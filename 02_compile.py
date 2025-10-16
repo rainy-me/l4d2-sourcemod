@@ -22,12 +22,13 @@ def main():
         check=True,
     )
 
-    # 컴파일된 플러그인 복사
+    # 컴파일된 플러그인 이동
     shutil.copytree(
         sourcemod_compiled_dir,
         sourcemod_plugins_dir,
         dirs_exist_ok=True,
     )
+    shutil.rmtree(sourcemod_compiled_dir)
 
     print("컴파일 및 적용 완료.")
 
