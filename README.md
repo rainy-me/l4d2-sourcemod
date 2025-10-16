@@ -78,7 +78,7 @@ python 03_uninstall.py
 7. Explosion Announcer  
    <https://forums.alliedmods.net/showthread.php?t=328006>
 
-8. l4d_death_item_glow  
+8. l4d_death_item_glow (glow color 변경)  
    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
 ### C. 종속 플러그인
