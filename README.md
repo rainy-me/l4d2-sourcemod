@@ -1,4 +1,4 @@
-# l4d2-sourcemod
+# L4D2 SourceMod
 
 Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 
