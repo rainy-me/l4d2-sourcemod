@@ -10,7 +10,7 @@ public Plugin myinfo =
     author      = "Rainy",
     description = "모든 무기에서 유휴 장전이 가능하도록 합니다.",
     version     = "1.0.0",
-    url         = ""
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_reload_on_all_weapons"
 };
 
 Handle g_hFinishReload                        = null;
