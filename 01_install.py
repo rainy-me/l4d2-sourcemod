@@ -12,6 +12,7 @@ def main():
 
     src_api_dir = Path(__file__).parent / "API"
     src_plugin_dir = Path(__file__).parent / "Plugin"
+    src_plugin_metamod_dir = Path(__file__).parent / "Plugin_metamod"
 
     # API 설치
     src_api_items = sorted([i for i in src_api_dir.iterdir() if i.is_dir()])
@@ -22,6 +23,13 @@ def main():
     src_plugin_items = sorted([i for i in src_plugin_dir.iterdir() if i.is_dir()])
     for item in src_plugin_items:
         shutil.copytree(item, l4d2_plugin_dir, dirs_exist_ok=True)
+
+    # Metamod Plugin 설치
+    src_plugin_metamod_items = sorted(
+        [i for i in src_plugin_metamod_dir.iterdir() if i.is_dir()]
+    )
+    for item in src_plugin_metamod_items:
+        shutil.copytree(item, l4d2_api_dir, dirs_exist_ok=True)
 
     print(f"'{l4d2_dir}'에서 설치 완료.")
 
