@@ -31,7 +31,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 
 ## 삭제
 
-API, 플러그인, sourcemod cfg를 모두 삭제합니다.
+API, 플러그인을 모두 삭제합니다.
 
 ```powershell
 python 03_uninstall.py
@@ -69,20 +69,32 @@ python 03_uninstall.py
 3. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-4. l4dffannounce  
+4. l4d2_skill_detect  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
+
+5. l4dffannounce  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-5. trigger_horde_notify  
+6. kills  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/kills>
+
+7. trigger_horde_notify  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
-6. Throwable Announcer  
-   <https://forums.alliedmods.net/showthread.php?p=2719564>
+8. l4d_ai_hunter_skeet_dmg_fix  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
 
-7. Explosion Announcer  
+9. Explosion Announcer  
    <https://forums.alliedmods.net/showthread.php?t=328006>
 
-8. l4d_death_item_glow (glow color 변경)  
-   <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
+10. Throwable Announcer  
+    <https://forums.alliedmods.net/showthread.php?p=2719564>
+
+11. l4d_death_item_glow (glow color 변경)  
+    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
+
+12. l4d2_fix_jockey_hitbox
+    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
 ### C. 종속 플러그인
 
