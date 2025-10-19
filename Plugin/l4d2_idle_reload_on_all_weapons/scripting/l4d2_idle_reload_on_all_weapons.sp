@@ -14,7 +14,6 @@ public Plugin myinfo =
 };
 
 Handle g_hFinishReload                        = null;
-int    g_iActiveWeapon[MAXPLAYERS + 1]        = { -1, ... };
 int    g_iReloadingWeaponSlot[MAXPLAYERS + 1] = { -1, ... };
 
 enum EventState
@@ -44,6 +43,19 @@ public void OnPluginStart()
 
     HookEvent("weapon_reload", Event_WeaponReload);
     HookEvent("bot_player_replace", Event_BotPlayerReplace);
+
+    // 예외 처리
+    HookEvent("player_death", Event_ResetPlayerState);
+    HookEvent("player_team", Event_ResetPlayerState);
+    HookEvent("item_pickup", Event_ResetPlayerState);
+    HookEvent("golden_crowbar_pickup", Event_ResetPlayerState);
+    HookEvent("round_end", Event_ResetPlayerState);
+    HookEvent("give_weapon", Event_ResetPlayerState);
+    HookEvent("upgrade_pack_used", Event_ResetPlayerState);
+    HookEvent("weapon_drop", Event_ResetPlayerState);
+    HookEvent("weapon_pickup", Event_ResetPlayerState);
+    HookEvent("player_connect", Event_ResetPlayerState);
+    HookEvent("player_disconnect", Event_ResetPlayerState);
 }
 
 public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
@@ -65,7 +77,6 @@ public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcas
         int weaponInSlot = GetPlayerWeaponSlot(client, i);
         if (weaponInSlot == activeWeapon)
         {
-            g_iActiveWeapon[client]        = activeWeapon;
             g_iReloadingWeaponSlot[client] = i;
             break;
         }
@@ -73,7 +84,10 @@ public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcas
 
     // 1번째 이벤트: 상태를 1단계 완료로 설정하고 타임아웃 시작
     g_PlayerState[client]   = State_Event1_Done;
-    g_fStateTimeout[client] = GetGameTime() + 3.0;    // 3초 제한
+    g_fStateTimeout[client] = GetGameTime() + 2.5;
+
+    // 타임아웃 후 자동으로 상태 초기화
+    CreateTimer(2.5, Timer_ResetPlayerState, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
@@ -84,16 +98,42 @@ public void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroa
         return;
     }
 
-    // 이전 상태가 1단계이고, 타임아웃되지 않았는지 확인
+    // 이전 상태가 1단계 완료이고, 타임아웃되지 않았는지 확인
     if (g_PlayerState[client] == State_Event1_Done && GetGameTime() < g_fStateTimeout[client])
     {
         IdleReload(client);
     }
 
-    g_PlayerState[client] = State_None;
+    ResetPlayerState(client);
 }
 
-public void IdleReload(int client)
+public void Event_ResetPlayerState(Event event, const char[] name, bool dontBroadcast)
+{
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (client > 0)
+    {
+        ResetPlayerState(client);
+    }
+}
+
+public Action Timer_ResetPlayerState(Handle timer, int userid)
+{
+    int client = GetClientOfUserId(userid);
+    if (client > 0)
+    {
+        ResetPlayerState(client);
+    }
+    return Plugin_Stop;
+}
+
+void ResetPlayerState(int client)
+{
+    g_PlayerState[client]          = State_None;
+    g_fStateTimeout[client]        = 0.0;
+    g_iReloadingWeaponSlot[client] = -1;
+}
+
+void IdleReload(int client)
 {
     if (g_iReloadingWeaponSlot[client] != 0 && g_iReloadingWeaponSlot[client] != 1)
     {
@@ -101,7 +141,7 @@ public void IdleReload(int client)
     }
 
     int weapon = GetPlayerWeaponSlot(client, g_iReloadingWeaponSlot[client]);
-    if (!IsValidEntity(weapon) || weapon != g_iActiveWeapon[client])
+    if (!IsValidEntity(weapon))
     {
         return;
     }
@@ -114,7 +154,7 @@ public void IdleReload(int client)
     }
 
     SDKCall(g_hFinishReload, weapon);
-    // PrintToChatAll("즉시 재장전!");
+    // PrintToChatAll("유휴 재장전!");
 }
 
 // 목록에 있는 무기만 유휴 재장전 실행
