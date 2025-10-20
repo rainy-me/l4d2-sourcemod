@@ -58,6 +58,9 @@ python 03_uninstall.py
 2. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
    모든 무기에서 유휴 장전이 가능하도록 합니다.
 
+3. [l4d2_idle_unlock](/Plugin/l4d2_idle_unlock/)  
+   플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.
+
 ### B. 공개 플러그인
 
 1. Tickrate Enabler  
@@ -84,16 +87,19 @@ python 03_uninstall.py
 8. l4d_ai_hunter_skeet_dmg_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
 
-9. Explosion Announcer  
-   <https://forums.alliedmods.net/showthread.php?t=328006>
+9. drop_secondary  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/drop_secondary>
 
-10. Throwable Announcer  
+10. Explosion Announcer  
+    <https://forums.alliedmods.net/showthread.php?t=328006>
+
+11. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-11. l4d_death_item_glow (glow color 변경)  
+12. l4d_death_item_glow (glow color 변경)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-12. l4d2_fix_jockey_hitbox
+13. l4d2_fix_jockey_hitbox
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
 ### C. 종속 플러그인
