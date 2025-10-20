@@ -66,23 +66,6 @@ public void OnPluginStart()
     HookEvent("player_disconnect", Event_ResetPlayerState);
 }
 
-public void OnPluginEnd()
-{
-    delete g_hFinishReload;
-    delete g_smIdleReloadableWeapons;
-}
-
-void InitializeIdleReloadableWeapons()
-{
-    g_smIdleReloadableWeapons = new StringMap();
-
-    g_smIdleReloadableWeapons.SetValue("weapon_pistol", true);
-    g_smIdleReloadableWeapons.SetValue("weapon_pistol_magnum", true);
-    g_smIdleReloadableWeapons.SetValue("weapon_smg", true);
-    g_smIdleReloadableWeapons.SetValue("weapon_smg_silenced", true);
-    g_smIdleReloadableWeapons.SetValue("weapon_smg_mp5", true);
-}
-
 public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
@@ -91,12 +74,14 @@ public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcas
         return;
     }
 
+    // 현재 활성화된 무기 가져오기
     int activeWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
     if (!IsValidEntity(activeWeapon))
     {
         return;
     }
 
+    // 현재 활성화된 무기의 슬롯 찾기
     for (int i = 0; i <= MAX_WEAPON_SLOTS; i++)
     {
         int weaponInSlot = GetPlayerWeaponSlot(client, i);
@@ -107,7 +92,23 @@ public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcas
         }
     }
 
-    // 1번째 이벤트: 상태를 1단계 완료로 설정하고 타임아웃 시작
+    // 0번(주무기), 1번(보조무기) 슬롯인지 확인
+    if (g_iReloadingWeaponSlot[client] != 0 && g_iReloadingWeaponSlot[client] != 1)
+    {
+        g_iReloadingWeaponSlot[client] = -1;
+        return;
+    }
+
+    // 무기가 유휴 재장전 가능한지 확인
+    char activeWeaponClsname[64];
+    GetEntityClassname(activeWeapon, activeWeaponClsname, sizeof(activeWeaponClsname));
+    if (!IsIdleReloadableWeapon(activeWeaponClsname))
+    {
+        g_iReloadingWeaponSlot[client] = -1;
+        return;
+    }
+
+    // 이벤트: 상태를 1단계 완료로 설정하고 타임아웃 시작
     g_PlayerState[client]   = State_Event1_Done;
     g_fStateTimeout[client] = GetGameTime() + RELOAD_TIMEOUT;
 }
@@ -117,13 +118,14 @@ public void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroa
     int client = GetClientOfUserId(event.GetInt("player"));
     if (client <= 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
     {
+        ResetPlayerState(client);
         return;
     }
 
     // 이전 상태가 1단계 완료이고, 타임아웃되지 않았는지 확인
     if (g_PlayerState[client] == State_Event1_Done && GetGameTime() < g_fStateTimeout[client])
     {
-        IdleReload(client);
+        IdleReload(client, g_iReloadingWeaponSlot[client]);
     }
 
     ResetPlayerState(client);
@@ -138,6 +140,16 @@ public void Event_ResetPlayerState(Event event, const char[] name, bool dontBroa
     }
 }
 
+void IdleReload(int client, int slot)
+{
+    int weapon = GetPlayerWeaponSlot(client, slot);
+    if (IsValidEntity(weapon))
+    {
+        SDKCall(g_hFinishReload, weapon);
+        // PrintToChatAll("유휴 재장전!");
+    }
+}
+
 void ResetPlayerState(int client)
 {
     g_PlayerState[client]          = State_None;
@@ -145,39 +157,18 @@ void ResetPlayerState(int client)
     g_iReloadingWeaponSlot[client] = -1;
 }
 
-void IdleReload(int client)
-{
-    // 0번(주무기), 1번(보조무기) 슬롯 외에는 무시
-    if (g_iReloadingWeaponSlot[client] != 0 && g_iReloadingWeaponSlot[client] != 1)
-    {
-        return;
-    }
-
-    int weapon = GetPlayerWeaponSlot(client, g_iReloadingWeaponSlot[client]);
-    if (!IsValidEntity(weapon))
-    {
-        return;
-    }
-
-    char active_weapon_clsname[64];
-    GetEntityClassname(weapon, active_weapon_clsname, sizeof(active_weapon_clsname));
-    if (!IsIdleReloadableWeapon(active_weapon_clsname))
-    {
-        return;
-    }
-
-    SDKCall(g_hFinishReload, weapon);
-    // PrintToChatAll("유휴 재장전!");
-}
-
-/**
- * 무기가 유휴 재장전 가능한지 확인
- *
- * @param weapon_clsname 무기 클래스 이름
- * @return 유휴 재장전 가능 여부
- */
-bool IsIdleReloadableWeapon(const char[] weapon_clsname)
+bool IsIdleReloadableWeapon(const char[] weaponClsname)
 {
     bool dummy;
-    return g_smIdleReloadableWeapons.GetValue(weapon_clsname, dummy);
+    return g_smIdleReloadableWeapons.GetValue(weaponClsname, dummy);
+}
+
+void InitializeIdleReloadableWeapons()
+{
+    g_smIdleReloadableWeapons = new StringMap();
+    g_smIdleReloadableWeapons.SetValue("weapon_pistol", true);
+    g_smIdleReloadableWeapons.SetValue("weapon_pistol_magnum", true);
+    g_smIdleReloadableWeapons.SetValue("weapon_smg", true);
+    g_smIdleReloadableWeapons.SetValue("weapon_smg_silenced", true);
+    g_smIdleReloadableWeapons.SetValue("weapon_smg_mp5", true);
 }
