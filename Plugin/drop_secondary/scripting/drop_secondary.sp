@@ -18,10 +18,13 @@ public Plugin myinfo =
 {
     name        = "L4D2 Drop Secondary",
     author      = "HarryPotter",
-    version     = "2.6-2025/1/16",
+    version     = "2.7-2025/10/20",
     description = "Survivor players will drop their secondary weapon when they die",
     url         = "https://steamcommunity.com/profiles/76561198026784913/"
 };
+
+// Forward for other plugins to detect secondary weapon drop
+GlobalForward g_hForward_OnSecondaryWeaponDrop;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -32,6 +35,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
         strcopy(error, err_max, "Plugin only supports Left 4 Dead 2.");
         return APLRes_SilentFailure;
     }
+
+    // Create forward for other plugins
+    g_hForward_OnSecondaryWeaponDrop = new GlobalForward("L4D2_OnSecondaryWeaponDrop", ET_Ignore, Param_Cell, Param_Cell);
 
     return APLRes_Success;
 }
@@ -163,6 +169,12 @@ void OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
             GetClientEyePosition(client, origin);
             SDKHooks_DropWeapon(client, secondary, origin);
 
+            // Notify other plugins about the secondary weapon drop
+            Call_StartForward(g_hForward_OnSecondaryWeaponDrop);
+            Call_PushCell(client);
+            Call_PushCell(secondary);
+            Call_Finish();
+
             for (int i = 1; i <= MaxClients; i++)
             {
                 if (!IsClientInGame(i)) continue;
@@ -180,6 +192,12 @@ void OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
             float origin[3];
             GetClientEyePosition(client, origin);
             SDKHooks_DropWeapon(client, HiddenWeapon, origin);
+
+            // Notify other plugins about the secondary weapon drop
+            Call_StartForward(g_hForward_OnSecondaryWeaponDrop);
+            Call_PushCell(client);
+            Call_PushCell(HiddenWeapon);
+            Call_Finish();
 
             for (int i = 1; i <= MaxClients; i++)
             {

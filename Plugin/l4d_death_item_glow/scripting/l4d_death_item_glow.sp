@@ -5,7 +5,11 @@
 #include <sdkhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.1"
+#undef REQUIRE_PLUGIN
+#include <drop_secondary>
+#define REQUIRE_PLUGIN
+
+#define PLUGIN_VERSION "1.2"
 
 public Plugin myinfo =
 {
@@ -67,6 +71,16 @@ public void OnPluginStart()
 	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (IsClientInGame(i)) OnClientPutInServer(i);
+	}
+}
+
+public void L4D2_OnSecondaryWeaponDrop(int client, int weapon)
+{
+	// Handle secondary weapon drops from drop_secondary.sp plugin
+	if (IsValidEntity(weapon))
+	{
+		AddWeaponGlow(weapon);
+		CheckGlowTime(weapon);
 	}
 }
 
