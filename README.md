@@ -61,6 +61,9 @@ python 03_uninstall.py
 3. [l4d2_idle_unlock](/Plugin/l4d2_idle_unlock/)  
    플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.
 
+4. [l4d2_remove_tongue_fatigue_penalty](/Plugin/l4d2_remove_tongue_fatigue_penalty/)  
+   스모커 혀에서 풀려났을 때 움직이지 못하는 페널티를 제거합니다.
+
 ### B. 공개 플러그인
 
 1. Tickrate Enabler  
