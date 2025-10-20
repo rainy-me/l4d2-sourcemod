@@ -9,7 +9,7 @@ public Plugin myinfo =
     author      = "Rainy",
     description = "플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.",
     version     = "1.0.0",
-    url         = ""
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/blob/main/Plugin/l4d2_idle_unlock"
 };
 
 Address    aGoAFK[4]               = { Address_Null, ... };
