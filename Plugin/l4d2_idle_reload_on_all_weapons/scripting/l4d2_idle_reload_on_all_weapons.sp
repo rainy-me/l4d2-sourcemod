@@ -12,7 +12,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Reload On All Weapons",
     author      = "Rainy",
     description = "모든 무기에서 유휴 장전이 가능하도록 합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_reload_on_all_weapons"
 };
 
@@ -59,6 +59,15 @@ public void OnPluginStart()
     HookEvent("upgrade_pack_used", Event_ResetPlayerState);
     HookEvent("weapon_drop", Event_ResetPlayerState);
     HookEvent("weapon_pickup", Event_ResetPlayerState);
+}
+
+public void Event_ResetPlayerState(Event event, const char[] name, bool dontBroadcast)
+{
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (client > 0)
+    {
+        ResetPlayerState(client);
+    }
 }
 
 public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
@@ -124,15 +133,6 @@ public void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroa
     }
 
     ResetPlayerState(client);
-}
-
-public void Event_ResetPlayerState(Event event, const char[] name, bool dontBroadcast)
-{
-    int client = GetClientOfUserId(event.GetInt("userid"));
-    if (client > 0)
-    {
-        ResetPlayerState(client);
-    }
 }
 
 void IdleReload(int client, int slot)
