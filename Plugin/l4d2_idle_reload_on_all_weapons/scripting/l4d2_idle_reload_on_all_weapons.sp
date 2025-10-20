@@ -54,16 +54,11 @@ public void OnPluginStart()
 
     // 예외 처리
     HookEvent("player_death", Event_ResetPlayerState);
-    HookEvent("player_team", Event_ResetPlayerState);
-    HookEvent("item_pickup", Event_ResetPlayerState);
-    HookEvent("golden_crowbar_pickup", Event_ResetPlayerState);
     HookEvent("round_end", Event_ResetPlayerState);
     HookEvent("give_weapon", Event_ResetPlayerState);
     HookEvent("upgrade_pack_used", Event_ResetPlayerState);
     HookEvent("weapon_drop", Event_ResetPlayerState);
     HookEvent("weapon_pickup", Event_ResetPlayerState);
-    HookEvent("player_connect", Event_ResetPlayerState);
-    HookEvent("player_disconnect", Event_ResetPlayerState);
 }
 
 public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
@@ -146,7 +141,6 @@ void IdleReload(int client, int slot)
     if (IsValidEntity(weapon))
     {
         SDKCall(g_hFinishReload, weapon);
-        // PrintToChatAll("유휴 재장전!");
     }
 }
 
