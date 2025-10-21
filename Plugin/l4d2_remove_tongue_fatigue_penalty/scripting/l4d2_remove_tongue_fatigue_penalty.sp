@@ -9,7 +9,7 @@ public Plugin myinfo =
     author      = "Rainy",
     description = "스모커 혀에서 풀려났을 때 움직이지 못하는 페널티를 제거합니다.",
     version     = "1.0.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_remove_tongue_fatigue_penalty/scripting"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_remove_tongue_fatigue_penalty"
 };
 
 ConVar g_hTongueReleaseFatigue = null;
