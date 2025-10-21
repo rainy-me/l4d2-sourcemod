@@ -102,8 +102,11 @@ python 03_uninstall.py
 12. l4d_death_item_glow (glow color 변경, 보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-13. l4d2_fix_jockey_hitbox
+13. l4d2_fix_jockey_hitbox  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
+
+14. l4d_tongue_float_fix  
+    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tongue_float_fix>
 
 ### C. 종속 플러그인
 
