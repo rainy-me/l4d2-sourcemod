@@ -45,9 +45,6 @@ python 03_uninstall.py
 2. Metamod  
    <https://www.sourcemm.net/downloads.php?branch=stable>
 
-3. l4dtoolz  
-   <https://github.com/accelerator74/l4dtoolz/releases>
-
 ## 플러그인 목록
 
 ### A. 자작 플러그인
@@ -110,14 +107,17 @@ python 03_uninstall.py
 
 ### C. 종속 플러그인
 
-1. SourceScramble  
+1. l4dtoolz  
+   <https://github.com/accelerator74/l4dtoolz/releases>
+
+2. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-2. Use Priority Patch  
+3. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
-3. Multi Colors  
+4. Multi Colors  
    <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
 
-4. Left4DHooks  
+5. Left4DHooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
