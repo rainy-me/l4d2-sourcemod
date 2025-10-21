@@ -66,7 +66,7 @@ python 03_uninstall.py
 
 ### B. 공개 플러그인
 
-1. Tickrate Enabler  
+1. Tickrate Enabler (기본값 100 tick 설정)  
    <https://forums.alliedmods.net/showthread.php?t=333408>
 
 2. TickrateFixes (CVar 1.5 설정)  

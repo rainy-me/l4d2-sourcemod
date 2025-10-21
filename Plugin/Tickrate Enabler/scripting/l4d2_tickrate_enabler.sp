@@ -51,7 +51,7 @@ public void OnPluginStart()
 	
 	context.l4d2_tickrate_enabler_auto_rates = CreateConVar("l4d2_tickrate_enabler_auto_rates", "1", "Enable auto rates updater", FCVAR_NONE, true, 0.0, true, 1.0);
 	
-	context.l4d2_tickrate_enabler_tick = CreateConVar("l4d2_tickrate_enabler_tick", "67.0", "Desired server tickrate.", FCVAR_NONE, true, 0.0);
+	context.l4d2_tickrate_enabler_tick = CreateConVar("l4d2_tickrate_enabler_tick", "100.0", "Desired server tickrate.", FCVAR_NONE, true, 0.0);
 	context.l4d2_tickrate_enabler_tick.AddChangeHook(OnTickrateChanged);
 	
 	AutoExecConfig(true, "l4d2_tickrate_enabler");
