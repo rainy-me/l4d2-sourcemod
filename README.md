@@ -90,7 +90,7 @@ python 03_uninstall.py
 8. l4d_ai_hunter_skeet_dmg_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
 
-9. drop_secondary  
+9. drop_secondary (forward 생성)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/drop_secondary>
 
 10. Explosion Announcer  
@@ -99,7 +99,7 @@ python 03_uninstall.py
 11. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-12. l4d_death_item_glow (glow color 변경)  
+12. l4d_death_item_glow (glow color 변경, 보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
 13. l4d2_fix_jockey_hitbox
