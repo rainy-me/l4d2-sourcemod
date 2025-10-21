@@ -12,7 +12,7 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_remove_tongue_fatigue_penalty/scripting"
 };
 
-ConVar g_hTongueReleaseFatigue;
+ConVar g_hTongueReleaseFatigue = null;
 
 public void OnPluginStart()
 {
@@ -26,7 +26,7 @@ public void OnPluginStart()
     PrintToServer("Set 'tongue_release_fatigue_penalty' to 0");
 }
 
-// 맵 로드 시에도 값을 0으로 유지
+// 맵 로드 시에도 값을 유지
 public void OnConfigsExecuted()
 {
     if (g_hTongueReleaseFatigue != null)

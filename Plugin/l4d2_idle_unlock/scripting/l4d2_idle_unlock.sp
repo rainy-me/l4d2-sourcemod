@@ -14,6 +14,7 @@ public Plugin myinfo =
 
 Address    aGoAFK[4]               = { Address_Null, ... };
 static int iOriginalBytes_GoAFK[8] = { -1, ... };
+ConVar     g_hDirectorAFKTimeout   = null;
 
 public void OnPluginStart()
 {
@@ -142,6 +143,23 @@ public void OnPluginStart()
     }
 
     delete gd_GoAFK;
+
+    g_hDirectorAFKTimeout = FindConVar("director_afk_timeout");
+    if (g_hDirectorAFKTimeout == null)
+    {
+        SetFailState("Could not find ConVar 'director_afk_timeout'");
+    }
+
+    SetConVarInt(g_hDirectorAFKTimeout, 2147483647);
+}
+
+// 맵 로드 시에도 값을 유지
+public void OnConfigsExecuted()
+{
+    if (g_hDirectorAFKTimeout != null)
+    {
+        SetConVarInt(g_hDirectorAFKTimeout, 2147483647);
+    }
 }
 
 public void OnPluginEnd()
