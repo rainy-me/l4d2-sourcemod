@@ -84,7 +84,7 @@ python 03_uninstall.py
 6. kills  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/kills>
 
-7. trigger_horde_notify  
+7. trigger_horde_notify (쿨다운 변경)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
 8. l4d_ai_hunter_skeet_dmg_fix  

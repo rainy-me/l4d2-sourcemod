@@ -76,7 +76,7 @@ public void OnPluginStart()
     }
 
     if(g_bL4D2Version) g_hAlarmCarNotify = CreateConVar(   PLUGIN_NAME ... "_alarm_car", "1", "If 1, Notify who tirggers the alarm car.", CVAR_FLAGS, true, 0.0, true, 1.0);
-    g_hColdDown =       CreateConVar(   PLUGIN_NAME ... "_cool_down_time", "30.0", "Cold down time to notify again.", CVAR_FLAGS, true, 0.0);
+    g_hColdDown =       CreateConVar(   PLUGIN_NAME ... "_cool_down_time", "10.0", "Cold down time to notify again.", CVAR_FLAGS, true, 0.0);
     CreateConVar(                       PLUGIN_NAME ... "_version",       PLUGIN_VERSION, PLUGIN_NAME ... " Plugin Version", CVAR_FLAGS_PLUGIN_VERSION);
     AutoExecConfig(true, PLUGIN_NAME);
 
