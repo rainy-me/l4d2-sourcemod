@@ -121,3 +121,8 @@ python 03_uninstall.py
 
 5. Left4DHooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
+
+## Rainy's 리포지토리
+
+- [l4d2-settings](https://github.com/rainy-me/l4d2-settings): Left 4 Dead 2 설정 모음
+- [l4d2-sourcemod](https://github.com/rainy-me/l4d2-sourcemod): Left 4 Dead 2 SourceMod 구성 모음
