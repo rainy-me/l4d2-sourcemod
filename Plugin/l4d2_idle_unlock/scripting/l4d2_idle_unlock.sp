@@ -8,13 +8,12 @@ public Plugin myinfo =
     name        = "L4D2 Idle Unlock",
     author      = "Rainy",
     description = "플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/blob/main/Plugin/l4d2_idle_unlock"
 };
 
 Address    aGoAFK[4]               = { Address_Null, ... };
 static int iOriginalBytes_GoAFK[8] = { -1, ... };
-ConVar     g_hDirectorAFKTimeout   = null;
 
 public void OnPluginStart()
 {
@@ -143,23 +142,6 @@ public void OnPluginStart()
     }
 
     delete gd_GoAFK;
-
-    g_hDirectorAFKTimeout = FindConVar("director_afk_timeout");
-    if (g_hDirectorAFKTimeout == null)
-    {
-        SetFailState("Could not find ConVar 'director_afk_timeout'");
-    }
-
-    SetConVarInt(g_hDirectorAFKTimeout, 2147483647);
-}
-
-// 맵 로드 시에도 값을 유지
-public void OnConfigsExecuted()
-{
-    if (g_hDirectorAFKTimeout != null)
-    {
-        SetConVarInt(g_hDirectorAFKTimeout, 2147483647);
-    }
 }
 
 public void OnPluginEnd()
