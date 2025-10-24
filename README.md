@@ -102,7 +102,7 @@ python 03_uninstall.py
 13. l4d_tongue_float_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tongue_float_fix>
 
-14. firebulletsfix
+14. firebulletsfix  
     <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
 
 ### C. 종속 플러그인
