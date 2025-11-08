@@ -61,6 +61,9 @@ python 03_uninstall.py
 4. [l4d2_remove_tongue_fatigue_penalty](/Plugin/l4d2_remove_tongue_fatigue_penalty/)  
    스모커 혀에서 풀려났을 때 움직이지 못하는 페널티를 제거합니다.
 
+5. [l4d2_active_assault_si](/Plugin/l4d2_active_assault_si/)  
+   모든 SI 봇이 대기하지 않고 생존자를 적극적으로 공격합니다.
+
 ### B. 공개 플러그인
 
 1. Tickrate Enabler (기본값 100 tick 설정)  
