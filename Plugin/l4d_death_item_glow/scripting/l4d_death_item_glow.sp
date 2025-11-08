@@ -41,7 +41,7 @@ int g_iGlowRange;
 public void OnPluginStart()
 {
 	CreateConVarHook("l4d_death_item_glow_color",
-					"255 0 0",
+					"255 255 255",
 					"Glow color (RGB) for items drooped by dead survivors.",
 					FCVAR_NONE,
 					false, 0.0, false, 0.0,

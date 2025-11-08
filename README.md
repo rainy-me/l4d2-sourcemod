@@ -93,7 +93,7 @@ python 03_uninstall.py
 10. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-11. l4d_death_item_glow (glow color 변경, 보조무기 glow 추가)  
+11. l4d_death_item_glow (보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
 12. l4d2_fix_jockey_hitbox  
