@@ -31,7 +31,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-    g_hCvarAssaultInterval = CreateConVar("si_assault_interval", "5.0", "SI bot assault command execution interval (seconds)",
+    g_hCvarAssaultInterval = CreateConVar("si_assault_interval", "10.0", "SI bot assault command execution interval (seconds)",
                                           FCVAR_NOTIFY, true, 0.1);
     g_hCvarAssaultInterval.AddChangeHook(OnConVarChange);
     AutoExecConfig(true, "l4d2_active_assault_si");
