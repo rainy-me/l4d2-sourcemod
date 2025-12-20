@@ -117,6 +117,9 @@ python 03_uninstall.py
 17. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
+18. l4d2_bugfix_deathspit  
+    <https://forums.alliedmods.net/showthread.php?p=2827186>
+
 ### C. 종속 플러그인
 
 1. l4dtoolz  
