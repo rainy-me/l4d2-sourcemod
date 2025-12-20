@@ -21,7 +21,7 @@ public Plugin myinfo =
 	name        = "L4D2 Item hint",
 	author      = "BHaType, fdxx, HarryPotter",
 	description = "When using 'Look' in vocalize menu, print corresponding item to chat area and make item glow or create spot marker/infeced maker like back 4 blood.",
-	version     = "3.9-2025/10/5",
+	version     = "4.0-2025/11/21",
 	url         = "https://forums.alliedmods.net/showpost.php?p=2765332&postcount=30"
 };
 
@@ -82,27 +82,37 @@ ConVar g_hItemCvarCMD, g_hItemCvarShiftE, g_hItemCvarVocalize,
 	g_hSurvivorMarkUseRange, g_hSurvivorMarkUseSound, g_hSurvivorMarkAnnounceType, g_hSurvivorMarkGlowTimer, g_hSurvivorMarkGlowRange, g_hSurvivorMarkCvarColor,
 	g_hSurvivorMarkInstructorHint, g_hSurvivorMarkInstructorColor, g_hSurvivorMarkInstructorIcon,
 	g_hSurvivorMarkFov;
+
 int g_iHintTransType,
 	g_iItemAnnounceType, g_iItemGlowRange, g_iItemCvarColor,
 	g_iSpotMarkCvarColorArray[3], g_iSpotMarkAnnounceType,
 	g_iInfectedMarkAnnounceType, g_iInfectedMarkGlowRange, g_iInfectedMarkCvarColor, g_iInfectedMarkSI,
 	g_iSurvivorMarkAnnounceType, g_iSurvivorMarkGlowRange, g_iSurvivorMarkCvarColor;
+
 float g_fItemHintCoolDown, g_fSpotMarkCoolDown, g_fInfectedMarkCoolDown, g_fSurvivorMarkCoolDown,
 	g_fItemUseHintRange, g_fItemGlowTimer,
 	g_fSpotMarkUseRange, g_fSpotMarkGlowTimer,
 	g_fInfectedMarkUseRange, g_fInfectedMarkGlowTimer, g_fInfectedMarkSIFov, g_fInfectedMarkWitchFov,
 	g_fSurvivorMarkUseRange, g_fSurvivorMarkGlowTimer, g_fSurvivorMarkFov;
-float       g_fItemHintCoolDownTime[MAXPLAYERS + 1], g_fSpotMarkCoolDownTime[MAXPLAYERS + 1], g_fInfectedMarkCoolDownTime[MAXPLAYERS + 1], g_fSurvivorMarkCoolDownTime[MAXPLAYERS + 1];
+
 char g_sItemInstructorColor[12], g_sItemInstructorIcon[16], g_sSpotMarkCvarColor[12], g_sItemUseSound[100], g_sKillDelay[32],
 			g_sSpotMarkUseSound[100], g_sSpotMarkInstructorColor[12], g_sSpotMarkInstructorIcon[16], g_sSpotMarkSpriteModel[PLATFORM_MAX_PATH],
 			g_sInfectedMarkUseSound[100], g_sInfectedMarkInstructorColor[12], g_sInfectedMarkInstructorIcon[16],
 			g_sSurvivorMarkUseSound[100], g_sSurvivorMarkInstructorColor[12], g_sSurvivorMarkInstructorIcon[16];
+
 bool g_bItemCvarCMD, g_bItemCvarShiftE, g_bItemCvarVocalize,
 	g_bCappedMark, g_bHaningMark, g_bDeadMark,
 	g_bItemInstructorHint, 
 	g_bSpotMarkInstructorHint, 
 	g_bInfectedMarkInstructorHint, g_bInfectedMarkWitch,
 	g_bSurvivorMarkInstructorHint;
+
+float       
+	g_fGlobalCoolDownTime[MAXPLAYERS + 1],
+	g_fItemHintCoolDownTime[MAXPLAYERS + 1],
+	g_fSpotMarkCoolDownTime[MAXPLAYERS + 1], 
+	g_fInfectedMarkCoolDownTime[MAXPLAYERS + 1], 
+	g_fSurvivorMarkCoolDownTime[MAXPLAYERS + 1];
 
 
 bool   
@@ -113,7 +123,8 @@ bool
 int       
 	g_iModelIndex[MAXENTITIES+1] = {0},
 	g_iInstructorIndex[MAXENTITIES+1] = {0},
-	g_iTargetInstructorIndex[MAXENTITIES+1] = {0};
+	g_iTargetInstructorIndex[MAXENTITIES+1] = {0},
+	g_iZombieClass;
 
 Handle  
 	g_iModelTimer[MAXENTITIES+1],
@@ -161,6 +172,8 @@ public void OnPluginStart()
 
 	// g_hItemUseHintRange = FindConVar("player_use_radius");
 	AddCommandListener(Vocalize_Listener, "vocalize");
+
+	g_iZombieClass = FindSendPropInfo("CTerrorPlayer", "m_zombieClass");
 
 	g_hItemCvarCMD					= CreateConVar("l4d2_item_hint_cmd", 							"1", 			"If 1, Player can type !mark cmd to mark", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_hItemCvarShiftE				= CreateConVar("l4d2_item_hint_shiftE", 						"1", 			"If 1, Player can press Shift+E to mark", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -790,6 +803,7 @@ void Clear(int client = -1)
 	{
 		for (int i = 1; i <= MaxClients; i++)
 		{
+			g_fGlobalCoolDownTime[i] = 0.0;
 			g_fItemHintCoolDownTime[i] = 0.0;
 			g_fSpotMarkCoolDownTime[i] = 0.0;
 			g_fInfectedMarkCoolDownTime[i] = 0.0;
@@ -797,6 +811,7 @@ void Clear(int client = -1)
 	}
 	else
 	{
+		g_fGlobalCoolDownTime[client] = 0.0;
 		g_fItemHintCoolDownTime[client] = 0.0;
 		g_fSpotMarkCoolDownTime[client] = 0.0;
 		g_fInfectedMarkCoolDownTime[client] = 0.0;
@@ -860,6 +875,12 @@ public void OnEntityCreated(int entity, const char[] classname)
 		case 'w':
 		{
 			if (StrEqual(classname, "witch"))
+				ge_bInvalidTrace[entity] = true;
+		}
+		case 'e':
+		{
+			if (StrEqual(classname, "env_physics_blocker") 
+				|| StrEqual(classname, "env_player_blocker"))
 				ge_bInvalidTrace[entity] = true;
 		}
 	}
@@ -1009,7 +1030,7 @@ bool CreateInfectedMarker(int client, int infected, bool bIsWitch = false)
 	static char sModelName[64];
 	if(!bIsWitch)
 	{
-		zClass = GetZombieClass(infected);
+		zClass = GetEntData(infected, g_iZombieClass);
 		int skin = GetLMCModel(infected);
 		if(skin > 0)
 		{
@@ -1314,7 +1335,8 @@ void CreateSpotMarker(int client, bool bIsAimPlayer)
 	float vAng[3];
 	GetClientEyeAngles(client, vAng);
 
-	Handle trace = TR_TraceRayFilterEx(vPos, vAng, MASK_ALL, RayType_Infinite, TraceFilter_Spot, client);
+	// MASK_ALL -> MASK_VISIBLE
+	Handle trace = TR_TraceRayFilterEx(vPos, vAng, MASK_VISIBLE, RayType_Infinite, TraceFilter_Spot, client);
 
 	if (TR_DidHit(trace))
 	{
@@ -2095,11 +2117,16 @@ void PlayerMarkHint(int client)
 	if(!g_bCappedMark && GetInfectedAttacker(client) != -1) return;
 	if(!g_bDeadMark && !IsPlayerAlive(client)) return;
 
+	float now = GetEngineTime();
+	if(g_fGlobalCoolDownTime[client] > now) return;
+	g_fGlobalCoolDownTime[client] = now + 0.2;
+
 	bool bIsAimPlayer = false, bIsAimWitch = false, bIsVaildItem = false;
 	static char sItemPhrase[64], sEntModelName[PLATFORM_MAX_PATH];
 
 	// 標記優先順序: 特感 > Witch > 隊友 > 物品或武器 > 地點
 
+	int class;
 	int clientAim = GetClientViewClient(client); //ignore glow model
 	float vClientPos[3], vTargetPos[3], vClientEyePos[3];
 	GetEntPropVector(client, Prop_Data, "m_vecOrigin", vClientPos);
@@ -2112,7 +2139,7 @@ void PlayerMarkHint(int client)
 			bIsAimPlayer = true;
 			//PrintToChatAll("look at %N", clientAim);
 				
-			int class = GetEntProp(clientAim, Prop_Send, "m_zombieClass");
+			class = GetEntData(clientAim, g_iZombieClass);
 			if(class == ZC_TANK) // tank
 			{
 				class--;
@@ -2164,19 +2191,29 @@ void PlayerMarkHint(int client)
 					{
 						if(IsPlayerGhost(i)) continue;
 
-						GetEntPropVector(i, Prop_Data, "m_vecOrigin", vTargetPos);
-						if( IsWithInRange(vClientPos, vTargetPos, g_fInfectedMarkUseRange) == false ) continue;
-						if(!IsVisibleToPlayer(vClientEyePos, i)) continue;
-
-						degree = GetFovAngle(client, i);
-						//PrintToChatAll("與%N的夾角度: %.1f", i, degree);
-						// 官方是超過45度忽略
-						if(degree > g_fInfectedMarkSIFov) continue;
-
-						if(degree < degree_Lowest)
+						class = GetEntData(i, g_iZombieClass);
+						if(class == ZC_TANK)
 						{
-							degree_Lowest = degree;
-							Target_FovNearBy = i;
+							class--;
+						}
+						class--;
+
+						if(class >=0 && class <=6 && ((1 << class) & g_iInfectedMarkSI))
+						{
+							GetEntPropVector(i, Prop_Data, "m_vecOrigin", vTargetPos);
+							if( IsWithInRange(vClientPos, vTargetPos, g_fInfectedMarkUseRange) == false ) continue;
+							if(!IsVisibleToPlayer(vClientEyePos, i)) continue;
+
+							degree = GetFovAngle(client, i);
+							//PrintToChatAll("與%N的夾角度: %.1f", i, degree);
+							// 官方是超過45度忽略
+							if(degree > g_fInfectedMarkSIFov) continue;
+
+							if(degree < degree_Lowest)
+							{
+								degree_Lowest = degree;
+								Target_FovNearBy = i;
+							}
 						}
 					}
 				}
@@ -2260,8 +2297,13 @@ void PlayerMarkHint(int client)
 		}
 	}
 
-	static int iEntity;
-	iEntity = GetUseEntity(client, g_fItemUseHintRange);
+	int iEntity = 0;
+	if(IsPlayerAlive(client)) iEntity = GetUseEntity(client, g_fItemUseHintRange);
+	else
+	{
+		if(clientAim > MaxClients) iEntity = clientAim;
+	}
+
 	if ( !bIsAimPlayer && !bIsAimWitch && IsValidEntityIndex(iEntity) && IsValidEntity(iEntity) && HasParentClient(iEntity) == false )
 	{
 		static char targetname[128];
@@ -2326,7 +2368,7 @@ void PlayerMarkHint(int client)
 
 			if(bIsVaildItem)
 			{
-				if(GetEngineTime() > g_fItemHintCoolDownTime[client])
+				if(now > g_fItemHintCoolDownTime[client])
 				{
 					NotifyMessage(client, sItemPhrase, eItemHint);
 
@@ -2347,7 +2389,7 @@ void PlayerMarkHint(int client)
 						}
 					}
 
-					g_fItemHintCoolDownTime[client] = GetEngineTime() + g_fItemHintCoolDown;
+					g_fItemHintCoolDownTime[client] = now + g_fItemHintCoolDown;
 					CreateEntityModelGlow(iEntity, sEntModelName);
 
 					if(g_bItemInstructorHint)
@@ -2367,11 +2409,6 @@ void PlayerMarkHint(int client)
 	// client / world / witch
 	CreateSpotMarker(client, bIsAimPlayer);
 } 
-
-int GetZombieClass(int client) 
-{
-	return GetEntProp(client, Prop_Send, "m_zombieClass");
-}
 
 void RemoveGlowandInstructor(int entity)
 {
@@ -2424,7 +2461,8 @@ bool IsVisibleToPlayer(float vClientEyePos[3], int target)
     MakeVectorFromPoints(vClientEyePos, vTargetPos, vLookAt);
     GetVectorAngles(vLookAt, vAng);
 
-    Handle trace = TR_TraceRayFilterEx(vClientEyePos, vAng, MASK_PLAYERSOLID, RayType_Infinite, TraceFilter_VisibleToPlayer, target);
+	// MASK_PLAYERSOLID -> MASK_VISIBLE
+    Handle trace = TR_TraceRayFilterEx(vClientEyePos, vAng, MASK_VISIBLE, RayType_Infinite, TraceFilter_VisibleToPlayer, target);
 
     bool isVisible;
 
@@ -2437,10 +2475,13 @@ bool IsVisibleToPlayer(float vClientEyePos[3], int target)
             vTargetPos[2] -= 62.0; // results the same as GetClientAbsOrigin
 
             delete trace;
-            trace = TR_TraceHullFilterEx(vClientEyePos, vTargetPos, g_fVPlayerMins, g_fVPlayerMaxs, MASK_PLAYERSOLID, TraceFilter_VisibleToPlayer, target);
+			// MASK_PLAYERSOLID -> MASK_VISIBLE
+            trace = TR_TraceHullFilterEx(vClientEyePos, vTargetPos, g_fVPlayerMins, g_fVPlayerMaxs, MASK_VISIBLE, TraceFilter_VisibleToPlayer, target);
 
             if (TR_DidHit(trace))
+			{
                 isVisible = (TR_GetEntityIndex(trace) == target);
+			}
         }
     }
 
@@ -2449,15 +2490,15 @@ bool IsVisibleToPlayer(float vClientEyePos[3], int target)
     return isVisible;
 }
 
-bool TraceFilter_VisibleToPlayer(int entity, int contentsMask, int infected)
+bool TraceFilter_VisibleToPlayer(int entity, int contentsMask, int player)
 {
-    if (entity == infected)
+    if (entity == player)
         return true;
 
     if (IsValidClientIndex(entity))
         return false;
 
-    if( !IsValidEntityIndex(entity) )
+    if (!IsValidEntityIndex(entity) )
         return false;
 
     return ge_bInvalidTrace[entity] ? false : true;
@@ -2465,7 +2506,8 @@ bool TraceFilter_VisibleToPlayer(int entity, int contentsMask, int infected)
 
 bool IsVisibleToEntity(float vClientEyePos[3], float vTargetPos[3], int witch)
 {
-	Handle hTrace = TR_TraceRayFilterEx(vClientEyePos, vTargetPos, MASK_SOLID_BRUSHONLY, RayType_EndPoint, TraceFilter_VisibleToEntity, witch);
+	// MASK_SOLID_BRUSHONLY -> MASK_VISIBLE
+	Handle hTrace = TR_TraceRayFilterEx(vClientEyePos, vTargetPos, MASK_VISIBLE, RayType_EndPoint, TraceFilter_VisibleToEntity, witch);
 	
 	if (TR_DidHit(hTrace))
 	{
