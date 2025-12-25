@@ -14,8 +14,8 @@ public Plugin myinfo =
 };
 
 bool   g_bLate;
-Handle g_hAssaultTimer = INVALID_HANDLE;
 ConVar g_hCvarAssaultInterval;
+Handle g_hAssaultTimer = INVALID_HANDLE;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -31,7 +31,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-    g_hCvarAssaultInterval = CreateConVar("si_assault_interval", "10.0", "SI bot assault command execution interval (seconds)",
+    g_hCvarAssaultInterval = CreateConVar("si_assault_interval", "10.0",
+                                          "SI bot assault command execution interval (seconds)",
                                           FCVAR_NOTIFY, true, 0.1);
     g_hCvarAssaultInterval.AddChangeHook(OnConVarChange);
     AutoExecConfig(true, "l4d2_active_assault_si");
@@ -63,7 +64,8 @@ void OnConVarChange(ConVar convar, const char[] oldValue, const char[] newValue)
             KillTimer(g_hAssaultTimer);
         }
         float interval  = StringToFloat(newValue);
-        g_hAssaultTimer = CreateTimer(interval, Timer_ForceExecuteAssault, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+        g_hAssaultTimer = CreateTimer(interval, Timer_ForceExecuteAssault,
+                                      _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 
