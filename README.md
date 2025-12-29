@@ -67,7 +67,7 @@ python 03_uninstall.py
 6. [dingshot](/Plugin/dingshot/)  
    헤드샷 시 띵 소리를 출력합니다.
 
-### B. 미배포 플러그인
+### B. 타인 제작 플러그인
 
 1. [l4d2_melee_accuracy_stat_fix](/Plugin/l4d2_melee_accuracy_stat_fix/)  
    근접무기는 명중률 통계에서 제외합니다.
