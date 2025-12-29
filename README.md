@@ -64,7 +64,12 @@ python 03_uninstall.py
 5. [l4d2_active_assault_si](/Plugin/l4d2_active_assault_si/)  
    모든 SI 봇이 대기하지 않고 생존자를 적극적으로 공격합니다.
 
-### B. 공개 플러그인
+### B. 미배포 플러그인
+
+1. [l4d2_melee_accuracy_stat_fix](/Plugin/l4d2_melee_accuracy_stat_fix/)  
+   근접무기는 명중률 통계에서 제외합니다.
+
+### C. 공개 플러그인
 
 1. Tickrate Enabler (기본값 100 tick 설정)  
    <https://forums.alliedmods.net/showthread.php?t=333408>
@@ -84,7 +89,7 @@ python 03_uninstall.py
 6. kills  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/kills>
 
-7. trigger_horde_notify (쿨다운 변경)  
+7. trigger_horde_notify  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
 8. drop_secondary (forward 생성)  
@@ -126,7 +131,7 @@ python 03_uninstall.py
 20. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-### C. 종속 플러그인
+### D. 종속 플러그인
 
 1. l4dtoolz  
    <https://github.com/accelerator74/l4dtoolz/releases>
