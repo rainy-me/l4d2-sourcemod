@@ -64,6 +64,9 @@ python 03_uninstall.py
 5. [l4d2_active_assault_si](/Plugin/l4d2_active_assault_si/)  
    모든 SI 봇이 대기하지 않고 생존자를 적극적으로 공격합니다.
 
+6. [dingshot](/Plugin/dingshot/)  
+   헤드샷 시 띵 소리를 출력합니다.
+
 ### B. 미배포 플러그인
 
 1. [l4d2_melee_accuracy_stat_fix](/Plugin/l4d2_melee_accuracy_stat_fix/)  
