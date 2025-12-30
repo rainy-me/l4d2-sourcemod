@@ -77,7 +77,7 @@ python 03_uninstall.py
 1. Tickrate Enabler  
    <https://forums.alliedmods.net/showthread.php?t=333408>
 
-2. TickrateFixes (CVar 2.0 설정)  
+2. TickrateFixes (CVar 1.5 설정)  
    <https://github.com/fbef0102/Rotoblin-AZMod/blob/master/SourceCode/scripting-az/TickrateFixes.sp>
 
 3. l4d2_item_hint  
