@@ -67,6 +67,9 @@ python 03_uninstall.py
 6. [dingshot](/Plugin/dingshot/)  
    헤드샷 시 띵 소리를 출력합니다.
 
+7. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+   틱레이트 변경에 따른 문 속도 문제를 고칩니다.
+
 ### B. 타인 제작 플러그인
 
 1. [l4d2_melee_accuracy_stat_fix](/Plugin/l4d2_melee_accuracy_stat_fix/)  
@@ -77,61 +80,58 @@ python 03_uninstall.py
 1. Tickrate Enabler  
    <https://forums.alliedmods.net/showthread.php?t=333408>
 
-2. TickrateFixes (CVar 1.5 설정)  
-   <https://github.com/fbef0102/Rotoblin-AZMod/blob/master/SourceCode/scripting-az/TickrateFixes.sp>
-
-3. l4d2_item_hint  
+2. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-4. l4d2_skill_detect  
+3. l4d2_skill_detect  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
 
-5. l4dffannounce  
+4. l4dffannounce  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-6. kills  
+5. kills  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/kills>
 
-7. trigger_horde_notify  
+6. trigger_horde_notify  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
-8. drop_secondary (forward 생성)  
+7. drop_secondary (forward 생성)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/drop_secondary>
 
-9. l4d_current_survivor_progress  
+8. l4d_current_survivor_progress  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_current_survivor_progress>
 
-10. l4dafkfix_deadbot  
-    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dafkfix_deadbot>
+9. l4dafkfix_deadbot  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dafkfix_deadbot>
 
-11. firebulletsfix  
+10. firebulletsfix  
     <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
 
-12. l4d_death_item_glow (보조무기 glow 추가)  
+11. l4d_death_item_glow (보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-13. l4d_fix_common_shove  
+12. l4d_fix_common_shove  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_common_shove>
 
-14. l4d2_fix_jockey_hitbox  
+13. l4d2_fix_jockey_hitbox  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-15. l4d2_jockey_jumpcap_patch  
+14. l4d2_jockey_jumpcap_patch  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-16. Hunter_pounce_alignment_fix  
+15. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-17. Explosion Announcer  
+16. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-18. Throwable Announcer  
+17. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-19. Shove Direction Fix  
+18. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-20. l4d2_bugfix_deathspit  
+19. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
 ### D. 종속 플러그인
