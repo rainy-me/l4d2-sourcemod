@@ -5,12 +5,14 @@
 #include <sdktools>
 #include <sdkhooks>
 
+#define VOLUME 0.85
+
 public Plugin myinfo =
 {
     name        = "Dingshot",
     author      = "Rainy",
     description = "헤드샷 시 띵 소리를 출력합니다.",
-    version     = "1.0.0",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/dingshot"
 };
 
@@ -33,7 +35,8 @@ void HeadShotHook(Event event, const char[] name, bool dontBroadcast)
     {
         // 8 == death by fire
         // 2097152 == death by slow burn
-        EmitSoundToClient(attacker, g_sHeadshotSound);
+        EmitSoundToClient(attacker, g_sHeadshotSound, SOUND_FROM_PLAYER, SNDCHAN_AUTO,
+                          SNDLEVEL_NORMAL, SND_NOFLAGS, VOLUME);
     }
 }
 
