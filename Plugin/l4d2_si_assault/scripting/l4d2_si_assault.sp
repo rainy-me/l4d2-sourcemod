@@ -6,11 +6,11 @@
 
 public Plugin myinfo =
 {
-    name        = "L4D2 Active Assault SI",
+    name        = "L4D2 SI Assault",
     author      = "Rainy",
     description = "모든 SI 봇이 대기하지 않고 생존자를 적극적으로 공격합니다.",
     version     = "1.2.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_active_assault_si"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_si_assault"
 };
 
 bool   g_bLate;
@@ -40,7 +40,7 @@ public void OnPluginStart()
                                           FCVAR_NOTIFY, true, 0.1);
     g_hCvarEnabled.AddChangeHook(OnConVarChanged);
     g_hCvarAssaultInterval.AddChangeHook(OnConVarChanged);
-    AutoExecConfig(true, "l4d2_active_assault_si");
+    AutoExecConfig(true, "l4d2_si_assault");
 
     LateLoad();
 }
