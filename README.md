@@ -70,10 +70,8 @@ python 03_uninstall.py
 7. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
    틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-### B. 타인 제작 플러그인
-
-1. [l4d2_melee_accuracy_stat_fix](/Plugin/l4d2_melee_accuracy_stat_fix/)  
-   근접무기는 명중률 통계에서 제외합니다.
+8. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
+   근접무기와 전기톱을 명중률 통계에서 제외합니다.
 
 ### C. 공개 플러그인
 

@@ -2,11 +2,11 @@
 
 public Plugin myinfo =
 {
-    name        = "L4D2 Melee Accuracy Stat Fix",
-    author      = "ChatGPT",
-    description = "Exclude melee attacks from accuracy stats",
+    name        = "L4D2 Accuracy Stat Fix",
+    author      = "Rainy",
+    description = "근접무기와 전기톱을 명중률 통계에서 제외합니다.",
     version     = "1.0.0",
-    url         = ""
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_accuracy_stat_fix"
 };
 
 public void OnPluginStart()
@@ -19,11 +19,9 @@ public Action Event_WeaponFire(Event event, const char[] name, bool dontBroadcas
     char weapon[32];
     event.GetString("weapon", weapon, sizeof(weapon));
 
-    // 근접무기면 통계 이벤트 자체를 막음
-    if (StrEqual(weapon, "melee"))
+    if (StrEqual(weapon, "melee") || StrEqual(weapon, "chainsaw"))
     {
         return Plugin_Handled;
     }
-
     return Plugin_Continue;
 }
