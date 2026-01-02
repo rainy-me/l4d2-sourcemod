@@ -137,8 +137,11 @@ python 03_uninstall.py
 20. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-21. lagpreventor
+21. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
+
+22. l4d2_tickrate_sg552_fix  
+    <https://forums.alliedmods.net/showthread.php?t=322141>
 
 ### D. 종속 플러그인
 
