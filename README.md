@@ -113,25 +113,28 @@ python 03_uninstall.py
 12. l4d2_fix_jockey_hitbox  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-13. l4d2_jockey_jumpcap_patch  
+13. l4d2_charge_target_fix  
+    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
+
+14. l4d2_jockey_jumpcap_patch  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-14. Hunter_pounce_alignment_fix  
+15. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-15. Explosion Announcer  
+16. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-16. Throwable Announcer  
+17. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-17. Shove Direction Fix  
+18. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-18. l4d2_bugfix_deathspit  
+19. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-19. lagpreventor
+20. lagpreventor
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
 ### D. 종속 플러그인
