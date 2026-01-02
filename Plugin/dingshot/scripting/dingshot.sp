@@ -16,13 +16,46 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/dingshot"
 };
 
-char g_sHeadshotSound[64] = "level/bell_normal.wav";
+ConVar g_hCvarEnabled;
+char   g_sHeadshotSound[64] = "level/bell_normal.wav";
 
 public void OnPluginStart()
+{
+    g_hCvarEnabled = CreateConVar("dingshot_enabled", "1",
+                                  "0 = Plugin OFF, 1 = Plugin ON",
+                                  FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hCvarEnabled.AddChangeHook(OnConVarChanged);
+    AutoExecConfig(true, "dingshot");
+
+    if (g_hCvarEnabled.BoolValue)
+    {
+        EnableDingshot();
+    }
+}
+
+void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+    if (g_hCvarEnabled.BoolValue)
+    {
+        EnableDingshot();
+    }
+    else
+    {
+        DisableDingshot();
+    }
+}
+
+void EnableDingshot()
 {
     PrecacheSound(g_sHeadshotSound, false);
     HookEvent("player_hurt", HeadShotHook, EventHookMode_Pre);
     HookEvent("infected_hurt", HeadShotHook, EventHookMode_Pre);
+}
+
+void DisableDingshot()
+{
+    UnhookEvent("player_hurt", HeadShotHook, EventHookMode_Pre);
+    UnhookEvent("infected_hurt", HeadShotHook, EventHookMode_Pre);
 }
 
 void HeadShotHook(Event event, const char[] name, bool dontBroadcast)
