@@ -51,7 +51,7 @@ public void OnPluginStart()
     HookEvent("weapon_fire", eventWeaponFire);
 }
 
-public Action eventWeaponFire(Event event, const char[] name, bool dontBroadcast)
+public void eventWeaponFire(Event event, const char[] name, bool dontBroadcast)
 {
     if (event.GetInt("weaponid") != 34)
         return;
