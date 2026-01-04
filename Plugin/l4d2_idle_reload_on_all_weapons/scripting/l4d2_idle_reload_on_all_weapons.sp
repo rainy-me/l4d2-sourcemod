@@ -12,7 +12,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Reload On All Weapons",
     author      = "Rainy",
     description = "모든 무기에서 유휴 장전이 가능하도록 합니다.",
-    version     = "1.0.1",
+    version     = "1.0.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_reload_on_all_weapons"
 };
 
@@ -86,7 +86,7 @@ public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcas
     }
 
     // 현재 활성화된 무기의 슬롯 찾기
-    for (int i = 0; i <= MAX_WEAPON_SLOTS; i++)
+    for (int i = 0; i < MAX_WEAPON_SLOTS; i++)
     {
         int weaponInSlot = GetPlayerWeaponSlot(client, i);
         if (weaponInSlot == activeWeapon)
