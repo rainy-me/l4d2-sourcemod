@@ -73,6 +73,9 @@ python 03_uninstall.py
 8. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
    근접무기와 전기톱을 명중률 통계에서 제외합니다.
 
+9. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+   탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
+
 ### C. 공개 플러그인
 
 1. Tickrate Enabler  
