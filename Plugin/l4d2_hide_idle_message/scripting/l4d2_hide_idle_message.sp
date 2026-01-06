@@ -9,7 +9,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Hide Idle Message",
     author      = "Rainy",
-    description = "유휴 상태 메시지를 채팅창에 표시하지 않습니다.",
+    description = "유휴 상태 메시지를 채팅창에 표시하지 않도록 합니다.",
     version     = "1.0.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_hide_idle_message"
 };

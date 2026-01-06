@@ -50,7 +50,7 @@ python 03_uninstall.py
 ### A. 자작 플러그인
 
 1. [l4d2_hide_idle_message](/Plugin/l4d2_hide_idle_message/)  
-   유휴 상태 메시지를 채팅창에 표시하지 않습니다.
+   유휴 상태 메시지를 채팅창에 표시하지 않도록 합니다.
 
 2. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
    모든 무기에서 유휴 장전이 가능하도록 합니다.
@@ -105,7 +105,7 @@ python 03_uninstall.py
 9. firebulletsfix  
    <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
 
-10. l4d_witch_retreat_panic_fix
+10. l4d_witch_retreat_panic_fix  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_witch_retreat_panic_fix>
 
 11. l4d_death_item_glow (보조무기 glow 추가)  
