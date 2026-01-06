@@ -12,7 +12,7 @@ public Plugin myinfo =
     name        = "L4D2 Tank Props Glow",
     author      = "Rainy",
     description = "탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_props_glow"
 };
 
@@ -63,6 +63,9 @@ void CheckTanksAndRemoveGlow()
 
 void ToggleTankPropsGlow(bool enable)
 {
+    int color[3];
+    GetColor(color);
+
     int entity = -1;
     while ((entity = FindEntityByClassname(entity, "prop_physics")) != -1)
     {
@@ -70,8 +73,6 @@ void ToggleTankPropsGlow(bool enable)
         {
             if (enable)
             {
-                int color[3];
-                GetColor(color);
                 L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hCvarGlowRange.IntValue,
                                    0, color, g_hCvarFlashing.BoolValue);
             }
@@ -89,8 +90,6 @@ void ToggleTankPropsGlow(bool enable)
         {
             if (enable)
             {
-                int color[3];
-                GetColor(color);
                 L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hCvarGlowRange.IntValue,
                                    0, color, g_hCvarFlashing.BoolValue);
             }
