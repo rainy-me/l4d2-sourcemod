@@ -25,7 +25,7 @@ public void OnPluginStart()
     HookUserMessage(msgId, HideIdleMessage, true);
 }
 
-public Action HideIdleMessage(UserMsg msg_id, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
+Action HideIdleMessage(UserMsg msg_id, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
 {
     char token[128];
     if (BfReadString(msg, token, sizeof(token)) < 0)

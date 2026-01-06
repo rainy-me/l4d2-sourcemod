@@ -14,7 +14,7 @@ public void OnPluginStart()
     HookEvent("weapon_fire", Event_WeaponFire, EventHookMode_Pre);
 }
 
-public Action Event_WeaponFire(Event event, const char[] name, bool dontBroadcast)
+Action Event_WeaponFire(Event event, const char[] name, bool dontBroadcast)
 {
     char weapon[32];
     event.GetString("weapon", weapon, sizeof(weapon));

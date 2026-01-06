@@ -61,7 +61,7 @@ public void OnPluginStart()
     HookEvent("weapon_pickup", Event_ResetPlayerState);
 }
 
-public void Event_ResetPlayerState(Event event, const char[] name, bool dontBroadcast)
+void Event_ResetPlayerState(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (client > 0)
@@ -70,7 +70,7 @@ public void Event_ResetPlayerState(Event event, const char[] name, bool dontBroa
     }
 }
 
-public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
+void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (client <= 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
@@ -117,7 +117,7 @@ public void Event_WeaponReload(Event event, const char[] name, bool dontBroadcas
     g_fStateTimeout[client] = GetGameTime() + RELOAD_TIMEOUT;
 }
 
-public void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
+void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("player"));
     if (client <= 0 || !IsClientInGame(client) || !IsPlayerAlive(client))

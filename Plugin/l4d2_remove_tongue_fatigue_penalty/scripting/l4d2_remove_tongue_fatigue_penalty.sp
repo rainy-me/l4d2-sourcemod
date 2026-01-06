@@ -12,25 +12,25 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_remove_tongue_fatigue_penalty"
 };
 
-ConVar g_hTongueReleaseFatigue = null;
+ConVar g_hTongueReleaseFatiguePenalty = null;
 
 public void OnPluginStart()
 {
-    g_hTongueReleaseFatigue = FindConVar("tongue_release_fatigue_penalty");
-    if (g_hTongueReleaseFatigue == null)
+    g_hTongueReleaseFatiguePenalty = FindConVar("tongue_release_fatigue_penalty");
+    if (g_hTongueReleaseFatiguePenalty == null)
     {
         SetFailState("Could not find ConVar 'tongue_release_fatigue_penalty'");
     }
 
-    SetConVarInt(g_hTongueReleaseFatigue, 0);
+    SetConVarInt(g_hTongueReleaseFatiguePenalty, 0);
     PrintToServer("Set 'tongue_release_fatigue_penalty' to 0");
 }
 
 // 맵 로드 시에도 값을 유지
 public void OnConfigsExecuted()
 {
-    if (g_hTongueReleaseFatigue != null)
+    if (g_hTongueReleaseFatiguePenalty != null)
     {
-        SetConVarInt(g_hTongueReleaseFatigue, 0);
+        SetConVarInt(g_hTongueReleaseFatiguePenalty, 0);
     }
 }
