@@ -32,14 +32,12 @@ public void OnPluginStart()
     if (PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CTerrorGun::CycleZoom") == false)
     {
         SetFailState("Failed to find signature: \"CTerrorGun::CycleZoom\"");
-        return;
     }
 
     hCycleZoom = EndPrepSDKCall();
     if (hCycleZoom == null)
     {
         SetFailState("Failed to create SDKCall: \"CTerrorGun::CycleZoom\"");
-        return;
     }
 
     hZoomPatch = MemoryPatch.CreateFromConf(hGameData, "zoom");

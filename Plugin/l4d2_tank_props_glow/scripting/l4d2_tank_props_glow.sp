@@ -127,7 +127,6 @@ void GetColor(int color[3])
     if (!StringToColor(sColor, color))
     {
         SetFailState("Invalid color format.");
-        return;
     }
 }
 
