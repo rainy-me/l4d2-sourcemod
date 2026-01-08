@@ -76,6 +76,9 @@ python 03_uninstall.py
 9. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
    탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
+10. [l4d2_force_idle](/Plugin/l4d2_force_idle)  
+    강제 유휴모드 전환 (사용법: bind <키> "say /idle")
+
 ### C. 공개 플러그인
 
 1. Tickrate Enabler  
