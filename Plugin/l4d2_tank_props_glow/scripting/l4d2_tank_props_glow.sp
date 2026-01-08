@@ -12,7 +12,7 @@ public Plugin myinfo =
     name        = "L4D2 Tank Props Glow",
     author      = "Rainy",
     description = "탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.",
-    version     = "1.0.1",
+    version     = "1.0.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_props_glow"
 };
 
@@ -25,7 +25,7 @@ public void OnPluginStart()
     g_hCvarGlowColor = CreateConVar("l4d2_tank_props_glow_color", "255 0 0",
                                     "Glow color (RGB) for props.",
                                     FCVAR_NONE);
-    g_hCvarGlowRange = CreateConVar("l4d2_tank_props_glow_range", "1800",
+    g_hCvarGlowRange = CreateConVar("l4d2_tank_props_glow_range", "800",
                                     "Glow range for props. (0 = unlimited)",
                                     FCVAR_NONE, true, 0.0);
     g_hCvarFlashing  = CreateConVar("l4d2_tank_props_glow_flashing", "0",
