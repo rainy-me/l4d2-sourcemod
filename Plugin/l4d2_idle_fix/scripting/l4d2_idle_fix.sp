@@ -6,16 +6,16 @@
 
 public Plugin myinfo =
 {
-    name        = "L4D2 Force Idle",
+    name        = "L4D2 Idle Fix",
     author      = "Rainy",
-    description = "강제 유휴모드 전환",
+    description = "유휴 명령 미인식 문제를 해결합니다.",
     version     = "1.0.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_force_idle"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
 };
 
 public void OnPluginStart()
 {
-    RegConsoleCmd("sm_idle", Cmd_ForceIdle, "Force the player into idle mode");
+    RegConsoleCmd("go_away_from_keyboard", Cmd_ForceIdle, "Override with forced idle mode.");
 }
 
 Action Cmd_ForceIdle(int client, int args)
@@ -29,10 +29,6 @@ Action Cmd_ForceIdle(int client, int args)
         return Plugin_Handled;
     }
 
-    if (!L4D_GoAwayFromKeyboard(client))
-    {
-        PrintToChat(client, "ForceIdle: Failed L4D_GoAwayFromKeyboard, trying FakeClientCommandEx.");
-        FakeClientCommandEx(client, "go_away_from_keyboard");
-    }
+    L4D_GoAwayFromKeyboard(client);
     return Plugin_Handled;
 }
