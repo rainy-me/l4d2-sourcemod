@@ -9,18 +9,22 @@ public Plugin myinfo =
     name        = "L4D2 Idle Fix",
     author      = "Rainy",
     description = "유휴 명령 미인식 문제를 해결합니다.",
-    version     = "1.1.0",
+    version     = "1.2.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
 };
 
 ConVar g_hCoolDown;
+ConVar g_hCoolDownMessage;
 float  g_fLastUseTime[MAXPLAYERS + 1] = { 0.0, ... };
 
 public void OnPluginStart()
 {
-    g_hCoolDown = CreateConVar("l4d2_idle_fix_cooldown_time", "0.0",
-                               "Cooldown time in seconds a player can use the idle command again.",
-                               FCVAR_NOTIFY, true, 0.0);
+    g_hCoolDown        = CreateConVar("l4d2_idle_fix_cooldown_time", "0.0",
+                                      "Cooldown time in seconds a player can use the idle command again.",
+                                      FCVAR_NOTIFY, true, 0.0);
+    g_hCoolDownMessage = CreateConVar("l4d2_idle_fix_cooldown_message", "1",
+                                      "Enable/Disable cooldown message when a player tries to use the idle command during cooldown.\n1 = Enable, 0 = Disable.",
+                                      FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_idle_fix");
 
     RegConsoleCmd("go_away_from_keyboard", Cmd_ForceIdle, "Override with forced idle mode.");
@@ -49,7 +53,10 @@ Action Cmd_ForceIdle(int client, int args)
 
     if (GetEngineTime() < g_fLastUseTime[client] + g_hCoolDown.FloatValue)
     {
-        PrintToChat(client, "Idle Cooldown.");
+        if (g_hCoolDownMessage.BoolValue)
+        {
+            PrintToChat(client, "Idle Cooldown.");
+        }
         return Plugin_Handled;
     }
 
