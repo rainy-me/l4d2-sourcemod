@@ -49,7 +49,7 @@ Action Cmd_ForceIdle(int client, int args)
 
     if (GetEngineTime() < g_fLastUseTime[client] + g_hCoolDown.FloatValue)
     {
-        PrintToChat(client, "Idle Cooldown!");
+        PrintToChat(client, "Idle Cooldown.");
         return Plugin_Handled;
     }
 
