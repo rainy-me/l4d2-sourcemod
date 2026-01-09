@@ -14,8 +14,8 @@ public Plugin myinfo =
 };
 
 bool   g_bLate;
-ConVar g_hCvarEnabled;
-ConVar g_hCvarAssaultInterval;
+ConVar g_hEnabled;
+ConVar g_hAssaultInterval;
 Handle g_hAssaultTimer = INVALID_HANDLE;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -32,14 +32,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-    g_hCvarEnabled         = CreateConVar("si_assault_enabled", "1",
-                                          "0 = Plugin OFF, 1 = Plugin ON",
-                                          FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hCvarAssaultInterval = CreateConVar("si_assault_interval", "10.0",
-                                          "SI bot assault command execution interval (seconds)",
-                                          FCVAR_NOTIFY, true, 0.1);
-    g_hCvarEnabled.AddChangeHook(OnConVarChanged);
-    g_hCvarAssaultInterval.AddChangeHook(OnConVarChanged);
+    g_hEnabled         = CreateConVar("si_assault_enabled", "1",
+                                      "0 = Plugin OFF, 1 = Plugin ON",
+                                      FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hAssaultInterval = CreateConVar("si_assault_interval", "10.0",
+                                      "SI bot assault command execution interval (seconds)",
+                                      FCVAR_NOTIFY, true, 0.1);
+    g_hEnabled.AddChangeHook(OnConVarChanged);
+    g_hAssaultInterval.AddChangeHook(OnConVarChanged);
     AutoExecConfig(true, "l4d2_si_assault");
 
     LateLoad();
@@ -47,18 +47,18 @@ public void OnPluginStart()
 
 void LateLoad()
 {
-    if (g_hCvarEnabled.BoolValue && g_bLate && L4D_HasAnySurvivorLeftSafeArea())
+    if (g_hEnabled.BoolValue && g_bLate && L4D_HasAnySurvivorLeftSafeArea())
     {
-        g_hAssaultTimer = CreateTimer(g_hCvarAssaultInterval.FloatValue, Timer_ForceExecuteAssault,
+        g_hAssaultTimer = CreateTimer(g_hAssaultInterval.FloatValue, Timer_ForceExecuteAssault,
                                       _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 
 public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
 {
-    if (g_hCvarEnabled.BoolValue)
+    if (g_hEnabled.BoolValue)
     {
-        g_hAssaultTimer = CreateTimer(g_hCvarAssaultInterval.FloatValue, Timer_ForceExecuteAssault,
+        g_hAssaultTimer = CreateTimer(g_hAssaultInterval.FloatValue, Timer_ForceExecuteAssault,
                                       _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
     }
 }
@@ -70,7 +70,7 @@ void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue
         KillTimer(g_hAssaultTimer);
     }
 
-    if (g_hCvarEnabled.BoolValue && L4D_HasAnySurvivorLeftSafeArea())
+    if (g_hEnabled.BoolValue && L4D_HasAnySurvivorLeftSafeArea())
     {
         g_hAssaultTimer = CreateTimer(StringToFloat(newValue), Timer_ForceExecuteAssault,
                                       _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);

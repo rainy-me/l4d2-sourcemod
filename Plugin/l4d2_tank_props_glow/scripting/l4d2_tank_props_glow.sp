@@ -16,21 +16,21 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_props_glow"
 };
 
-ConVar g_hCvarGlowColor;
-ConVar g_hCvarGlowRange;
-ConVar g_hCvarFlashing;
+ConVar g_hGlowColor;
+ConVar g_hGlowRange;
+ConVar g_hFlashing;
 
 public void OnPluginStart()
 {
-    g_hCvarGlowColor = CreateConVar("l4d2_tank_props_glow_color", "255 0 0",
-                                    "Glow color (RGB) for props.",
-                                    FCVAR_NONE);
-    g_hCvarGlowRange = CreateConVar("l4d2_tank_props_glow_range", "800",
-                                    "Glow range for props. (0 = unlimited)",
-                                    FCVAR_NONE, true, 0.0);
-    g_hCvarFlashing  = CreateConVar("l4d2_tank_props_glow_flashing", "0",
-                                    "Flashing glow effect for props. (0 = disabled, 1 = enabled)",
-                                    FCVAR_NONE, true, 0.0, true, 1.0);
+    g_hGlowColor = CreateConVar("l4d2_tank_props_glow_color", "255 0 0",
+                                "Glow color (RGB) for props.",
+                                FCVAR_NONE);
+    g_hGlowRange = CreateConVar("l4d2_tank_props_glow_range", "800",
+                                "Glow range for props. (0 = unlimited)",
+                                FCVAR_NONE, true, 0.0);
+    g_hFlashing  = CreateConVar("l4d2_tank_props_glow_flashing", "0",
+                                "Flashing glow effect for props. (0 = disabled, 1 = enabled)",
+                                FCVAR_NONE, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_tank_props_glow");
 
     HookEvent("tank_spawn", Event_TankSpawn);
@@ -73,8 +73,8 @@ void ToggleTankPropsGlow(bool enable)
         {
             if (enable)
             {
-                L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hCvarGlowRange.IntValue,
-                                   0, color, g_hCvarFlashing.BoolValue);
+                L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hGlowRange.IntValue,
+                                   0, color, g_hFlashing.BoolValue);
             }
             else
             {
@@ -90,8 +90,8 @@ void ToggleTankPropsGlow(bool enable)
         {
             if (enable)
             {
-                L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hCvarGlowRange.IntValue,
-                                   0, color, g_hCvarFlashing.BoolValue);
+                L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hGlowRange.IntValue,
+                                   0, color, g_hFlashing.BoolValue);
             }
             else
             {
@@ -123,7 +123,7 @@ bool IsTankProp(int entity)
 void GetColor(int color[3])
 {
     char sColor[12];
-    g_hCvarGlowColor.GetString(sColor, sizeof(sColor));
+    g_hGlowColor.GetString(sColor, sizeof(sColor));
     if (!StringToColor(sColor, color))
     {
         SetFailState("Invalid color format.");

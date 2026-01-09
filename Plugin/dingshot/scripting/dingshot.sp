@@ -16,18 +16,18 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/dingshot"
 };
 
-ConVar g_hCvarEnabled;
+ConVar g_hEnabled;
 char   g_sHeadshotSound[64] = "level/bell_normal.wav";
 
 public void OnPluginStart()
 {
-    g_hCvarEnabled = CreateConVar("dingshot_enabled", "1",
-                                  "0 = Plugin OFF, 1 = Plugin ON",
-                                  FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hCvarEnabled.AddChangeHook(OnConVarChanged);
+    g_hEnabled = CreateConVar("dingshot_enabled", "1",
+                              "0 = Plugin OFF, 1 = Plugin ON",
+                              FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hEnabled.AddChangeHook(OnConVarChanged);
     AutoExecConfig(true, "dingshot");
 
-    if (g_hCvarEnabled.BoolValue)
+    if (g_hEnabled.BoolValue)
     {
         EnableDingshot();
     }
@@ -35,7 +35,7 @@ public void OnPluginStart()
 
 void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-    if (g_hCvarEnabled.BoolValue)
+    if (g_hEnabled.BoolValue)
     {
         EnableDingshot();
     }
