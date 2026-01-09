@@ -12,30 +12,37 @@ public Plugin myinfo =
     name        = "L4D2 Tank Props Glow",
     author      = "Rainy",
     description = "탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.",
-    version     = "1.0.2",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_props_glow"
 };
 
+ConVar g_hEnabled;
 ConVar g_hGlowColor;
 ConVar g_hGlowRange;
 ConVar g_hFlashing;
 
 public void OnPluginStart()
 {
+    g_hEnabled   = CreateConVar("l4d2_tank_props_glow_enabled", "1",
+                                "0 = Plugin Off, 1 = Plugin On",
+                                FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hGlowColor = CreateConVar("l4d2_tank_props_glow_color", "255 0 0",
                                 "Glow color (RGB) for props.",
-                                FCVAR_NONE);
+                                FCVAR_NOTIFY);
     g_hGlowRange = CreateConVar("l4d2_tank_props_glow_range", "800",
                                 "Glow range for props. (0 = unlimited)",
-                                FCVAR_NONE, true, 0.0);
+                                FCVAR_NOTIFY, true, 0.0);
     g_hFlashing  = CreateConVar("l4d2_tank_props_glow_flashing", "0",
                                 "Flashing glow effect for props. (0 = disabled, 1 = enabled)",
-                                FCVAR_NONE, true, 0.0, true, 1.0);
+                                FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_tank_props_glow");
 
-    HookEvent("tank_spawn", Event_TankSpawn);
-    HookEvent("tank_killed", Event_TankKilled);
-    HookEvent("round_end", Event_RoundEnd);
+    if (g_hEnabled.BoolValue)
+    {
+        HookEvent("tank_spawn", Event_TankSpawn);
+        HookEvent("tank_killed", Event_TankKilled);
+        HookEvent("round_end", Event_RoundEnd);
+    }
 }
 
 void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
