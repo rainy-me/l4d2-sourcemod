@@ -1,0 +1,14 @@
+"Phrases"
+{
+    "Cooldown Message"
+    {
+        "en"    "Idle Cooldown."
+        "ko"    "유휴 쿨다운."
+
+    }
+    "Idle Message"
+    {
+        "en"    "%N is now idle."
+        "ko"    "%N 님이 유휴 상태입니다."
+    }
+}

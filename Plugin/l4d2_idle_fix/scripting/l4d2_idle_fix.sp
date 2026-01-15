@@ -9,21 +9,27 @@ public Plugin myinfo =
     name        = "L4D2 Idle Fix",
     author      = "Rainy",
     description = "유휴 명령 미인식 문제를 해결합니다.",
-    version     = "1.2.1",
+    version     = "1.3.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
 };
 
-ConVar g_hCoolDown;
-ConVar g_hCoolDownMessage;
+ConVar g_hIdleMessage;
+ConVar g_hCooldownTime;
+ConVar g_hCooldownMessage;
 float  g_fLastUseTime[MAXPLAYERS + 1] = { 0.0, ... };
 
 public void OnPluginStart()
 {
-    g_hCoolDown        = CreateConVar("l4d2_idle_fix_cooldown_time", "0.25",
+    LoadTranslations("l4d2_idle_fix.phrases");
+
+    g_hIdleMessage     = CreateConVar("l4d2_idle_fix_idle_message", "0",
+                                      "ON/OFF idle message. (1=ON, 0=OFF)",
+                                      FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hCooldownTime    = CreateConVar("l4d2_idle_fix_cooldown_time", "0.25",
                                       "Cooldown time in seconds a player can use the idle command again.",
                                       FCVAR_NOTIFY, true, 0.0);
-    g_hCoolDownMessage = CreateConVar("l4d2_idle_fix_cooldown_message", "0",
-                                      "Enable/Disable cooldown message when a player tries to use the idle command during cooldown.\n1 = Enable, 0 = Disable.",
+    g_hCooldownMessage = CreateConVar("l4d2_idle_fix_cooldown_message", "0",
+                                      "ON/OFF cooldown message. (1=ON, 0=OFF)",
                                       FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_idle_fix");
 
@@ -51,16 +57,20 @@ Action Cmd_ForceIdle(int client, int args)
         return Plugin_Handled;
     }
 
-    if (GetEngineTime() < g_fLastUseTime[client] + g_hCoolDown.FloatValue)
+    if (GetEngineTime() < g_fLastUseTime[client] + g_hCooldownTime.FloatValue)
     {
-        if (g_hCoolDownMessage.BoolValue)
+        if (g_hCooldownMessage.BoolValue)
         {
-            PrintToChat(client, "Idle Cooldown.");
+            PrintToChat(client, "%t", "Cooldown Message");
         }
         return Plugin_Handled;
     }
 
     L4D_GoAwayFromKeyboard(client);
+    if (g_hIdleMessage.BoolValue)
+    {
+        PrintToChatAll("%t", "Idle Message", client);
+    }
     g_fLastUseTime[client] = GetEngineTime();
     return Plugin_Handled;
 }
