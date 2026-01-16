@@ -70,13 +70,16 @@ python 03_uninstall.py
 7. [dingshot](/Plugin/dingshot/)  
    헤드샷 시 띵 소리를 출력합니다.
 
-8. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+8. [l4d2_tickrate_convar_manager](/Plugin/l4d2_tickrate_convar_manager/)  
+   틱레이트와 관련된 convar를 관리합니다.
+
+9. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
    틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-9. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
-   근접무기와 전기톱을 명중률 통계에서 제외합니다.
+10. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
+    근접무기와 전기톱을 명중률 통계에서 제외합니다.
 
-10. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+11. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
 ### C. 공개 플러그인
@@ -155,19 +158,22 @@ python 03_uninstall.py
 1. l4dtoolz  
    <https://github.com/accelerator74/l4dtoolz/releases>
 
-2. SourceScramble  
+2. Tickrate Enabler  
+   <https://github.com/accelerator74/Tickrate-Enabler>
+
+3. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-3. Use Priority Patch  
+4. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
-4. Multi Colors  
+5. Multi Colors  
    <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
 
-5. Left4DHooks  
+6. Left4DHooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
 
-6. Actions  
+7. Actions  
    <https://forums.alliedmods.net/showthread.php?p=2771520>
 
 ## Rainy's 리포지토리
