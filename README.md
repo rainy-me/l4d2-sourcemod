@@ -70,96 +70,90 @@ python 03_uninstall.py
 7. [dingshot](/Plugin/dingshot/)  
    헤드샷 시 띵 소리를 출력합니다.
 
-8. [l4d2_tickrate_convar_manager](/Plugin/l4d2_tickrate_convar_manager/)  
-   틱레이트와 관련된 convar를 관리합니다.
-
-9. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+8. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
    틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-10. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
-    근접무기와 전기톱을 명중률 통계에서 제외합니다.
+9. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
+   근접무기와 전기톱을 명중률 통계에서 제외합니다.
 
-11. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+10. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
 ### C. 공개 플러그인
 
-1. Tickrate Enabler  
-   <https://forums.alliedmods.net/showthread.php?t=333408>
-
-2. l4d2_item_hint  
+1. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-3. l4d2_skill_detect  
+2. l4d2_skill_detect  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
 
-4. l4dffannounce  
+3. l4dffannounce  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-5. kills  
+4. kills  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/kills>
 
-6. trigger_horde_notify  
+5. trigger_horde_notify  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
-7. drop_secondary (forward 생성)  
+6. drop_secondary (forward 생성)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/drop_secondary>
 
-8. firebulletsfix  
+7. firebulletsfix  
    <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
 
-9. l4d_witch_retreat_panic_fix  
+8. l4d_witch_retreat_panic_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_witch_retreat_panic_fix>
 
-10. l4d_ai_hunter_skeet_dmg_fix  
-    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
+9. l4d_ai_hunter_skeet_dmg_fix  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
 
-11. l4d_death_item_glow (보조무기 glow 추가)  
+10. l4d_death_item_glow (보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-12. l4d_fix_common_shove  
+11. l4d_fix_common_shove  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_common_shove>
 
-13. l4d2_fix_jockey_hitbox  
+12. l4d2_fix_jockey_hitbox  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-14. l4d2_charge_target_fix  
+13. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-15. l4d_tongue_float_fix  
+14. l4d_tongue_float_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tongue_float_fix>
 
-16. l4d2_jockey_jumpcap_patch  
+15. l4d2_jockey_jumpcap_patch  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-17. Hunter_pounce_alignment_fix  
+16. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-18. Explosion Announcer  
+17. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-19. Throwable Announcer  
+18. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-20. Shove Direction Fix  
+19. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-21. l4d2_bugfix_deathspit  
+20. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-22. lagpreventor  
+21. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-23. l4d2_tickrate_sg552_fix  
+22. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
 ### D. 종속 플러그인
 
-1. l4dtoolz  
-   <https://github.com/accelerator74/l4dtoolz/releases>
-
-2. Tickrate Enabler  
+1. Tickrate Enabler  
    <https://github.com/accelerator74/Tickrate-Enabler>
+
+2. l4dtoolz  
+   <https://github.com/accelerator74/l4dtoolz/releases>
 
 3. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
