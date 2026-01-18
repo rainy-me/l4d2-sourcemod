@@ -24,7 +24,7 @@ public void OnPluginStart()
     LoadTranslations("l4d2_idle_fix.phrases");
 
     g_hIdleSolo        = CreateConVar("l4d2_idle_fix_idle_solo", "1",
-                                      "Allow idle command in solo. (1=ON, 0=OFF)",
+                                      "ON/OFF idle command in solo. (1=ON, 0=OFF)",
                                       FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hIdleMessage     = CreateConVar("l4d2_idle_fix_idle_message", "0",
                                       "ON/OFF idle message. (1=ON, 0=OFF)",
