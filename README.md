@@ -61,20 +61,23 @@ python 03_uninstall.py
 4. [l4d2_idle_unlock](/Plugin/l4d2_idle_unlock/)  
    플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.
 
-5. [l4d2_si_assault](/Plugin/l4d2_si_assault/)  
+5. [l4d2_idle_flashlight_fix](/Plugin/l4d2_idle_flashlight_fix/)  
+   유휴 전 손전등 on/off 상태를 유휴 후에도 유지합니다.
+
+6. [l4d2_si_assault](/Plugin/l4d2_si_assault/)  
    모든 SI 봇이 대기하지 않고 생존자를 적극적으로 공격합니다.
 
-6. [dingshot](/Plugin/dingshot/)  
+7. [dingshot](/Plugin/dingshot/)  
    헤드샷 시 띵 소리를 출력합니다.
 
-7. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+8. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
    틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-8. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
+9. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
    근접무기와 전기톱을 명중률 통계에서 제외합니다.
 
-9. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
-   탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
+10. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+    탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
 ### C. 공개 플러그인
 
