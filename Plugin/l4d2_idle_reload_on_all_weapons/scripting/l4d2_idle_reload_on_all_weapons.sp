@@ -12,7 +12,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Reload On All Weapons",
     author      = "Rainy",
     description = "모든 무기에서 유휴 장전이 가능하도록 합니다.",
-    version     = "1.0.2",
+    version     = "1.0.3",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_reload_on_all_weapons"
 };
 
@@ -30,7 +30,7 @@ float      g_fStateTimeout[MAXPLAYERS + 1] = { 0.0, ... };
 
 public void OnPluginStart()
 {
-    Handle hGameConf = LoadGameConfigFile("l4d2_idle_reload_on_all_weapons");
+    GameData hGameConf = LoadGameConfigFile("l4d2_idle_reload_on_all_weapons");
     if (hGameConf == null)
     {
         SetFailState("Failed to load game config file: l4d2_idle_reload_on_all_weapons.txt");
