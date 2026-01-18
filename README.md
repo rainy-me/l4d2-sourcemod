@@ -79,7 +79,7 @@ python 03_uninstall.py
 10. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-### C. 공개 플러그인
+### B. 공개 플러그인
 
 1. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
@@ -147,7 +147,7 @@ python 03_uninstall.py
 22. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
-### D. 종속 플러그인
+### C. 종속 플러그인
 
 1. Tickrate Enabler  
    <https://github.com/accelerator74/Tickrate-Enabler>
