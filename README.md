@@ -126,45 +126,45 @@ python 03_uninstall.py
 16. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-17. Explosion Announcer  
+17. Tickrate Enabler  
+    <https://forums.alliedmods.net/showthread.php?t=333408>
+
+18. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-18. Throwable Announcer  
+19. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-19. Shove Direction Fix  
+20. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-20. l4d2_bugfix_deathspit  
+21. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-21. lagpreventor  
+22. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-22. l4d2_tickrate_sg552_fix  
+23. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
 ### C. 종속 플러그인
 
-1. Tickrate Enabler  
-   <https://github.com/accelerator74/Tickrate-Enabler>
-
-2. l4dtoolz  
+1. l4dtoolz  
    <https://github.com/accelerator74/l4dtoolz/releases>
 
-3. SourceScramble  
+2. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-4. Use Priority Patch  
+3. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
-5. Multi Colors  
+4. Multi Colors  
    <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
 
-6. Left4DHooks  
+5. Left4DHooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
 
-7. Actions  
+6. Actions  
    <https://forums.alliedmods.net/showthread.php?p=2771520>
 
 ## Rainy's 리포지토리
