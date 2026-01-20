@@ -24,7 +24,7 @@ public void OnPluginStart()
     HookEvent("bot_player_replace", Event_ReturnFromIdle);
 }
 
-public void OnClientConnected(int client)
+public void OnClientPutInServer(int client)
 {
     g_bFlashlightState[client] = false;
 }
