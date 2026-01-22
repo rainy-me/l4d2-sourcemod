@@ -129,23 +129,26 @@ python 03_uninstall.py
 17. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-18. l4d2_bugfix_deathspit  
+18. Gear Transfer  
+    <https://forums.alliedmods.net/showthread.php?t=137616>
+
+19. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-19. l4d2_tickrate_sg552_fix  
+20. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
-20. lagpreventor  
+21. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-21. Shove Direction Fix  
+22. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
-
-22. Tickrate Enabler  
-    <https://forums.alliedmods.net/showthread.php?t=333408>
 
 23. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
+
+24. Tickrate Enabler  
+    <https://forums.alliedmods.net/showthread.php?t=333408>
 
 ### C. 종속 플러그인
 
