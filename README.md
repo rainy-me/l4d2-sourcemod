@@ -126,28 +126,31 @@ python 03_uninstall.py
 16. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-17. Explosion Announcer  
+17. spit_fizzle  
+    <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
+
+18. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-18. Gear Transfer  
+19. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-19. l4d2_bugfix_deathspit  
+20. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-20. l4d2_tickrate_sg552_fix  
+21. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
-21. lagpreventor  
+22. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-22. Shove Direction Fix  
+23. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-23. Throwable Announcer  
+24. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-24. Tickrate Enabler  
+25. Tickrate Enabler  
     <https://forums.alliedmods.net/showthread.php?t=333408>
 
 ### C. 종속 플러그인
@@ -164,10 +167,13 @@ python 03_uninstall.py
 4. Multi Colors  
    <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
 
-5. SourceScramble  
+5. neb_stocks  
+   <https://github.com/neburaii/l4d2-plugins/tree/main/neb_stocks/scripting/include>
+
+6. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-6. Use Priority Patch  
+7. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
 ## Rainy's 리포지토리
