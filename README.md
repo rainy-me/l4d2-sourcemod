@@ -123,34 +123,31 @@ python 03_uninstall.py
 15. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-16. si_audio  
-    <https://github.com/neburaii/l4d2-plugins/tree/main/si_audio>
-
-17. spit_fizzle  
+16. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-18. Explosion Announcer  
+17. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-19. Gear Transfer  
+18. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-20. l4d2_bugfix_deathspit  
+19. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-21. l4d2_tickrate_sg552_fix  
+20. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
-22. lagpreventor  
+21. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-23. Shove Direction Fix  
+22. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-24. Throwable Announcer  
+23. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-25. Tickrate Enabler  
+24. Tickrate Enabler  
     <https://forums.alliedmods.net/showthread.php?t=333408>
 
 ### C. 종속 플러그인
