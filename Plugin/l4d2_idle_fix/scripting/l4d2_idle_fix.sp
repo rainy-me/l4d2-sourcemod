@@ -9,7 +9,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Fix",
     author      = "Rainy",
     description = "유휴 명령 미인식 문제를 해결합니다.",
-    version     = "1.4.0",
+    version     = "1.4.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
 };
 
@@ -52,7 +52,7 @@ public void OnClientDisconnect(int client)
 
 Action Cmd_ForceIdle(int client, int args)
 {
-    if (client <= 0 || !IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client))
+    if (!IsClient(client) || !IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client))
     {
         return Plugin_Handled;
     }
@@ -94,4 +94,9 @@ int GetAliveSurvivorCount()
         }
     }
     return count;
+}
+
+bool IsClient(int index)
+{
+    return index > 0 && index <= MaxClients;
 }

@@ -12,7 +12,7 @@ public Plugin myinfo =
     name        = "L4D2 Tank Props Glow",
     author      = "Rainy",
     description = "탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.",
-    version     = "1.1.0",
+    version     = "1.1.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_props_glow"
 };
 
@@ -167,10 +167,15 @@ bool IsAnyTankAlive()
 
 bool IsAliveTank(int client)
 {
-    return (IsClientInGame(client) && GetClientTeam(client) == TEAM_INFECTED && IsPlayerAlive(client) && IsTank(client));
+    return (IsClient(client) && IsClientInGame(client) && GetClientTeam(client) == TEAM_INFECTED && IsPlayerAlive(client) && IsTank(client));
 }
 
 bool IsTank(int client)
 {
     return (GetEntProp(client, Prop_Send, "m_zombieClass") == Z_TANK);
+}
+
+bool IsClient(int index)
+{
+    return index > 0 && index <= MaxClients;
 }

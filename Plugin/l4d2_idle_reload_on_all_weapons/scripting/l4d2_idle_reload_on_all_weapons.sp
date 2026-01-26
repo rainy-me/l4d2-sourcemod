@@ -12,7 +12,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Reload On All Weapons",
     author      = "Rainy",
     description = "모든 무기에서 유휴 장전이 가능하도록 합니다.",
-    version     = "1.0.3",
+    version     = "1.0.4",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_reload_on_all_weapons"
 };
 
@@ -64,7 +64,7 @@ public void OnPluginStart()
 void Event_ResetPlayerState(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
-    if (client > 0)
+    if (IsClient(client))
     {
         ResetPlayerState(client);
     }
@@ -73,7 +73,7 @@ void Event_ResetPlayerState(Event event, const char[] name, bool dontBroadcast)
 void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
-    if (client <= 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client))
     {
         return;
     }
@@ -120,7 +120,7 @@ void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
 void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("player"));
-    if (client <= 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client))
     {
         ResetPlayerState(client);
         return;
@@ -165,4 +165,9 @@ void InitializeIdleReloadableWeapons()
     g_smIdleReloadableWeapons.SetValue("weapon_smg", true);
     g_smIdleReloadableWeapons.SetValue("weapon_smg_silenced", true);
     g_smIdleReloadableWeapons.SetValue("weapon_smg_mp5", true);
+}
+
+bool IsClient(int index)
+{
+    return index > 0 && index <= MaxClients;
 }

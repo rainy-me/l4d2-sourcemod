@@ -11,7 +11,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Flashlight Fix",
     author      = "Rainy",
     description = "유휴 전 손전등 on/off 상태를 유휴 후에도 유지합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_flashlight_fix"
 };
 
@@ -32,7 +32,7 @@ public void OnClientPutInServer(int client)
 Action Event_GoIdle(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("player"));
-    if (client > 0 && IsClientInGame(client))
+    if (IsClient(client) && IsClientInGame(client))
     {
         int iEffects = GetEntProp(client, Prop_Send, "m_fEffects");
         if (iEffects & EF_DIMLIGHT)
@@ -50,7 +50,7 @@ Action Event_GoIdle(Event event, const char[] name, bool dontBroadcast)
 Action Event_ReturnFromIdle(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("player"));
-    if (IsValidClient(client))
+    if (IsValidAliveClient(client))
     {
         DataPack pack = CreateDataPack();
         pack.WriteCell(client);
@@ -67,7 +67,7 @@ void RestoreFlashlightState(DataPack pack)
     bool flashlight_state = pack.ReadCell();
     delete pack;
 
-    if (IsValidClient(client))
+    if (IsValidAliveClient(client))
     {
         int iEffects = GetEntProp(client, Prop_Send, "m_fEffects");
 
@@ -82,7 +82,12 @@ void RestoreFlashlightState(DataPack pack)
     }
 }
 
-bool IsValidClient(int client)
+bool IsValidAliveClient(int client)
 {
-    return (client > 0 && IsClientInGame(client) && IsPlayerAlive(client));
+    return (IsClient(client) && IsClientInGame(client) && IsPlayerAlive(client));
+}
+
+bool IsClient(int index)
+{
+    return index > 0 && index <= MaxClients;
 }
