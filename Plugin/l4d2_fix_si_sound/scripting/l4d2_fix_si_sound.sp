@@ -19,7 +19,7 @@ public Plugin myinfo =
 ConVar      g_hJockeyIdleSoundInterval;
 ConVar      g_hAutoConvars;
 
-bool        g_bEmitJockeyIdleSound = false;
+bool        g_bEmitJockeyIdleSound[MAXPLAYERS + 1] = { false, ... };
 Handle      g_hJockeySoundTimer[MAXPLAYERS + 1];
 static char g_sJockeySound[][] = {
     "player/jockey/voice/idle/jockey_recognize02.wav",
@@ -107,7 +107,7 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
         case L4D2ZombieClass_Jockey:
         {
             // 게임 엔진에서 재생하는 자키 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
-            if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bEmitJockeyIdleSound)
+            if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bEmitJockeyIdleSound[entity])
             {
                 return Plugin_Stop;
             }
@@ -210,10 +210,10 @@ void JockeyRideEnd_NextFrame(any userid)
 
 Action EmitJockeyIdleSound(Handle timer, any client)
 {
-    int rndPick            = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
-    g_bEmitJockeyIdleSound = true;
+    int rndPick                    = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
+    g_bEmitJockeyIdleSound[client] = true;
     EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
-    g_bEmitJockeyIdleSound = false;
+    g_bEmitJockeyIdleSound[client] = false;
 
     return Plugin_Continue;
 }
