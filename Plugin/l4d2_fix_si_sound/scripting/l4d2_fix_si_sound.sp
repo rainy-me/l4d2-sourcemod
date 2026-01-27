@@ -12,12 +12,13 @@ public Plugin myinfo =
 {
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
-    description = "특수좀비의 소리 문제를 해결합니다.",
+    description = "특수좀비의 소리 문제를 개선합니다.",
     version     = "1.0.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
-ConVar      g_hJockeyIdleSoundInterval = null;
+bool        g_bIsPluginEmitted = false;
+ConVar      g_hJockeyIdleSoundInterval;
 Handle      g_hJockeySoundTimer[MAXPLAYERS + 1];
 static char g_sJockeySound[][] = {
     "player/jockey/voice/idle/jockey_recognize02.wav",
@@ -69,7 +70,7 @@ public void OnMapStart()
 
 Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
-    if (entity <= 0 || !IsValidEntity(entity))
+    if (!IsValidEntity(entity))
     {
         return Plugin_Continue;
     }
@@ -82,6 +83,12 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
 
     // 자키가 생존자에게 올라타고 있지 않으면 공격 소리 막기 (불필요한 소리 호출 버그 해결)
     if (StrContains(sample, "player/jockey/voice/attack/jockey_attackloop", false) != -1 && L4D_GetVictimJockey(entity) == 0)
+    {
+        return Plugin_Stop;
+    }
+
+    // 게임 엔진에서 재생하는 자키 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
+    if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bIsPluginEmitted)
     {
         return Plugin_Stop;
     }
@@ -180,10 +187,13 @@ void JockeyRideEnd_NextFrame(any userid)
     }
 }
 
-Action delayedJockeySound(Handle timer, any client)
+Action EmitJockeySound(Handle timer, any client)
 {
-    int rndPick = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
+    int rndPick        = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
+    g_bIsPluginEmitted = true;
     EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
+    g_bIsPluginEmitted = false;
+
     return Plugin_Continue;
 }
 
@@ -196,7 +206,7 @@ void ChangeJockeyTimerStatus(int client, bool bEnable)
 
     if (bEnable)
     {
-        g_hJockeySoundTimer[client] = CreateTimer(g_hJockeyIdleSoundInterval.FloatValue, delayedJockeySound, client, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+        g_hJockeySoundTimer[client] = CreateTimer(g_hJockeyIdleSoundInterval.FloatValue, EmitJockeySound, client, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 
