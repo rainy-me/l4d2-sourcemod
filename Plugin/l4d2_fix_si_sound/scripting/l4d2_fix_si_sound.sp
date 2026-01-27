@@ -6,8 +6,6 @@
 #include <left4dhooks>
 
 #define TEAM_INFECTED 3
-#define ZC_SMOKER     1
-#define ZC_JOCKEY     5
 
 public Plugin myinfo =
 {
@@ -71,15 +69,15 @@ public void OnMapStart()
 
 Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
-    if (!IsValidEntity(entity) || GetClientTeam(entity) != TEAM_INFECTED)
+    if (!IsValidEntity(entity) || !IsClientInGame(entity) || GetClientTeam(entity) != TEAM_INFECTED)
     {
         return Plugin_Continue;
     }
 
-    int zClass = GetEntProp(entity, Prop_Send, "m_zombieClass");
+    int zClass = L4D2_GetPlayerZombieClass(entity);
     switch (zClass)
     {
-        case ZC_SMOKER:
+        case L4D2ZombieClass_Smoker:
         {
             // 스모커 타겟 포착 소리 막기 (타겟 포착 소리 재생 때문에 warn 소리가 차단되는 문제 해결)
             if (StrContains(sample, "player/smoker/voice/idle/smoker_spotprey", false) != -1)
@@ -87,7 +85,7 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
                 return Plugin_Stop;
             }
         }
-        case ZC_JOCKEY:
+        case L4D2ZombieClass_Jockey:
         {
             // 자키가 생존자에게 올라타고 있지 않으면 공격 소리 막기 (불필요한 소리 호출 버그 해결)
             if (StrContains(sample, "player/jockey/voice/attack/jockey_attackloop", false) != -1 && L4D_GetVictimJockey(entity) == 0)
@@ -126,7 +124,7 @@ void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast)
     {
         return;
     }
-    if (GetEntProp(client, Prop_Send, "m_zombieClass") != ZC_JOCKEY)
+    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Jockey)
     {
         return;
     }
@@ -189,7 +187,7 @@ void JockeyRideEnd_NextFrame(any userid)
     if (IsClient(client) && IsClientInGame(client) && IsPlayerAlive(client) && !GetEntProp(client, Prop_Send, "m_isGhost"))
     {
         // Resume our sound spam as the Jockey is still alive
-        if (GetClientTeam(client) == TEAM_INFECTED && GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_JOCKEY)
+        if (GetClientTeam(client) == TEAM_INFECTED && L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Jockey)
         {
             ChangeJockeyTimerStatus(client, true);
         }
