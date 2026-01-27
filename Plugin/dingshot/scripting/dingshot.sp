@@ -12,7 +12,7 @@ public Plugin myinfo =
     name        = "Dingshot",
     author      = "Rainy",
     description = "헤드샷 시 띵 소리를 출력합니다.",
-    version     = "1.1.0",
+    version     = "1.1.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/dingshot"
 };
 
@@ -64,7 +64,7 @@ void HeadShotHook(Event event, const char[] name, bool dontBroadcast)
     int hitgroup = event.GetInt("hitgroup");
     int type     = event.GetInt("type");
 
-    if (IsClientValid(attacker) && hitgroup == 1 && type != 8 && type != 2097152)
+    if (IsValidAliveClient(attacker) && hitgroup == 1 && type != 8 && type != 2097152)
     {
         // 8 == death by fire
         // 2097152 == death by slow burn
@@ -73,7 +73,12 @@ void HeadShotHook(Event event, const char[] name, bool dontBroadcast)
     }
 }
 
-bool IsClientValid(int client)
+bool IsValidAliveClient(int client)
 {
-    return client > 0 && client <= MaxClients && IsClientConnected(client) && IsClientInGame(client);
+    return (IsClient(client) && IsClientInGame(client) && IsPlayerAlive(client));
+}
+
+bool IsClient(int index)
+{
+    return index > 0 && index <= MaxClients;
 }
