@@ -6,6 +6,7 @@
 #include <left4dhooks>
 
 #define TEAM_INFECTED 3
+#define ZC_SMOKER     1
 #define ZC_JOCKEY     5
 
 public Plugin myinfo =
@@ -70,27 +71,35 @@ public void OnMapStart()
 
 Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
-    if (!IsValidEntity(entity))
+    if (!IsValidEntity(entity) || GetClientTeam(entity) != TEAM_INFECTED)
     {
         return Plugin_Continue;
     }
 
-    // 스모커 타겟 포착 소리 막기 (타겟 포착 소리 재생 때문에 warn 소리가 차단되는 문제 해결)
-    if (StrContains(sample, "player/smoker/voice/idle/smoker_spotprey", false) != -1)
+    int zClass = GetEntProp(entity, Prop_Send, "m_zombieClass");
+    switch (zClass)
     {
-        return Plugin_Stop;
-    }
-
-    // 자키가 생존자에게 올라타고 있지 않으면 공격 소리 막기 (불필요한 소리 호출 버그 해결)
-    if (StrContains(sample, "player/jockey/voice/attack/jockey_attackloop", false) != -1 && L4D_GetVictimJockey(entity) == 0)
-    {
-        return Plugin_Stop;
-    }
-
-    // 게임 엔진에서 재생하는 자키 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
-    if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bEmitJockeyIdleSound)
-    {
-        return Plugin_Stop;
+        case ZC_SMOKER:
+        {
+            // 스모커 타겟 포착 소리 막기 (타겟 포착 소리 재생 때문에 warn 소리가 차단되는 문제 해결)
+            if (StrContains(sample, "player/smoker/voice/idle/smoker_spotprey", false) != -1)
+            {
+                return Plugin_Stop;
+            }
+        }
+        case ZC_JOCKEY:
+        {
+            // 자키가 생존자에게 올라타고 있지 않으면 공격 소리 막기 (불필요한 소리 호출 버그 해결)
+            if (StrContains(sample, "player/jockey/voice/attack/jockey_attackloop", false) != -1 && L4D_GetVictimJockey(entity) == 0)
+            {
+                return Plugin_Stop;
+            }
+            // 게임 엔진에서 재생하는 자키 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
+            if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bEmitJockeyIdleSound)
+            {
+                return Plugin_Stop;
+            }
+        }
     }
 
     return Plugin_Continue;
