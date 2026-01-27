@@ -27,21 +27,17 @@ static char g_sJockeySound[][] = {
     "player/jockey/voice/idle/jockey_recognize09.wav",
     "player/jockey/voice/idle/jockey_recognize10.wav",
     "player/jockey/voice/idle/jockey_recognize11.wav",
-    "player/jockey/voice/idle/jockey_recognize12.wav",
     "player/jockey/voice/idle/jockey_recognize13.wav",
     "player/jockey/voice/idle/jockey_recognize15.wav",
     "player/jockey/voice/idle/jockey_recognize16.wav",
     "player/jockey/voice/idle/jockey_recognize17.wav",
-    "player/jockey/voice/idle/jockey_recognize18.wav",
-    "player/jockey/voice/idle/jockey_recognize19.wav",
-    "player/jockey/voice/idle/jockey_recognize20.wav",
-    "player/jockey/voice/idle/jockey_recognize24.wav"
+    "player/jockey/voice/idle/jockey_recognize18.wav"
 };
 
 public void OnPluginStart()
 {
-    g_hJockeyIdleSoundInterval = CreateConVar("jockey_idle_sound_interval", "2.0",
-                                              "Interval between forced jockey sounds.",
+    g_hJockeyIdleSoundInterval = CreateConVar("jockey_idle_sound_interval", "1.7",
+                                              "Interval between jockey idle sounds.",
                                               FCVAR_NOTIFY, true, 0.0);
     AutoExecConfig(true, "l4d2_fix_si_sound");
 
@@ -69,9 +65,15 @@ public void OnMapStart()
 
 Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
-    if (!IsValidEntity(entity) || !IsClientInGame(entity) || GetClientTeam(entity) != TEAM_INFECTED)
+    if (!IsClient(entity) || !IsClientInGame(entity) || GetClientTeam(entity) != TEAM_INFECTED)
     {
         return Plugin_Continue;
+    }
+
+    // 자키가 생존자에게 올라타고 있지 않으면 공격 소리 막기 (불필요한 소리 호출 버그 해결)
+    if (StrContains(sample, "player/jockey/voice/attack/jockey_attackloop", false) != -1 && L4D_GetVictimJockey(entity) == 0)
+    {
+        return Plugin_Stop;
     }
 
     int zClass = L4D2_GetPlayerZombieClass(entity);
@@ -87,11 +89,6 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
         }
         case L4D2ZombieClass_Jockey:
         {
-            // 자키가 생존자에게 올라타고 있지 않으면 공격 소리 막기 (불필요한 소리 호출 버그 해결)
-            if (StrContains(sample, "player/jockey/voice/attack/jockey_attackloop", false) != -1 && L4D_GetVictimJockey(entity) == 0)
-            {
-                return Plugin_Stop;
-            }
             // 게임 엔진에서 재생하는 자키 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
             if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bEmitJockeyIdleSound)
             {
