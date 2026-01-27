@@ -16,8 +16,10 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
-bool        g_bEmitJockeyIdleSound = false;
 ConVar      g_hJockeyIdleSoundInterval;
+ConVar      g_hAutoConvars;
+
+bool        g_bEmitJockeyIdleSound = false;
 Handle      g_hJockeySoundTimer[MAXPLAYERS + 1];
 static char g_sJockeySound[][] = {
     "player/jockey/voice/idle/jockey_recognize02.wav",
@@ -39,8 +41,12 @@ public void OnPluginStart()
     g_hJockeyIdleSoundInterval = CreateConVar("jockey_idle_sound_interval", "1.7",
                                               "Interval between jockey idle sounds.",
                                               FCVAR_NOTIFY, true, 0.0);
+    g_hAutoConvars             = CreateConVar("l4d2_fix_si_sound_auto_convars", "1",
+                                              "On/Off auto convars updater. (1=On, 0=Off)",
+                                              FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_fix_si_sound");
 
+    AutoConvars(g_hAutoConvars.BoolValue);
     AddNormalSoundHook(SoundHook);
     HookEvent("player_spawn", PlayerSpawn_Event);
     HookEvent("player_death", PlayerDeath_Event);
@@ -60,6 +66,17 @@ public void OnMapStart()
     for (int i = 1; i <= MaxClients; i++)
     {
         g_hJockeySoundTimer[i] = null;
+    }
+}
+
+void AutoConvars(bool enable)
+{
+    if (enable)
+    {
+        ConVar snd_max_same_sounds     = FindConVar("snd_max_same_sounds");
+        ConVar sv_multiplayer_sounds   = FindConVar("sv_multiplayer_sounds");
+        snd_max_same_sounds.IntValue   = 64;
+        sv_multiplayer_sounds.IntValue = 128;
     }
 }
 
