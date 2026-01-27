@@ -38,7 +38,7 @@ static char g_sJockeySound[][] = {
 
 public void OnPluginStart()
 {
-    g_hJockeyIdleSoundInterval = CreateConVar("jockey_idle_sound_interval", "1.7",
+    g_hJockeyIdleSoundInterval = CreateConVar("jockey_idle_sound_interval", "1.8",
                                               "Interval between jockey idle sounds.",
                                               FCVAR_NOTIFY, true, 0.0);
     g_hAutoConvars             = CreateConVar("l4d2_fix_si_sound_auto_convars", "1",
