@@ -17,7 +17,7 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
-bool        g_bIsPluginEmitted = false;
+bool        g_bEmitJockeyIdleSound = false;
 ConVar      g_hJockeyIdleSoundInterval;
 Handle      g_hJockeySoundTimer[MAXPLAYERS + 1];
 static char g_sJockeySound[][] = {
@@ -88,7 +88,7 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
     }
 
     // 게임 엔진에서 재생하는 자키 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
-    if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bIsPluginEmitted)
+    if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bEmitJockeyIdleSound)
     {
         return Plugin_Stop;
     }
@@ -187,12 +187,12 @@ void JockeyRideEnd_NextFrame(any userid)
     }
 }
 
-Action EmitJockeySound(Handle timer, any client)
+Action EmitJockeyIdleSound(Handle timer, any client)
 {
-    int rndPick        = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
-    g_bIsPluginEmitted = true;
+    int rndPick            = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
+    g_bEmitJockeyIdleSound = true;
     EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
-    g_bIsPluginEmitted = false;
+    g_bEmitJockeyIdleSound = false;
 
     return Plugin_Continue;
 }
@@ -206,7 +206,7 @@ void ChangeJockeyTimerStatus(int client, bool bEnable)
 
     if (bEnable)
     {
-        g_hJockeySoundTimer[client] = CreateTimer(g_hJockeyIdleSoundInterval.FloatValue, EmitJockeySound, client, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+        g_hJockeySoundTimer[client] = CreateTimer(g_hJockeyIdleSoundInterval.FloatValue, EmitJockeyIdleSound, client, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 
