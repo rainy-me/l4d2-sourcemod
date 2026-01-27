@@ -1,5 +1,5 @@
 #pragma semicolon 1
-#pragma newdecls required    //強制1.7以後的新語法
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdkhooks>
@@ -19,39 +19,10 @@ static char sHunterSound_L4D2[][] = {
     "player/hunter/voice/idle/hunter_stalk_09.wav"
 };
 
-static char sHunterSound_L4D1[][] = {
-    "player/hunter/voice/idle/hunter_stalk_01.wav",
-    "player/hunter/voice/idle/hunter_stalk_04.wav",
-    "player/hunter/voice/idle/hunter_stalk_05.wav"
-};
-
 bool        isHunter[MAXPLAYERS + 1];
 static int  g_iOffsetFallVelocity    = -1;
 static char CLASSNAME_TERRORPLAYER[] = "CTerrorPlayer";
 static char NETPROP_FALLVELOCITY[]   = "m_flFallVelocity";
-
-bool        g_bL4D2Version;
-
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-    EngineVersion test = GetEngineVersion();
-
-    if (test == Engine_Left4Dead)
-    {
-        g_bL4D2Version = false;
-    }
-    else if (test == Engine_Left4Dead2)
-    {
-        g_bL4D2Version = true;
-    }
-    else
-    {
-        strcopy(error, err_max, "Plugin only supports Left 4 Dead 1 & 2.");
-        return APLRes_SilentFailure;
-    }
-
-    return APLRes_Success;
-}
 
 public Plugin myinfo =
 {
@@ -73,19 +44,9 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-    if (g_bL4D2Version)
+    for (int i = 0; i < sizeof(sHunterSound_L4D2); i++)
     {
-        for (int i = 0; i < sizeof(sHunterSound_L4D2); i++)
-        {
-            PrecacheSound(sHunterSound_L4D2[i]);
-        }
-    }
-    else
-    {
-        for (int i = 0; i < sizeof(sHunterSound_L4D1); i++)
-        {
-            PrecacheSound(sHunterSound_L4D1[i]);
-        }
+        PrecacheSound(sHunterSound_L4D2[i]);
     }
 }
 
@@ -157,19 +118,11 @@ Action HunterCrouchReallyCheck(Handle timer, any client)
     int ducked = GetEntProp(client, Prop_Send, "m_bDucked");
     if (ducked && GetEntDataFloat(client, g_iOffsetFallVelocity) == 0.0)
     {
-        if (g_bL4D2Version)
-        {
-            int rndPick = GetRandomInt(0, sizeof(sHunterSound_L4D2) - 1);
-            EmitSoundToAll(sHunterSound_L4D2[rndPick], client, SNDCHAN_VOICE);
-        }
-        else
-        {
-            int rndPick = GetRandomInt(0, sizeof(sHunterSound_L4D1) - 1);
-            EmitSoundToAll(sHunterSound_L4D1[rndPick], client, SNDCHAN_VOICE);
-        }
+        int rndPick = GetRandomInt(0, sizeof(sHunterSound_L4D2) - 1);
+        EmitSoundToAll(sHunterSound_L4D2[rndPick], client, SNDCHAN_VOICE, 85);
 
 #if DEBUG
-        PrintToChatAll("Spawn Sound");
+        PrintToChatAll("Emit sound!");
 #endif
     }
     return Plugin_Continue;
@@ -185,7 +138,7 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 bool HasTarget(int hunter)
 {
     int hasvictim = GetEntPropEnt(hunter, Prop_Send, "m_pounceVictim");
-    if (IsSurvivors(hasvictim))    //已經撲人
+    if (IsSurvivors(hasvictim))
     {
         return true;
     }
