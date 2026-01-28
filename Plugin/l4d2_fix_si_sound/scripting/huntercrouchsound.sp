@@ -47,6 +47,10 @@ public void OnMapStart()
     {
         PrecacheSound(sHunterSound[i]);
     }
+}
+
+void event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
     for (int i = 0; i <= MAXPLAYERS; i++)
     {
         isHunter[i] = false;
