@@ -9,7 +9,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Fix",
     author      = "Rainy",
     description = "유휴 명령 미인식 문제를 해결합니다.",
-    version     = "1.4.1",
+    version     = "1.4.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
 };
 
@@ -17,7 +17,7 @@ ConVar g_hIdleSolo;
 ConVar g_hIdleMessage;
 ConVar g_hCooldownTime;
 ConVar g_hCooldownMessage;
-float  g_fLastUseTime[MAXPLAYERS + 1] = { 0.0, ... };
+float  g_fUseAllowTime[MAXPLAYERS + 1] = { 0.0, ... };
 
 public void OnPluginStart()
 {
@@ -42,12 +42,12 @@ public void OnPluginStart()
 
 public void OnClientPutInServer(int client)
 {
-    g_fLastUseTime[client] = 0.0;
+    g_fUseAllowTime[client] = 0.0;
 }
 
 public void OnClientDisconnect(int client)
 {
-    g_fLastUseTime[client] = 0.0;
+    g_fUseAllowTime[client] = 0.0;
 }
 
 Action Cmd_ForceIdle(int client, int args)
@@ -65,7 +65,7 @@ Action Cmd_ForceIdle(int client, int args)
         return Plugin_Handled;
     }
 
-    if (GetEngineTime() < g_fLastUseTime[client] + g_hCooldownTime.FloatValue)
+    if (GetEngineTime() < g_fUseAllowTime[client])
     {
         if (g_hCooldownMessage.BoolValue)
         {
@@ -79,7 +79,7 @@ Action Cmd_ForceIdle(int client, int args)
     {
         PrintToChatAll("%t", "Idle Message", client);
     }
-    g_fLastUseTime[client] = GetEngineTime();
+    g_fUseAllowTime[client] = GetEngineTime() + g_hCooldownTime.FloatValue;
     return Plugin_Handled;
 }
 
