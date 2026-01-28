@@ -55,7 +55,7 @@ python 03_uninstall.py
 2. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
    근접무기와 전기톱을 명중률 통계에서 제외합니다.
 
-3. [l4d2_fix_si_sound](/Plugin/l4d2_fix_si_sound/)
+3. [l4d2_fix_si_sound](/Plugin/l4d2_fix_si_sound/)  
    특수좀비의 소리 문제를 개선합니다. (공개 플러그인 합본)
 
 4. [l4d2_hide_idle_message](/Plugin/l4d2_hide_idle_message/)  
