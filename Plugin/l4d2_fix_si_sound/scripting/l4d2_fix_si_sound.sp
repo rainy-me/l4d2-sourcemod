@@ -5,8 +5,6 @@
 #include <sdktools>
 #include <left4dhooks>
 
-#define TEAM_INFECTED 3
-
 public Plugin myinfo =
 {
     name        = "L4D2 Fix SI Sound",
@@ -20,8 +18,9 @@ ConVar      g_hJockeyIdleSoundInterval;
 ConVar      g_hAutoConvars;
 
 bool        g_bEmitJockeyIdleSound[MAXPLAYERS + 1] = { false, ... };
-Handle      g_hJockeySoundTimer[MAXPLAYERS + 1];
-static char g_sJockeySound[][] = {
+Handle      g_hJockeySoundTimer[MAXPLAYERS + 1]    = { null, ... };
+
+static char g_sJockeySound[][]                     = {
     "player/jockey/voice/idle/jockey_recognize02.wav",
     "player/jockey/voice/idle/jockey_recognize06.wav",
     "player/jockey/voice/idle/jockey_recognize07.wav",
@@ -63,7 +62,7 @@ public void OnMapStart()
         PrecacheSound(g_sJockeySound[i], true);
     }
     // avoid invalid timer handle exceptions after map transitions
-    for (int i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MAXPLAYERS; i++)
     {
         g_hJockeySoundTimer[i] = null;
     }
@@ -82,7 +81,7 @@ void AutoConvars(bool enable)
 
 Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
-    if (!IsClient(entity) || !IsClientInGame(entity) || GetClientTeam(entity) != TEAM_INFECTED)
+    if (!IsClient(entity) || !IsClientInGame(entity) || GetClientTeam(entity) != L4D_TEAM_INFECTED)
     {
         return Plugin_Continue;
     }
@@ -134,7 +133,7 @@ void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast)
     // Kill the sound timer if it exists (this will also trigger if you switch to Tank)
     ChangeJockeyTimerStatus(client, false);
 
-    if (GetClientTeam(client) != TEAM_INFECTED)
+    if (GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
         return;
     }
@@ -201,7 +200,7 @@ void JockeyRideEnd_NextFrame(any userid)
     if (IsClient(client) && IsClientInGame(client) && IsPlayerAlive(client) && !GetEntProp(client, Prop_Send, "m_isGhost"))
     {
         // Resume our sound spam as the Jockey is still alive
-        if (GetClientTeam(client) == TEAM_INFECTED && L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Jockey)
+        if (GetClientTeam(client) == L4D_TEAM_INFECTED && L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Jockey)
         {
             ChangeJockeyTimerStatus(client, true);
         }
