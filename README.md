@@ -156,9 +156,6 @@ python 03_uninstall.py
 24. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-25. Tickrate Enabler  
-    <https://forums.alliedmods.net/showthread.php?t=333408>
-
 ### C. 종속 플러그인
 
 1. Actions  
@@ -181,6 +178,9 @@ python 03_uninstall.py
 
 7. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
+
+8. Tickrate Enabler  
+   <https://github.com/accelerator74/Tickrate-Enabler>
 
 ### D. 미사용 플러그인
 
