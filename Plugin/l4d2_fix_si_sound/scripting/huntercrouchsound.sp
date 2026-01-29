@@ -32,6 +32,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+    HookEvent("round_start", Event_RoundStart);
     HookEvent("player_spawn", Event_PlayerSpawn);
     HookEvent("player_death", Event_PlayerDeath);
     g_iOffsetFallVelocity = FindSendPropInfo("CTerrorPlayer", "m_flFallVelocity");
@@ -49,7 +50,7 @@ public void OnMapStart()
     }
 }
 
-void event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     for (int i = 0; i <= MAXPLAYERS; i++)
     {
