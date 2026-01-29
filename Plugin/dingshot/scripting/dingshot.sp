@@ -5,7 +5,8 @@
 #include <sdktools>
 #include <sdkhooks>
 
-#define VOLUME 0.85
+#define HEADSHOT_SOUND "level/bell_normal.wav"
+#define VOLUME         0.85
 
 public Plugin myinfo =
 {
@@ -17,12 +18,11 @@ public Plugin myinfo =
 };
 
 ConVar g_hEnabled;
-char   g_sHeadshotSound[64] = "level/bell_normal.wav";
 
 public void OnPluginStart()
 {
     g_hEnabled = CreateConVar("dingshot_enabled", "1",
-                              "0 = Plugin OFF, 1 = Plugin ON",
+                              "0=OFF, 1=ON",
                               FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hEnabled.AddChangeHook(OnConVarChanged);
     AutoExecConfig(true, "dingshot");
@@ -47,18 +47,18 @@ void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue
 
 void EnableDingshot()
 {
-    PrecacheSound(g_sHeadshotSound, false);
-    HookEvent("player_hurt", HeadShotHook, EventHookMode_Pre);
-    HookEvent("infected_hurt", HeadShotHook, EventHookMode_Pre);
+    PrecacheSound(HEADSHOT_SOUND);
+    HookEvent("player_hurt", HeadshotHook, EventHookMode_Pre);
+    HookEvent("infected_hurt", HeadshotHook, EventHookMode_Pre);
 }
 
 void DisableDingshot()
 {
-    UnhookEvent("player_hurt", HeadShotHook, EventHookMode_Pre);
-    UnhookEvent("infected_hurt", HeadShotHook, EventHookMode_Pre);
+    UnhookEvent("player_hurt", HeadshotHook, EventHookMode_Pre);
+    UnhookEvent("infected_hurt", HeadshotHook, EventHookMode_Pre);
 }
 
-void HeadShotHook(Event event, const char[] name, bool dontBroadcast)
+void HeadshotHook(Event event, const char[] name, bool dontBroadcast)
 {
     int attacker = GetClientOfUserId(event.GetInt("attacker"));
     int hitgroup = event.GetInt("hitgroup");
@@ -68,8 +68,8 @@ void HeadShotHook(Event event, const char[] name, bool dontBroadcast)
     {
         // 8 == death by fire
         // 2097152 == death by slow burn
-        EmitSoundToClient(attacker, g_sHeadshotSound, SOUND_FROM_PLAYER, SNDCHAN_AUTO,
-                          SNDLEVEL_NORMAL, SND_NOFLAGS, VOLUME);
+        EmitSoundToClient(attacker, HEADSHOT_SOUND, SOUND_FROM_PLAYER, SNDCHAN_AUTO,
+                          SNDLEVEL_NONE, SND_NOFLAGS, VOLUME);
     }
 }
 
