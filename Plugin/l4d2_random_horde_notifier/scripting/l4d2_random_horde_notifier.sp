@@ -19,7 +19,7 @@ float  g_fNotifyAllowTime = 0.0;
 
 public void OnPluginStart()
 {
-    g_hCooldownTime = CreateConVar("l4d2_random_horde_notifier_cooldown_time", "40.0",
+    g_hCooldownTime = CreateConVar("l4d2_random_horde_notifier_cooldown_time", "30.0",
                                    "Cooldown time to notify again. (seconds)",
                                    FCVAR_NOTIFY, true, 0.0);
     AutoExecConfig(true, "l4d2_random_horde_notifier");
