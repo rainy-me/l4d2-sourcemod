@@ -14,13 +14,13 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
-ConVar      g_hJockeyIdleSoundInterval;
+ConVar      g_hJockeySoundInterval;
 ConVar      g_hAutoConvars;
 
-bool        g_bEmitJockeyIdleSound[MAXPLAYERS + 1] = { false, ... };
-Handle      g_hJockeySoundTimer[MAXPLAYERS + 1]    = { null, ... };
+bool        g_bEmitJockeySound[MAXPLAYERS + 1]  = { false, ... };
+Handle      g_hJockeySoundTimer[MAXPLAYERS + 1] = { null, ... };
 
-static char g_sJockeySound[][]                     = {
+static char g_sJockeySound[][]                  = {
     "player/jockey/voice/idle/jockey_recognize02.wav",
     "player/jockey/voice/idle/jockey_recognize06.wav",
     "player/jockey/voice/idle/jockey_recognize07.wav",
@@ -37,12 +37,12 @@ static char g_sJockeySound[][]                     = {
 
 public void OnPluginStart()
 {
-    g_hJockeyIdleSoundInterval = CreateConVar("jockey_idle_sound_interval", "1.8",
-                                              "Interval between jockey idle sounds.",
-                                              FCVAR_NOTIFY, true, 0.0);
-    g_hAutoConvars             = CreateConVar("l4d2_fix_si_sound_auto_convars", "1",
-                                              "On/Off auto convars updater. (1=On, 0=Off)",
-                                              FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hJockeySoundInterval = CreateConVar("jockey_sound_interval", "1.8",
+                                          "Interval between jockey sounds.",
+                                          FCVAR_NOTIFY, true, 0.0);
+    g_hAutoConvars         = CreateConVar("l4d2_fix_si_sound_auto_convars", "1",
+                                          "On/Off auto convars updater. (1=On, 0=Off)",
+                                          FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_fix_si_sound");
 
     AutoConvars(g_hAutoConvars.BoolValue);
@@ -106,7 +106,7 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
         case L4D2ZombieClass_Jockey:
         {
             // 게임 엔진에서 재생하는 자키 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
-            if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bEmitJockeyIdleSound[entity])
+            if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bEmitJockeySound[entity])
             {
                 return Plugin_Stop;
             }
@@ -207,12 +207,12 @@ void JockeyRideEnd_NextFrame(any userid)
     }
 }
 
-Action EmitJockeyIdleSound(Handle timer, any client)
+Action EmitJockeySound(Handle timer, any client)
 {
-    int rndPick                    = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
-    g_bEmitJockeyIdleSound[client] = true;
+    int rndPick                = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
+    g_bEmitJockeySound[client] = true;
     EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
-    g_bEmitJockeyIdleSound[client] = false;
+    g_bEmitJockeySound[client] = false;
 
     return Plugin_Continue;
 }
@@ -226,7 +226,7 @@ void ChangeJockeyTimerStatus(int client, bool bEnable)
 
     if (bEnable)
     {
-        g_hJockeySoundTimer[client] = CreateTimer(g_hJockeyIdleSoundInterval.FloatValue, EmitJockeyIdleSound, client, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+        g_hJockeySoundTimer[client] = CreateTimer(g_hJockeySoundInterval.FloatValue, EmitJockeySound, client, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 
