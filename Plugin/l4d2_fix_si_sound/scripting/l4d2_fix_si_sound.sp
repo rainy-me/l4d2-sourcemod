@@ -5,10 +5,10 @@
 #include <sdktools>
 #include <left4dhooks>
 
-#define SMOKER_SOUND_INTERVAL  2.6
-#define HUNTER_SOUND_INTERVAL  2.7
+#define SMOKER_SOUND_INTERVAL  2.45
+#define HUNTER_SOUND_INTERVAL  2.6
 #define JOCKEY_SOUND_INTERVAL  1.8
-#define CHARGER_SOUND_INTERVAL 1.78
+#define CHARGER_SOUND_INTERVAL 1.7
 
 public Plugin myinfo =
 {
@@ -21,15 +21,21 @@ public Plugin myinfo =
 
 ConVar      g_hAutoConvars;
 
+bool        g_bHunterWasDucking[MAXPLAYERS + 1]  = { false, ... };
+
+// Flags to indicate if the plugin is emitting the sound
 bool        g_bEmitSmokerSound[MAXPLAYERS + 1]   = { false, ... };
 bool        g_bEmitHunterSound[MAXPLAYERS + 1]   = { false, ... };
 bool        g_bEmitJockeySound[MAXPLAYERS + 1]   = { false, ... };
 bool        g_bEmitChargerSound[MAXPLAYERS + 1]  = { false, ... };
+
+// Timer handles for each special infected sound emitter
 Handle      g_hSmokerSoundTimer[MAXPLAYERS + 1]  = { null, ... };
 Handle      g_hHunterSoundTimer[MAXPLAYERS + 1]  = { null, ... };
 Handle      g_hJockeySoundTimer[MAXPLAYERS + 1]  = { null, ... };
 Handle      g_hChargerSoundTimer[MAXPLAYERS + 1] = { null, ... };
 
+// Sound file arrays for each special infected
 static char g_sSmokerSound[][]                   = {
     "player/smoker/voice/idle/smoker_lurk_01.wav",
     "player/smoker/voice/idle/smoker_lurk_03.wav",
@@ -159,7 +165,6 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
             // warn 소리 재생하는 동안 idle 소리 중지
             if (StrContains(sample, "player/smoker/voice/warn/smoker_warn", false) != -1)
             {
-                KillSmokerSoundTimer(entity);
                 CreateSmokerSoundTimer(entity);
                 return Plugin_Continue;
             }
@@ -174,15 +179,7 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
             // warn 소리 재생하는 동안 idle 소리 중지
             if (StrContains(sample, "player/hunter/voice/warn/hunter_warn", false) != -1)
             {
-                KillHunterSoundTimer(entity);
                 CreateHunterSoundTimer(null, entity);
-                return Plugin_Continue;
-            }
-            // 능력 사용 소리 재생하는 동안 idle 소리 중지
-            if (StrContains(sample, "player/hunter/voice/leap/hunter_attackmix", false) != -1)
-            {
-                KillHunterSoundTimer(entity);
-                CreateTimer(3.2 - HUNTER_SOUND_INTERVAL, CreateHunterSoundTimer, entity, TIMER_FLAG_NO_MAPCHANGE);
                 return Plugin_Continue;
             }
         }
@@ -204,7 +201,6 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
             // 타겟 포착 소리 재생하는 동안 idle 소리 중지
             if (StrContains(sample, "player/charger/voice/idle/charger_spotprey", false) != -1)
             {
-                KillChargerSoundTimer(entity);
                 CreateChargerSoundTimer(entity);
                 return Plugin_Continue;
             }
@@ -212,6 +208,30 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
     }
 
     return Plugin_Continue;
+}
+
+public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float vel[3], const float angles[3], int weapon, int subtype, int cmdnum, int tickcount, int seed, const int mouse[2])
+{
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    {
+        return;
+    }
+    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Hunter)
+    {
+        return;
+    }
+
+    bool isDucking = (buttons & IN_DUCK) != 0;
+    if (isDucking && !g_bHunterWasDucking[client])
+    {
+        CreateHunterSoundTimer(null, client);
+        TriggerTimer(g_hHunterSoundTimer[client], true);
+    }
+    else if (!isDucking && g_bHunterWasDucking[client])
+    {
+        KillHunterSoundTimer(client);
+    }
+    g_bHunterWasDucking[client] = isDucking;
 }
 
 void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
@@ -234,6 +254,10 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
         case L4D2ZombieClass_Smoker:
         {
             CreateSmokerSoundTimer(client);
+        }
+        case L4D2ZombieClass_Hunter:
+        {
+            g_bHunterWasDucking[client] = false;
         }
         case L4D2ZombieClass_Jockey:
         {
@@ -274,6 +298,17 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
             KillChargerSoundTimer(client);
         }
     }
+}
+
+public void L4D_ActivateAbility_Hunter_Post(int client, int ability)
+{
+    if (!IsClient(client) || !IsClientInGame(client))
+    {
+        return;
+    }
+
+    KillHunterSoundTimer(client);
+    CreateTimer(3.8 - HUNTER_SOUND_INTERVAL, CreateHunterSoundTimer, client, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public void L4D2_ActivateAbility_Charger_Post(int client, int ability)
@@ -376,7 +411,7 @@ Action EmitSmokerSound(Handle timer, any client)
 
     int rndPick                = GetRandomInt(0, (sizeof(g_sSmokerSound) - 1));
     g_bEmitSmokerSound[client] = true;
-    EmitSoundToAll(g_sSmokerSound[rndPick], client, SNDCHAN_VOICE, 85);
+    EmitSoundToAll(g_sSmokerSound[rndPick], client, SNDCHAN_VOICE, 85, SND_NOFLAGS, 0.9);
     g_bEmitSmokerSound[client] = false;
     return Plugin_Continue;
 }
@@ -398,13 +433,10 @@ Action EmitHunterSound(Handle timer, any client)
         return Plugin_Continue;
     }
 
-    if (GetClientButtons(client) & IN_DUCK)
-    {
-        int rndPick                = GetRandomInt(0, sizeof(g_sHunterSound) - 1);
-        g_bEmitHunterSound[client] = true;
-        EmitSoundToAll(g_sHunterSound[rndPick], client, SNDCHAN_VOICE, 85);
-        g_bEmitHunterSound[client] = false;
-    }
+    int rndPick                = GetRandomInt(0, sizeof(g_sHunterSound) - 1);
+    g_bEmitHunterSound[client] = true;
+    EmitSoundToAll(g_sHunterSound[rndPick], client, SNDCHAN_VOICE, 85);
+    g_bEmitHunterSound[client] = false;
     return Plugin_Continue;
 }
 
