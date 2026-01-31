@@ -123,8 +123,8 @@ void AutoConvars(bool enable)
     {
         ConVar snd_max_same_sounds     = FindConVar("snd_max_same_sounds");
         ConVar sv_multiplayer_sounds   = FindConVar("sv_multiplayer_sounds");
-        snd_max_same_sounds.IntValue   = 16;
-        sv_multiplayer_sounds.IntValue = 64;
+        snd_max_same_sounds.IntValue   = 64;
+        sv_multiplayer_sounds.IntValue = 128;
     }
 }
 
@@ -234,10 +234,6 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
         case L4D2ZombieClass_Smoker:
         {
             CreateSmokerSoundTimer(client);
-        }
-        case L4D2ZombieClass_Hunter:
-        {
-            CreateHunterSoundTimer(null, client);
         }
         case L4D2ZombieClass_Jockey:
         {
