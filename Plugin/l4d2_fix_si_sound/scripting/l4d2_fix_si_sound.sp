@@ -5,6 +5,7 @@
 #include <sdktools>
 #include <left4dhooks>
 
+#define SMOKER_SOUND_INTERVAL  2.6
 #define HUNTER_SOUND_INTERVAL  2.7
 #define JOCKEY_SOUND_INTERVAL  1.8
 #define CHARGER_SOUND_INTERVAL 1.78
@@ -20,14 +21,27 @@ public Plugin myinfo =
 
 ConVar      g_hAutoConvars;
 
+bool        g_bEmitSmokerSound[MAXPLAYERS + 1]   = { false, ... };
 bool        g_bEmitHunterSound[MAXPLAYERS + 1]   = { false, ... };
 bool        g_bEmitJockeySound[MAXPLAYERS + 1]   = { false, ... };
 bool        g_bEmitChargerSound[MAXPLAYERS + 1]  = { false, ... };
+Handle      g_hSmokerSoundTimer[MAXPLAYERS + 1]  = { null, ... };
 Handle      g_hHunterSoundTimer[MAXPLAYERS + 1]  = { null, ... };
 Handle      g_hJockeySoundTimer[MAXPLAYERS + 1]  = { null, ... };
 Handle      g_hChargerSoundTimer[MAXPLAYERS + 1] = { null, ... };
 
-static char g_sHunterSound[][]                   = {
+static char g_sSmokerSound[][]                   = {
+    "player/smoker/voice/idle/smoker_lurk_01.wav",
+    "player/smoker/voice/idle/smoker_lurk_03.wav",
+    "player/smoker/voice/idle/smoker_lurk_04.wav",
+    "player/smoker/voice/idle/smoker_lurk_06.wav",
+    "player/smoker/voice/idle/smoker_lurk_08.wav",
+    "player/smoker/voice/idle/smoker_lurk_10.wav",
+    "player/smoker/voice/idle/smoker_lurk_11.wav",
+    "player/smoker/voice/idle/smoker_lurk_12.wav",
+    "player/smoker/voice/idle/smoker_lurk_13.wav"
+};
+static char g_sHunterSound[][] = {
     "player/hunter/voice/idle/hunter_stalk_04.wav",
     "player/hunter/voice/idle/hunter_stalk_05.wav",
     "player/hunter/voice/idle/hunter_stalk_06.wav",
@@ -77,6 +91,10 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+    for (int i = 0; i < sizeof(g_sSmokerSound); i++)
+    {
+        PrecacheSound(g_sSmokerSound[i], true);
+    }
     for (int i = 0; i < sizeof(g_sJockeySound); i++)
     {
         PrecacheSound(g_sJockeySound[i], true);
@@ -93,6 +111,7 @@ public void OnMapStart()
     // avoid invalid timer handle exceptions after map transitions
     for (int i = 1; i <= MAXPLAYERS; i++)
     {
+        g_hSmokerSoundTimer[i]  = null;
         g_hHunterSoundTimer[i]  = null;
         g_hJockeySoundTimer[i]  = null;
         g_hChargerSoundTimer[i] = null;
@@ -132,6 +151,18 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
             if (StrContains(sample, "player/smoker/voice/idle/smoker_spotprey", false) != -1)
             {
                 return Plugin_Stop;
+            }
+            // 게임 엔진에서 재생하는 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
+            if (StrContains(sample, "player/smoker/voice/idle/smoker_lurk", false) != -1 && !g_bEmitSmokerSound[entity])
+            {
+                return Plugin_Stop;
+            }
+            // warn 소리 재생하는 동안 idle 소리 중지
+            if (StrContains(sample, "player/smoker/voice/warn/smoker_warn", false) != -1)
+            {
+                KillSmokerSoundTimer(entity);
+                CreateSmokerSoundTimer(entity);
+                return Plugin_Continue;
             }
         }
         case L4D2ZombieClass_Hunter:
@@ -193,6 +224,7 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
     }
 
     // This will also trigger if you switch to Tank
+    KillSmokerSoundTimer(client);
     KillHunterSoundTimer(client);
     KillJockeySoundTimer(client);
     KillChargerSoundTimer(client);
@@ -200,6 +232,10 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
     int zClass = L4D2_GetPlayerZombieClass(client);
     switch (zClass)
     {
+        case L4D2ZombieClass_Smoker:
+        {
+            CreateSmokerSoundTimer(client);
+        }
         case L4D2ZombieClass_Hunter:
         {
             CreateHunterSoundTimer(null, client);
@@ -226,6 +262,10 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
     int zClass = L4D2_GetPlayerZombieClass(client);
     switch (zClass)
     {
+        case L4D2ZombieClass_Smoker:
+        {
+            KillSmokerSoundTimer(client);
+        }
         case L4D2ZombieClass_Hunter:
         {
             KillHunterSoundTimer(client);
@@ -249,12 +289,13 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
+    KillSmokerSoundTimer(client);
     KillHunterSoundTimer(client);
     KillJockeySoundTimer(client);
     KillChargerSoundTimer(client);
 }
 
-public void L4D2_ActivateAbility_Charger_Post(int client)
+public void L4D2_ActivateAbility_Charger_Post(int client, int ability)
 {
     if (!IsClient(client) || !IsClientInGame(client))
     {
@@ -273,6 +314,21 @@ void Event_ChargerChargeEnd(Event event, const char[] name, bool dontBroadcast)
     }
 
     CreateChargerSoundTimer(client);
+}
+
+void CreateSmokerSoundTimer(int client)
+{
+    KillSmokerSoundTimer(client);
+    g_hSmokerSoundTimer[client] = CreateTimer(SMOKER_SOUND_INTERVAL, EmitSmokerSound, client,
+                                              TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+}
+
+void KillSmokerSoundTimer(int client)
+{
+    if (g_hSmokerSoundTimer[client] != null)
+    {
+        delete g_hSmokerSoundTimer[client];
+    }
 }
 
 void CreateHunterSoundTimer(Handle timer, int client)
@@ -318,6 +374,28 @@ void KillChargerSoundTimer(int client)
     {
         delete g_hChargerSoundTimer[client];
     }
+}
+
+Action EmitSmokerSound(Handle timer, any client)
+{
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    {
+        return Plugin_Stop;
+    }
+    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Smoker)
+    {
+        return Plugin_Stop;
+    }
+    if (L4D_GetVictimSmoker(client) != 0)
+    {
+        return Plugin_Continue;
+    }
+
+    int rndPick                = GetRandomInt(0, (sizeof(g_sSmokerSound) - 1));
+    g_bEmitSmokerSound[client] = true;
+    EmitSoundToAll(g_sSmokerSound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
+    g_bEmitSmokerSound[client] = false;
+    return Plugin_Continue;
 }
 
 Action EmitHunterSound(Handle timer, any client)
