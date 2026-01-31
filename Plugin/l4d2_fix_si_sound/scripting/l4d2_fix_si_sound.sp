@@ -5,6 +5,9 @@
 #include <sdktools>
 #include <left4dhooks>
 
+#define HUNTER_SOUND_INTERVAL 2.7
+#define JOCKEY_SOUND_INTERVAL 1.8
+
 public Plugin myinfo =
 {
     name        = "L4D2 Fix SI Sound",
@@ -14,10 +17,11 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
-ConVar      g_hJockeySoundInterval;
 ConVar      g_hAutoConvars;
 
+bool        g_bEmitHunterSound[MAXPLAYERS + 1]  = { false, ... };
 bool        g_bEmitJockeySound[MAXPLAYERS + 1]  = { false, ... };
+Handle      g_hHunterSoundTimer[MAXPLAYERS + 1] = { null, ... };
 Handle      g_hJockeySoundTimer[MAXPLAYERS + 1] = { null, ... };
 
 static char g_sHunterSound[][]                  = {
@@ -45,12 +49,9 @@ static char g_sJockeySound[][] = {
 
 public void OnPluginStart()
 {
-    g_hJockeySoundInterval = CreateConVar("jockey_sound_interval", "1.8",
-                                          "Interval between jockey sounds.",
-                                          FCVAR_NOTIFY, true, 0.0);
-    g_hAutoConvars         = CreateConVar("l4d2_fix_si_sound_auto_convars", "1",
-                                          "On/Off auto convars updater. (1=On, 0=Off)",
-                                          FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hAutoConvars = CreateConVar("l4d2_fix_si_sound_auto_convars", "1",
+                                  "ON/OFF auto convars updater. (1=ON, 0=OFF)",
+                                  FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_fix_si_sound");
 
     AutoConvars(g_hAutoConvars.BoolValue);
@@ -58,8 +59,6 @@ public void OnPluginStart()
     HookEvent("player_spawn", Event_PlayerSpawn);
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("player_team", Event_PlayerTeam);
-    HookEvent("jockey_ride", Event_JockeyRideStart);
-    HookEvent("jockey_ride_end", Event_JockeyRideEnd);
 }
 
 public void OnMapStart()
@@ -76,6 +75,7 @@ public void OnMapStart()
     // avoid invalid timer handle exceptions after map transitions
     for (int i = 1; i <= MAXPLAYERS; i++)
     {
+        g_hHunterSoundTimer[i] = null;
         g_hJockeySoundTimer[i] = null;
     }
 }
@@ -115,9 +115,31 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
                 return Plugin_Stop;
             }
         }
+        case L4D2ZombieClass_Hunter:
+        {
+            // 게임 엔진에서 재생하는 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
+            if (StrContains(sample, "player/hunter/voice/idle/hunter_stalk", false) != -1 && !g_bEmitHunterSound[entity])
+            {
+                return Plugin_Stop;
+            }
+            // warn 소리 재생하는 동안 idle 소리 중지
+            if (StrContains(sample, "player/hunter/voice/warn/hunter_warn", false) != -1)
+            {
+                KillHunterSoundTimer(entity);
+                CreateHunterSoundTimer(null, entity);
+                return Plugin_Continue;
+            }
+            // 능력 사용 소리 재생하는 동안 idle 소리 중지
+            if (StrContains(sample, "player/hunter/voice/leap/hunter_attackmix", false) != -1)
+            {
+                KillHunterSoundTimer(entity);
+                CreateTimer(3.2 - HUNTER_SOUND_INTERVAL, CreateHunterSoundTimer, entity, TIMER_FLAG_NO_MAPCHANGE);
+                return Plugin_Continue;
+            }
+        }
         case L4D2ZombieClass_Jockey:
         {
-            // 게임 엔진에서 재생하는 자키 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
+            // 게임 엔진에서 재생하는 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
             if (StrContains(sample, "player/jockey/voice/idle/jockey_recognize", false) != -1 && !g_bEmitJockeySound[entity])
             {
                 return Plugin_Stop;
@@ -137,11 +159,20 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
     }
 
     // This will also trigger if you switch to Tank
+    KillHunterSoundTimer(client);
     KillJockeySoundTimer(client);
 
-    if (L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Jockey)
+    int zClass = L4D2_GetPlayerZombieClass(client);
+    switch (zClass)
     {
-        CreateJockeySoundTimer(client);
+        case L4D2ZombieClass_Hunter:
+        {
+            CreateHunterSoundTimer(null, client);
+        }
+        case L4D2ZombieClass_Jockey:
+        {
+            CreateJockeySoundTimer(client);
+        }
     }
 }
 
@@ -153,9 +184,17 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
-    if (L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Jockey)
+    int zClass = L4D2_GetPlayerZombieClass(client);
+    switch (zClass)
     {
-        KillJockeySoundTimer(client);
+        case L4D2ZombieClass_Hunter:
+        {
+            KillHunterSoundTimer(client);
+        }
+        case L4D2ZombieClass_Jockey:
+        {
+            KillJockeySoundTimer(client);
+        }
     }
 }
 
@@ -167,34 +206,29 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
+    KillHunterSoundTimer(client);
     KillJockeySoundTimer(client);
 }
 
-void Event_JockeyRideStart(Event event, const char[] name, bool dontBroadcast)
+void CreateHunterSoundTimer(Handle timer, int client)
 {
-    int client = GetClientOfUserId(event.GetInt("userid"));
-    if (!IsClient(client) || !IsClientInGame(client))
-    {
-        return;
-    }
-
-    KillJockeySoundTimer(client);
+    KillHunterSoundTimer(client);
+    g_hHunterSoundTimer[client] = CreateTimer(HUNTER_SOUND_INTERVAL, EmitHunterSound, client,
+                                              TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
-void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadcast)
+void KillHunterSoundTimer(int client)
 {
-    int client = GetClientOfUserId(event.GetInt("userid"));
-    if (!IsClient(client) || !IsClientInGame(client))
+    if (g_hHunterSoundTimer[client] != null)
     {
-        return;
+        delete g_hHunterSoundTimer[client];
     }
-
-    CreateJockeySoundTimer(client);
 }
 
 void CreateJockeySoundTimer(int client)
 {
-    g_hJockeySoundTimer[client] = CreateTimer(g_hJockeySoundInterval.FloatValue, EmitJockeySound, client,
+    KillJockeySoundTimer(client);
+    g_hJockeySoundTimer[client] = CreateTimer(JOCKEY_SOUND_INTERVAL, EmitJockeySound, client,
                                               TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
@@ -212,15 +246,44 @@ Action EmitJockeySound(Handle timer, any client)
     {
         return Plugin_Stop;
     }
-    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Jockey || L4D_GetVictimJockey(client) != 0)
+    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Jockey)
     {
         return Plugin_Stop;
+    }
+    if (L4D_GetVictimJockey(client) != 0)
+    {
+        return Plugin_Continue;
     }
 
     int rndPick                = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
     g_bEmitJockeySound[client] = true;
     EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
     g_bEmitJockeySound[client] = false;
+    return Plugin_Continue;
+}
+
+Action EmitHunterSound(Handle timer, any client)
+{
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    {
+        return Plugin_Stop;
+    }
+    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Hunter)
+    {
+        return Plugin_Stop;
+    }
+    if (L4D_GetVictimHunter(client) != 0)
+    {
+        return Plugin_Continue;
+    }
+
+    if (GetClientButtons(client) & IN_DUCK)
+    {
+        int rndPick                = GetRandomInt(0, sizeof(g_sHunterSound) - 1);
+        g_bEmitHunterSound[client] = true;
+        EmitSoundToAll(g_sHunterSound[rndPick], client, SNDCHAN_VOICE, 85);
+        g_bEmitHunterSound[client] = false;
+    }
     return Plugin_Continue;
 }
 
