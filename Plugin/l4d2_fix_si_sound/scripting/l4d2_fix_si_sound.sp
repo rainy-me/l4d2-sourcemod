@@ -20,7 +20,15 @@ ConVar      g_hAutoConvars;
 bool        g_bEmitJockeySound[MAXPLAYERS + 1]  = { false, ... };
 Handle      g_hJockeySoundTimer[MAXPLAYERS + 1] = { null, ... };
 
-static char g_sJockeySound[][]                  = {
+static char g_sHunterSound[][]                  = {
+    "player/hunter/voice/idle/hunter_stalk_04.wav",
+    "player/hunter/voice/idle/hunter_stalk_05.wav",
+    "player/hunter/voice/idle/hunter_stalk_06.wav",
+    "player/hunter/voice/idle/hunter_stalk_07.wav",
+    "player/hunter/voice/idle/hunter_stalk_08.wav",
+    "player/hunter/voice/idle/hunter_stalk_09.wav"
+};
+static char g_sJockeySound[][] = {
     "player/jockey/voice/idle/jockey_recognize02.wav",
     "player/jockey/voice/idle/jockey_recognize06.wav",
     "player/jockey/voice/idle/jockey_recognize07.wav",
@@ -47,20 +55,24 @@ public void OnPluginStart()
 
     AutoConvars(g_hAutoConvars.BoolValue);
     AddNormalSoundHook(SoundHook);
-    HookEvent("player_spawn", PlayerSpawn_Event);
-    HookEvent("player_death", PlayerDeath_Event);
-    HookEvent("player_team", PlayerTeam_Event);
-    HookEvent("jockey_ride", JockeyRideStart_Event);
-    HookEvent("jockey_ride_end", JockeyRideEnd_Event);
+    HookEvent("player_spawn", Event_PlayerSpawn);
+    HookEvent("player_death", Event_PlayerDeath);
+    HookEvent("player_team", Event_PlayerTeam);
+    HookEvent("jockey_ride", Event_JockeyRideStart);
+    HookEvent("jockey_ride_end", Event_JockeyRideEnd);
 }
 
 public void OnMapStart()
 {
-    // Precache
     for (int i = 0; i < sizeof(g_sJockeySound); i++)
     {
         PrecacheSound(g_sJockeySound[i], true);
     }
+    for (int i = 0; i < sizeof(g_sHunterSound); i++)
+    {
+        PrecacheSound(g_sHunterSound[i], true);
+    }
+
     // avoid invalid timer handle exceptions after map transitions
     for (int i = 1; i <= MAXPLAYERS; i++)
     {
@@ -116,13 +128,38 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
     return Plugin_Continue;
 }
 
-public void L4D_OnEnterGhostState(int client)
+void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-    // Simply disable the timer if the client enters ghost mode and has the timer set.
-    ChangeJockeyTimerStatus(client, false);
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (!IsClient(client) || !IsClientInGame(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    {
+        return;
+    }
+
+    // This will also trigger if you switch to Tank
+    KillJockeySoundTimer(client);
+
+    if (L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Jockey)
+    {
+        CreateJockeySoundTimer(client);
+    }
 }
 
-void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (!IsClient(client) || !IsClientInGame(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    {
+        return;
+    }
+
+    if (L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Jockey)
+    {
+        KillJockeySoundTimer(client);
+    }
+}
+
+void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (!IsClient(client) || !IsClientInGame(client))
@@ -130,23 +167,10 @@ void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
-    // Kill the sound timer if it exists (this will also trigger if you switch to Tank)
-    ChangeJockeyTimerStatus(client, false);
-
-    if (GetClientTeam(client) != L4D_TEAM_INFECTED)
-    {
-        return;
-    }
-    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Jockey)
-    {
-        return;
-    }
-
-    // Setup the sound interval
-    RequestFrame(JockeyRideEnd_NextFrame, GetClientUserId(client));
+    KillJockeySoundTimer(client);
 }
 
-void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
+void Event_JockeyRideStart(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (!IsClient(client) || !IsClientInGame(client))
@@ -154,11 +178,10 @@ void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
-    // Kill the sound timer if it exists
-    ChangeJockeyTimerStatus(client, false);
+    KillJockeySoundTimer(client);
 }
 
-void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
+void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (!IsClient(client) || !IsClientInGame(client))
@@ -166,68 +189,39 @@ void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
-    // Kill the sound timer if it exists
-    ChangeJockeyTimerStatus(client, false);
+    CreateJockeySoundTimer(client);
 }
 
-void JockeyRideStart_Event(Event event, const char[] name, bool dontBroadcast)
+void CreateJockeySoundTimer(int client)
 {
-    int client = GetClientOfUserId(event.GetInt("userid"));
-    if (!IsClient(client) || !IsClientInGame(client))
-    {
-        return;
-    }
-
-    // Kill the sound timer if it exists
-    ChangeJockeyTimerStatus(client, false);
+    g_hJockeySoundTimer[client] = CreateTimer(g_hJockeySoundInterval.FloatValue, EmitJockeySound, client,
+                                              TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
-void JockeyRideEnd_Event(Event event, const char[] name, bool dontBroadcast)
-{
-    int client = GetClientOfUserId(event.GetInt("userid"));
-    if (!IsClient(client) || !IsClientInGame(client))
-    {
-        return;
-    }
-
-    // Check if our beloved Jockey is alive on the very next frame
-    RequestFrame(JockeyRideEnd_NextFrame, GetClientUserId(client));
-}
-
-void JockeyRideEnd_NextFrame(any userid)
-{
-    int client = GetClientOfUserId(userid);
-    if (IsClient(client) && IsClientInGame(client) && IsPlayerAlive(client) && !GetEntProp(client, Prop_Send, "m_isGhost"))
-    {
-        // Resume our sound spam as the Jockey is still alive
-        if (GetClientTeam(client) == L4D_TEAM_INFECTED && L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Jockey)
-        {
-            ChangeJockeyTimerStatus(client, true);
-        }
-    }
-}
-
-Action EmitJockeySound(Handle timer, any client)
-{
-    int rndPick                = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
-    g_bEmitJockeySound[client] = true;
-    EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
-    g_bEmitJockeySound[client] = false;
-
-    return Plugin_Continue;
-}
-
-void ChangeJockeyTimerStatus(int client, bool bEnable)
+void KillJockeySoundTimer(int client)
 {
     if (g_hJockeySoundTimer[client] != null)
     {
         delete g_hJockeySoundTimer[client];
     }
+}
 
-    if (bEnable)
+Action EmitJockeySound(Handle timer, any client)
+{
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
-        g_hJockeySoundTimer[client] = CreateTimer(g_hJockeySoundInterval.FloatValue, EmitJockeySound, client, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+        return Plugin_Stop;
     }
+    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Jockey || L4D_GetVictimJockey(client) != 0)
+    {
+        return Plugin_Stop;
+    }
+
+    int rndPick                = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
+    g_bEmitJockeySound[client] = true;
+    EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
+    g_bEmitJockeySound[client] = false;
+    return Plugin_Continue;
 }
 
 bool IsClient(int index)
