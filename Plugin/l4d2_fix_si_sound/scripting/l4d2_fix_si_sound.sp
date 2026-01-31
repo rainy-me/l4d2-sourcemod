@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
     description = "특수좀비의 소리 문제를 개선합니다.",
-    version     = "1.1.0",
+    version     = "1.1.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
@@ -179,7 +179,7 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
             // warn 소리 재생하는 동안 idle 소리 중지
             if (StrContains(sample, "player/hunter/voice/warn/hunter_warn", false) != -1)
             {
-                CreateHunterSoundTimer(null, entity);
+                CreateHunterSoundTimer(entity);
                 return Plugin_Continue;
             }
         }
@@ -224,7 +224,7 @@ public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float
     bool isDucking = (buttons & IN_DUCK) != 0;
     if (isDucking && !g_bHunterWasDucking[client])
     {
-        CreateHunterSoundTimer(null, client);
+        CreateHunterSoundTimer(client);
         TriggerTimer(g_hHunterSoundTimer[client], true);
     }
     else if (!isDucking && g_bHunterWasDucking[client])
@@ -307,8 +307,7 @@ public void L4D_ActivateAbility_Hunter_Post(int client, int ability)
         return;
     }
 
-    KillHunterSoundTimer(client);
-    CreateTimer(3.8 - HUNTER_SOUND_INTERVAL, CreateHunterSoundTimer, client, TIMER_FLAG_NO_MAPCHANGE);
+    CreateHunterSoundTimer(client);
 }
 
 public void L4D2_ActivateAbility_Charger_Post(int client, int ability)
@@ -347,7 +346,7 @@ void KillSmokerSoundTimer(int client)
     }
 }
 
-void CreateHunterSoundTimer(Handle timer, int client)
+void CreateHunterSoundTimer(int client)
 {
     KillHunterSoundTimer(client);
     g_hHunterSoundTimer[client] = CreateTimer(HUNTER_SOUND_INTERVAL, EmitHunterSound, client,
