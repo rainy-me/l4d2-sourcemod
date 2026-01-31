@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
     description = "특수좀비의 소리 문제를 개선합니다.",
-    version     = "1.0.1",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
@@ -85,7 +85,6 @@ public void OnPluginStart()
     AddNormalSoundHook(SoundHook);
     HookEvent("player_spawn", Event_PlayerSpawn);
     HookEvent("player_death", Event_PlayerDeath);
-    HookEvent("player_team", Event_PlayerTeam);
     HookEvent("charger_charge_end", Event_ChargerChargeEnd);
 }
 
@@ -281,20 +280,6 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
     }
 }
 
-void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
-{
-    int client = GetClientOfUserId(event.GetInt("userid"));
-    if (!IsClient(client) || !IsClientInGame(client))
-    {
-        return;
-    }
-
-    KillSmokerSoundTimer(client);
-    KillHunterSoundTimer(client);
-    KillJockeySoundTimer(client);
-    KillChargerSoundTimer(client);
-}
-
 public void L4D2_ActivateAbility_Charger_Post(int client, int ability)
 {
     if (!IsClient(client) || !IsClientInGame(client))
@@ -380,10 +365,12 @@ Action EmitSmokerSound(Handle timer, any client)
 {
     if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
+        g_hSmokerSoundTimer[client] = null;
         return Plugin_Stop;
     }
     if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Smoker)
     {
+        g_hSmokerSoundTimer[client] = null;
         return Plugin_Stop;
     }
     if (L4D_GetVictimSmoker(client) != 0)
@@ -402,10 +389,12 @@ Action EmitHunterSound(Handle timer, any client)
 {
     if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
+        g_hHunterSoundTimer[client] = null;
         return Plugin_Stop;
     }
     if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Hunter)
     {
+        g_hHunterSoundTimer[client] = null;
         return Plugin_Stop;
     }
     if (L4D_GetVictimHunter(client) != 0)
@@ -427,10 +416,12 @@ Action EmitJockeySound(Handle timer, any client)
 {
     if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
+        g_hJockeySoundTimer[client] = null;
         return Plugin_Stop;
     }
     if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Jockey)
     {
+        g_hJockeySoundTimer[client] = null;
         return Plugin_Stop;
     }
     if (L4D_GetVictimJockey(client) != 0)
@@ -449,10 +440,12 @@ Action EmitChargerSound(Handle timer, any client)
 {
     if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
+        g_hChargerSoundTimer[client] = null;
         return Plugin_Stop;
     }
     if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Charger)
     {
+        g_hChargerSoundTimer[client] = null;
         return Plugin_Stop;
     }
     if (L4D_GetVictimCharger(client) != 0)
