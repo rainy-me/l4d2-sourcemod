@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
     description = "특수좀비의 소리 문제를 개선합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
@@ -393,7 +393,7 @@ Action EmitSmokerSound(Handle timer, any client)
 
     int rndPick                = GetRandomInt(0, (sizeof(g_sSmokerSound) - 1));
     g_bEmitSmokerSound[client] = true;
-    EmitSoundToAll(g_sSmokerSound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
+    EmitSoundToAll(g_sSmokerSound[rndPick], client, SNDCHAN_VOICE, 85);
     g_bEmitSmokerSound[client] = false;
     return Plugin_Continue;
 }
@@ -462,7 +462,7 @@ Action EmitChargerSound(Handle timer, any client)
 
     int rndPick                 = GetRandomInt(0, (sizeof(g_sChargerSound) - 1));
     g_bEmitChargerSound[client] = true;
-    EmitSoundToAll(g_sChargerSound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
+    EmitSoundToAll(g_sChargerSound[rndPick], client, SNDCHAN_VOICE, 85);
     g_bEmitChargerSound[client] = false;
     return Plugin_Continue;
 }
