@@ -64,14 +64,14 @@ static char g_sJockeySound[][] = {
     "player/jockey/voice/idle/jockey_recognize18.wav"
 };
 static char g_sChargerSound[][] = {
-    "player/charger/voice/idle/Charger_lurk_01.wav",
-    "player/charger/voice/idle/Charger_lurk_02.wav",
-    "player/charger/voice/idle/Charger_lurk_03.wav",
-    "player/charger/voice/idle/Charger_lurk_05.wav",
-    "player/charger/voice/idle/Charger_lurk_06.wav",
-    "player/charger/voice/idle/Charger_lurk_08.wav",
-    "player/charger/voice/idle/Charger_lurk_09.wav",
-    "player/charger/voice/idle/Charger_lurk_10.wav"
+    "player/charger/voice/idle/charger_lurk_01.wav",
+    "player/charger/voice/idle/charger_lurk_02.wav",
+    "player/charger/voice/idle/charger_lurk_03.wav",
+    "player/charger/voice/idle/charger_lurk_05.wav",
+    "player/charger/voice/idle/charger_lurk_06.wav",
+    "player/charger/voice/idle/charger_lurk_08.wav",
+    "player/charger/voice/idle/charger_lurk_09.wav",
+    "player/charger/voice/idle/charger_lurk_10.wav"
 };
 
 public void OnPluginStart()
