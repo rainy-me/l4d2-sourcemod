@@ -5,8 +5,9 @@
 #include <sdktools>
 #include <left4dhooks>
 
-#define HUNTER_SOUND_INTERVAL 2.7
-#define JOCKEY_SOUND_INTERVAL 1.8
+#define HUNTER_SOUND_INTERVAL  2.7
+#define JOCKEY_SOUND_INTERVAL  1.8
+#define CHARGER_SOUND_INTERVAL 1.78
 
 public Plugin myinfo =
 {
@@ -19,12 +20,14 @@ public Plugin myinfo =
 
 ConVar      g_hAutoConvars;
 
-bool        g_bEmitHunterSound[MAXPLAYERS + 1]  = { false, ... };
-bool        g_bEmitJockeySound[MAXPLAYERS + 1]  = { false, ... };
-Handle      g_hHunterSoundTimer[MAXPLAYERS + 1] = { null, ... };
-Handle      g_hJockeySoundTimer[MAXPLAYERS + 1] = { null, ... };
+bool        g_bEmitHunterSound[MAXPLAYERS + 1]   = { false, ... };
+bool        g_bEmitJockeySound[MAXPLAYERS + 1]   = { false, ... };
+bool        g_bEmitChargerSound[MAXPLAYERS + 1]  = { false, ... };
+Handle      g_hHunterSoundTimer[MAXPLAYERS + 1]  = { null, ... };
+Handle      g_hJockeySoundTimer[MAXPLAYERS + 1]  = { null, ... };
+Handle      g_hChargerSoundTimer[MAXPLAYERS + 1] = { null, ... };
 
-static char g_sHunterSound[][]                  = {
+static char g_sHunterSound[][]                   = {
     "player/hunter/voice/idle/hunter_stalk_04.wav",
     "player/hunter/voice/idle/hunter_stalk_05.wav",
     "player/hunter/voice/idle/hunter_stalk_06.wav",
@@ -46,6 +49,16 @@ static char g_sJockeySound[][] = {
     "player/jockey/voice/idle/jockey_recognize17.wav",
     "player/jockey/voice/idle/jockey_recognize18.wav"
 };
+static char g_sChargerSound[][] = {
+    "player/charger/voice/idle/Charger_lurk_01.wav",
+    "player/charger/voice/idle/Charger_lurk_02.wav",
+    "player/charger/voice/idle/Charger_lurk_03.wav",
+    "player/charger/voice/idle/Charger_lurk_05.wav",
+    "player/charger/voice/idle/Charger_lurk_06.wav",
+    "player/charger/voice/idle/Charger_lurk_08.wav",
+    "player/charger/voice/idle/Charger_lurk_09.wav",
+    "player/charger/voice/idle/Charger_lurk_10.wav"
+};
 
 public void OnPluginStart()
 {
@@ -59,6 +72,7 @@ public void OnPluginStart()
     HookEvent("player_spawn", Event_PlayerSpawn);
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("player_team", Event_PlayerTeam);
+    HookEvent("charger_charge_end", Event_ChargerChargeEnd);
 }
 
 public void OnMapStart()
@@ -71,12 +85,17 @@ public void OnMapStart()
     {
         PrecacheSound(g_sHunterSound[i], true);
     }
+    for (int i = 0; i < sizeof(g_sChargerSound); i++)
+    {
+        PrecacheSound(g_sChargerSound[i], true);
+    }
 
     // avoid invalid timer handle exceptions after map transitions
     for (int i = 1; i <= MAXPLAYERS; i++)
     {
-        g_hHunterSoundTimer[i] = null;
-        g_hJockeySoundTimer[i] = null;
+        g_hHunterSoundTimer[i]  = null;
+        g_hJockeySoundTimer[i]  = null;
+        g_hChargerSoundTimer[i] = null;
     }
 }
 
@@ -145,6 +164,21 @@ Action SoundHook(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH
                 return Plugin_Stop;
             }
         }
+        case L4D2ZombieClass_Charger:
+        {
+            // 게임 엔진에서 재생하는 idle 소리 막기 (플러그인에서 강제로 재생하는 소리와 중복 재생되는 문제 해결)
+            if (StrContains(sample, "player/charger/voice/idle/charger_lurk", false) != -1 && !g_bEmitChargerSound[entity])
+            {
+                return Plugin_Stop;
+            }
+            // 타겟 포착 소리 재생하는 동안 idle 소리 중지
+            if (StrContains(sample, "player/charger/voice/idle/charger_spotprey", false) != -1)
+            {
+                KillChargerSoundTimer(entity);
+                CreateChargerSoundTimer(entity);
+                return Plugin_Continue;
+            }
+        }
     }
 
     return Plugin_Continue;
@@ -161,6 +195,7 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
     // This will also trigger if you switch to Tank
     KillHunterSoundTimer(client);
     KillJockeySoundTimer(client);
+    KillChargerSoundTimer(client);
 
     int zClass = L4D2_GetPlayerZombieClass(client);
     switch (zClass)
@@ -172,6 +207,10 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
         case L4D2ZombieClass_Jockey:
         {
             CreateJockeySoundTimer(client);
+        }
+        case L4D2ZombieClass_Charger:
+        {
+            CreateChargerSoundTimer(client);
         }
     }
 }
@@ -195,6 +234,10 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
         {
             KillJockeySoundTimer(client);
         }
+        case L4D2ZombieClass_Charger:
+        {
+            KillChargerSoundTimer(client);
+        }
     }
 }
 
@@ -208,6 +251,28 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 
     KillHunterSoundTimer(client);
     KillJockeySoundTimer(client);
+    KillChargerSoundTimer(client);
+}
+
+public void L4D2_ActivateAbility_Charger_Post(int client)
+{
+    if (!IsClient(client) || !IsClientInGame(client))
+    {
+        return;
+    }
+
+    KillChargerSoundTimer(client);
+}
+
+void Event_ChargerChargeEnd(Event event, const char[] name, bool dontBroadcast)
+{
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (!IsClient(client) || !IsClientInGame(client))
+    {
+        return;
+    }
+
+    CreateChargerSoundTimer(client);
 }
 
 void CreateHunterSoundTimer(Handle timer, int client)
@@ -240,26 +305,19 @@ void KillJockeySoundTimer(int client)
     }
 }
 
-Action EmitJockeySound(Handle timer, any client)
+void CreateChargerSoundTimer(int client)
 {
-    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
-    {
-        return Plugin_Stop;
-    }
-    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Jockey)
-    {
-        return Plugin_Stop;
-    }
-    if (L4D_GetVictimJockey(client) != 0)
-    {
-        return Plugin_Continue;
-    }
+    KillChargerSoundTimer(client);
+    g_hChargerSoundTimer[client] = CreateTimer(CHARGER_SOUND_INTERVAL, EmitChargerSound, client,
+                                               TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+}
 
-    int rndPick                = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
-    g_bEmitJockeySound[client] = true;
-    EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
-    g_bEmitJockeySound[client] = false;
-    return Plugin_Continue;
+void KillChargerSoundTimer(int client)
+{
+    if (g_hChargerSoundTimer[client] != null)
+    {
+        delete g_hChargerSoundTimer[client];
+    }
 }
 
 Action EmitHunterSound(Handle timer, any client)
@@ -284,6 +342,50 @@ Action EmitHunterSound(Handle timer, any client)
         EmitSoundToAll(g_sHunterSound[rndPick], client, SNDCHAN_VOICE, 85);
         g_bEmitHunterSound[client] = false;
     }
+    return Plugin_Continue;
+}
+
+Action EmitJockeySound(Handle timer, any client)
+{
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    {
+        return Plugin_Stop;
+    }
+    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Jockey)
+    {
+        return Plugin_Stop;
+    }
+    if (L4D_GetVictimJockey(client) != 0)
+    {
+        return Plugin_Continue;
+    }
+
+    int rndPick                = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
+    g_bEmitJockeySound[client] = true;
+    EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
+    g_bEmitJockeySound[client] = false;
+    return Plugin_Continue;
+}
+
+Action EmitChargerSound(Handle timer, any client)
+{
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    {
+        return Plugin_Stop;
+    }
+    if (L4D2_GetPlayerZombieClass(client) != L4D2ZombieClass_Charger)
+    {
+        return Plugin_Stop;
+    }
+    if (L4D_GetVictimCharger(client) != 0)
+    {
+        return Plugin_Continue;
+    }
+
+    int rndPick                 = GetRandomInt(0, (sizeof(g_sChargerSound) - 1));
+    g_bEmitChargerSound[client] = true;
+    EmitSoundToAll(g_sChargerSound[rndPick], client, SNDCHAN_VOICE, SNDLEVEL_HELICOPTER);
+    g_bEmitChargerSound[client] = false;
     return Plugin_Continue;
 }
 
