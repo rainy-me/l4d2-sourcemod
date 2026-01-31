@@ -90,73 +90,70 @@ python 03_uninstall.py
 1. drop_secondary (forward 생성)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/drop_secondary>
 
-2. huntercrouchsound  
-   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/huntercrouchsound>
-
-3. l4d_ai_hunter_skeet_dmg_fix  
+2. l4d_ai_hunter_skeet_dmg_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
 
-4. l4d_witch_retreat_panic_fix  
+3. l4d_witch_retreat_panic_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_witch_retreat_panic_fix>
 
-5. l4d2_item_hint  
+4. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-6. l4d2_skill_detect  
+5. l4d2_skill_detect  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
 
-7. l4dffannounce  
+6. l4dffannounce  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-8. trigger_horde_notify  
+7. trigger_horde_notify  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
-9. firebulletsfix  
+8. firebulletsfix  
    <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
 
-10. l4d_death_item_glow (보조무기 glow 추가)  
-    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
+9. l4d_death_item_glow (보조무기 glow 추가)  
+   <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-11. l4d_fix_common_shove  
+10. l4d_fix_common_shove  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_common_shove>
 
-12. l4d_tongue_float_fix  
+11. l4d_tongue_float_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tongue_float_fix>
 
-13. l4d2_charge_target_fix  
+12. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-14. l4d2_fix_jockey_hitbox  
+13. l4d2_fix_jockey_hitbox  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-15. l4d2_jockey_jumpcap_patch  
+14. l4d2_jockey_jumpcap_patch  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-16. Hunter_pounce_alignment_fix  
+15. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-17. spit_fizzle  
+16. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-18. Explosion Announcer  
+17. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-19. Gear Transfer  
+18. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-20. l4d2_bugfix_deathspit  
+19. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-21. l4d2_tickrate_sg552_fix  
+20. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
-22. lagpreventor  
+21. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-23. Shove Direction Fix  
+22. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-24. Throwable Announcer  
+23. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
 ### C. 종속 플러그인
