@@ -12,21 +12,22 @@ public Plugin myinfo =
     name        = "L4D2 Idle Reload On All Weapons",
     author      = "Rainy",
     description = "모든 무기에서 유휴 장전이 가능하도록 합니다.",
-    version     = "1.0.4",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_reload_on_all_weapons"
 };
 
-Handle    g_hFinishReload                        = null;
-StringMap g_smIdleReloadableWeapons              = null;
-int       g_iReloadingWeaponSlot[MAXPLAYERS + 1] = { -1, ... };
+Handle    g_hFinishReload           = null;
+StringMap g_smIdleReloadableWeapons = null;
 
 enum EventState
 {
     State_None,
     State_Event1_Done,
 };
-EventState g_PlayerState[MAXPLAYERS + 1]   = { State_None, ... };
-float      g_fStateTimeout[MAXPLAYERS + 1] = { 0.0, ... };
+int        g_iActiveWeapon[MAXPLAYERS + 1]        = { -1, ... };
+int        g_iReloadingWeaponSlot[MAXPLAYERS + 1] = { -1, ... };
+EventState g_esEventState[MAXPLAYERS + 1]         = { State_None, ... };
+float      g_fStateTimeout[MAXPLAYERS + 1]        = { 0.0, ... };
 
 public void OnPluginStart()
 {
@@ -39,11 +40,11 @@ public void OnPluginStart()
     StartPrepSDKCall(SDKCall_Entity);
     PrepSDKCall_SetFromConf(hGameConf, SDKConf_Virtual, "CBaseCombatWeapon::FinishReload");
     g_hFinishReload = EndPrepSDKCall();
-    delete hGameConf;
     if (g_hFinishReload == null)
     {
         SetFailState("Failed to find CBaseCombatWeapon::FinishReload");
     }
+    delete hGameConf;
 
     // 유휴 재장전 가능한 무기 목록 초기화
     InitializeIdleReloadableWeapons();
@@ -53,20 +54,30 @@ public void OnPluginStart()
     HookEvent("bot_player_replace", Event_BotPlayerReplace);
 
     // 예외 처리
-    HookEvent("player_death", Event_ResetPlayerState);
-    HookEvent("round_end", Event_ResetPlayerState);
-    HookEvent("give_weapon", Event_ResetPlayerState);
-    HookEvent("upgrade_pack_used", Event_ResetPlayerState);
-    HookEvent("weapon_drop", Event_ResetPlayerState);
-    HookEvent("weapon_pickup", Event_ResetPlayerState);
+    HookEvent("player_death", Event_ResetState);
+    HookEvent("round_end", Event_ResetStateAll);
+    HookEvent("give_weapon", Event_ResetState);
+    HookEvent("upgrade_pack_used", Event_ResetState);
+    HookEvent("weapon_drop", Event_ResetState);
 }
 
-void Event_ResetPlayerState(Event event, const char[] name, bool dontBroadcast)
+void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (IsClient(client))
     {
-        ResetPlayerState(client);
+        ResetState(client);
+    }
+}
+
+void Event_ResetStateAll(Event event, const char[] name, bool dontBroadcast)
+{
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (IsClient(i) && IsClientInGame(i))
+        {
+            ResetState(i);
+        }
     }
 }
 
@@ -79,27 +90,26 @@ void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
     }
 
     // 현재 활성화된 무기 가져오기
-    int activeWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+    int activeWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
     if (!IsValidEntity(activeWeapon))
     {
         return;
     }
 
     // 현재 활성화된 무기의 슬롯 찾기
+    int activeWeaponSlot = -1;
     for (int i = 0; i < MAX_WEAPON_SLOTS; i++)
     {
-        int weaponInSlot = GetPlayerWeaponSlot(client, i);
-        if (weaponInSlot == activeWeapon)
+        if (GetPlayerWeaponSlot(client, i) == activeWeapon)
         {
-            g_iReloadingWeaponSlot[client] = i;
+            activeWeaponSlot = i;
             break;
         }
     }
 
     // 0번(주무기), 1번(보조무기) 슬롯인지 확인
-    if (g_iReloadingWeaponSlot[client] != 0 && g_iReloadingWeaponSlot[client] != 1)
+    if (activeWeaponSlot != 0 && activeWeaponSlot != 1)
     {
-        g_iReloadingWeaponSlot[client] = -1;
         return;
     }
 
@@ -108,13 +118,16 @@ void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
     GetEntityClassname(activeWeapon, activeWeaponClsname, sizeof(activeWeaponClsname));
     if (!IsIdleReloadableWeapon(activeWeaponClsname))
     {
-        g_iReloadingWeaponSlot[client] = -1;
         return;
     }
 
+    // 현재 활성화된 무기 및 슬롯 저장
+    g_iActiveWeapon[client]        = activeWeapon;
+    g_iReloadingWeaponSlot[client] = activeWeaponSlot;
+
     // 이벤트: 상태를 1단계 완료로 설정하고 타임아웃 시작
-    g_PlayerState[client]   = State_Event1_Done;
-    g_fStateTimeout[client] = GetGameTime() + RELOAD_TIMEOUT;
+    g_esEventState[client]         = State_Event1_Done;
+    g_fStateTimeout[client]        = GetGameTime() + RELOAD_TIMEOUT;
 }
 
 void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
@@ -122,33 +135,42 @@ void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
     int client = GetClientOfUserId(event.GetInt("player"));
     if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client))
     {
-        ResetPlayerState(client);
+        ResetState(client);
         return;
     }
 
     // 이전 상태가 1단계 완료이고, 타임아웃되지 않았는지 확인
-    if (g_PlayerState[client] == State_Event1_Done && GetGameTime() < g_fStateTimeout[client])
+    if (g_esEventState[client] != State_Event1_Done || g_fStateTimeout[client] < GetGameTime())
     {
-        IdleReload(client, g_iReloadingWeaponSlot[client]);
+        ResetState(client);
+        return;
     }
 
-    ResetPlayerState(client);
+    // 저장된 무기와 현재 재장전할 슬롯의 무기가 일치하는지 확인
+    if (g_iActiveWeapon[client] != GetPlayerWeaponSlot(client, g_iReloadingWeaponSlot[client]))
+    {
+        ResetState(client);
+        return;
+    }
+
+    IdleReload(g_iActiveWeapon[client]);
+    ResetState(client);
 }
 
-void IdleReload(int client, int slot)
+void IdleReload(int weapon)
 {
-    int weapon = GetPlayerWeaponSlot(client, slot);
     if (IsValidEntity(weapon))
     {
         SDKCall(g_hFinishReload, weapon);
     }
 }
 
-void ResetPlayerState(int client)
+void ResetState(int client)
 {
-    g_PlayerState[client]          = State_None;
-    g_fStateTimeout[client]        = 0.0;
+    g_iActiveWeapon[client]        = -1;
     g_iReloadingWeaponSlot[client] = -1;
+    g_esEventState[client]         = State_None;
+    g_fStateTimeout[client]        = 0.0;
 }
 
 bool IsIdleReloadableWeapon(const char[] weaponClsname)
