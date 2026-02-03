@@ -106,7 +106,7 @@ void Event_PlayerShoved(Event hEvent, const char[] sEventName, bool bDontBroadca
 MRESReturn CLeap_OnTouch(int iAbility, DHookParam hParams)
 {
     int iJockey = GetEntPropEnt(iAbility, Prop_Send, "m_owner");
-    if (!IsJockey(iJockey) || IsFakeClient(iJockey))
+    if (!IsJockey(iJockey))
     {
         return MRES_Ignored;
     }
