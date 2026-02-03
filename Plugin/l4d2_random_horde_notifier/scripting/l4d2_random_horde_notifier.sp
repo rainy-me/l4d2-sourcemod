@@ -10,7 +10,7 @@ public Plugin myinfo =
     name        = "L4D2 Random Horde Notifier",
     author      = "Rainy",
     description = "랜덤 웨이브가 발생하면 알림을 표시합니다.",
-    version     = "1.0.0",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_random_horde_notifier"
 };
 
@@ -19,7 +19,7 @@ float  g_fNotifyAllowTime = 0.0;
 
 public void OnPluginStart()
 {
-    g_hCooldownTime = CreateConVar("l4d2_random_horde_notifier_cooldown_time", "30.0",
+    g_hCooldownTime = CreateConVar("l4d2_random_horde_notifier_cooldown_time", "20.0",
                                    "Cooldown time to notify again. (seconds)",
                                    FCVAR_NOTIFY, true, 0.0);
     AutoExecConfig(true, "l4d2_random_horde_notifier");
