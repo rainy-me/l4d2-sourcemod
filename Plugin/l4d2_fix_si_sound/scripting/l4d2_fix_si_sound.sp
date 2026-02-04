@@ -7,7 +7,7 @@
 
 #define SMOKER_SOUND_INTERVAL  2.45
 #define HUNTER_SOUND_INTERVAL  2.6
-#define JOCKEY_SOUND_INTERVAL  1.8
+#define JOCKEY_SOUND_INTERVAL  1.7
 #define CHARGER_SOUND_INTERVAL 1.7
 
 public Plugin myinfo =
@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
     description = "특수좀비의 소리 문제를 개선합니다.",
-    version     = "1.2.0",
+    version     = "1.3.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
@@ -65,9 +65,10 @@ static char g_sJockeySound[][] = {
     "player/jockey/voice/idle/jockey_recognize11.wav",
     "player/jockey/voice/idle/jockey_recognize13.wav",
     "player/jockey/voice/idle/jockey_recognize15.wav",
-    "player/jockey/voice/idle/jockey_recognize16.wav",
     "player/jockey/voice/idle/jockey_recognize17.wav",
-    "player/jockey/voice/idle/jockey_recognize18.wav"
+    "player/jockey/voice/idle/jockey_recognize18.wav",
+    "player/jockey/voice/idle/jockey_recognize20.wav",
+    "player/jockey/voice/idle/jockey_recognize24.wav"
 };
 static char g_sChargerSound[][] = {
     "player/charger/voice/idle/charger_lurk_01.wav",
