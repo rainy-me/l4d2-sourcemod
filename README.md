@@ -129,34 +129,40 @@ python 03_uninstall.py
 13. l4d2_fix_jockey_hitbox  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-14. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
+14. l4d_tank_damage_announce  
+    <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_tank_damage_announce.sp>
+
+15. l4d_witch_damage_announce  
+    <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
+
+16. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-15. Hunter_pounce_alignment_fix  
+17. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-16. spit_fizzle  
+18. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-17. Explosion Announcer  
+19. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-18. Gear Transfer  
+20. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-19. l4d2_bugfix_deathspit  
+21. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-20. l4d2_tickrate_sg552_fix  
+22. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
-21. lagpreventor  
+23. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-22. Shove Direction Fix  
+24. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-23. Throwable Announcer  
+25. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
 ### C. 종속 플러그인
