@@ -168,6 +168,9 @@ python 03_uninstall.py
 26. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
+27. Upgrade Ammo Pack Deploy Announce  
+    <https://forums.alliedmods.net/showthread.php?p=2797826>
+
 ### C. 종속 플러그인
 
 1. Actions  
