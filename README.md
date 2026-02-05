@@ -90,7 +90,7 @@ python 03_uninstall.py
 
 ### B. 공개 플러그인
 
-1. drop_secondary (forward 생성)  
+1. drop_secondary (forward 추가)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/drop_secondary>
 
 2. l4d_ai_hunter_skeet_dmg_fix  
