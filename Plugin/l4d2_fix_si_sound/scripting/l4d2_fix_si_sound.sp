@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
     description = "특수좀비의 소리 문제를 개선합니다.",
-    version     = "1.3.0",
+    version     = "1.3.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
@@ -233,6 +233,14 @@ public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float
         KillHunterSoundTimer(client);
     }
     g_bHunterWasDucking[client] = isDucking;
+}
+
+public void OnClientDisconnect(int client)
+{
+    KillSmokerSoundTimer(client);
+    KillHunterSoundTimer(client);
+    KillJockeySoundTimer(client);
+    KillChargerSoundTimer(client);
 }
 
 void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
