@@ -191,16 +191,13 @@ python 03_uninstall.py
 4. Multi Colors  
    <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
 
-5. neb_stocks  
-   <https://github.com/neburaii/l4d2-plugins/tree/main/neb_stocks/scripting/include>
-
-6. SourceScramble  
+5. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-7. Use Priority Patch  
+6. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
-8. Tickrate Enabler  
+7. Tickrate Enabler  
    <https://github.com/accelerator74/Tickrate-Enabler>
 
 ### D. 미사용 플러그인
