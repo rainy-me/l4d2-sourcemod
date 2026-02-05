@@ -101,13 +101,13 @@ public void OnMapStart()
     {
         PrecacheSound(g_sSmokerSound[i], true);
     }
-    for (int i = 0; i < sizeof(g_sJockeySound); i++)
-    {
-        PrecacheSound(g_sJockeySound[i], true);
-    }
     for (int i = 0; i < sizeof(g_sHunterSound); i++)
     {
         PrecacheSound(g_sHunterSound[i], true);
+    }
+    for (int i = 0; i < sizeof(g_sJockeySound); i++)
+    {
+        PrecacheSound(g_sJockeySound[i], true);
     }
     for (int i = 0; i < sizeof(g_sChargerSound); i++)
     {
@@ -115,7 +115,7 @@ public void OnMapStart()
     }
 
     // avoid invalid timer handle exceptions after map transitions
-    for (int i = 1; i <= MAXPLAYERS; i++)
+    for (int i = 0; i <= MAXPLAYERS; i++)
     {
         g_hSmokerSoundTimer[i]  = null;
         g_hHunterSoundTimer[i]  = null;
