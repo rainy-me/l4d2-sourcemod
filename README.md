@@ -73,7 +73,7 @@ python 03_uninstall.py
 8. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
    모든 무기에서 유휴 장전이 가능하도록 합니다.
 
-9. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)
+9. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
    CI/SI의 ragdoll을 즉시 제거합니다.
 
 10. [l4d2_random_horde_notifier](/Plugin/l4d2_random_horde_notifier/)  
@@ -153,22 +153,25 @@ python 03_uninstall.py
 21. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-22. l4d2_script_cmd_swap  
+22. l4d2_getup_damage_fix  
+    <https://forums.alliedmods.net/showthread.php?p=2451569>
+
+23. l4d2_script_cmd_swap  
     <https://forums.alliedmods.net/showthread.php?p=2657025>
 
-23. l4d2_tickrate_sg552_fix  
+24. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
-24. lagpreventor  
+25. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-25. Shove Direction Fix  
+26. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-26. Throwable Announcer  
+27. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-27. Upgrade Ammo Pack Deploy Announce  
+28. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
 ### C. 종속 플러그인
