@@ -199,7 +199,7 @@ python 03_uninstall.py
 
 ### D. 미사용 플러그인
 
-1. [l4d2_idle_unlock](/legacy/l4d2_idle_unlock/)  
+1. [l4d2_idle_unlock](/archive/l4d2_idle_unlock/)  
    플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.  
    ([l4d2_idle_fix](/Plugin/l4d2_idle_fix)에 포함됨)
 
