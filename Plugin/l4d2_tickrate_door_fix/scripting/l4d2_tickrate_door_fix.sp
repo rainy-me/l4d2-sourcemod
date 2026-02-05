@@ -6,7 +6,7 @@
 #include <sdktools>
 
 #define MAX_EDICTS             2048    //(1 << 11)
-#define MAX_ENTITY_NAME_LENGTH 64
+#define ENTITY_MAX_NAME_LENGTH 64
 
 public Plugin myinfo =
 {
@@ -24,7 +24,7 @@ enum
     DoorTypeTracked_Prop_Door_Rotating_Checkpoint = 1
 };
 
-static const char g_szDoors_Type_Tracked[][MAX_ENTITY_NAME_LENGTH] = {
+static const char g_szDoors_Type_Tracked[][ENTITY_MAX_NAME_LENGTH] = {
     "prop_door_rotating",
     "prop_door_rotating_checkpoint"
 };
@@ -84,7 +84,7 @@ void Hook_DoorSpawnPost(int iEntity)
         return;
     }
 
-    char sClassName[MAX_ENTITY_NAME_LENGTH];
+    char sClassName[ENTITY_MAX_NAME_LENGTH];
     GetEntityClassname(iEntity, sClassName, sizeof(sClassName));
 
     // Save Original Settings.
