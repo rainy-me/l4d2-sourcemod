@@ -129,49 +129,52 @@ python 03_uninstall.py
 13. l4d2_fix_jockey_hitbox  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-14. l4d_tank_damage_announce  
+14. l4d2_getup_fixes  
+    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_getup_fixes>
+
+15. l4d_tank_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_tank_damage_announce.sp>
 
-15. l4d_witch_damage_announce  
+16. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-16. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
+17. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-17. Hunter_pounce_alignment_fix  
+18. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-18. spit_fizzle  
+19. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-19. Explosion Announcer  
+20. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-20. Gear Transfer  
+21. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-21. l4d2_bugfix_deathspit  
+22. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-22. l4d2_getup_damage_fix  
+23. l4d2_getup_damage_fix  
     <https://forums.alliedmods.net/showthread.php?p=2451569>
 
-23. l4d2_script_cmd_swap  
+24. l4d2_script_cmd_swap  
     <https://forums.alliedmods.net/showthread.php?p=2657025>
 
-24. l4d2_tickrate_sg552_fix  
+25. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
-25. lagpreventor  
+26. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-26. Shove Direction Fix  
+27. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-27. Throwable Announcer  
+28. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-28. Upgrade Ammo Pack Deploy Announce  
+29. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
 ### C. 종속 플러그인
