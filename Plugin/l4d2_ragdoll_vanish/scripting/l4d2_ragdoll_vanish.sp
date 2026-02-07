@@ -26,11 +26,6 @@ public void OnEntityCreated(int entity, const char[] classname)
     }
 }
 
-void Frame_RemoveEntity(int entity)
-{
-    RemoveEntity(entity);
-}
-
 void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
     int entity = event.GetInt("entityid");
@@ -46,4 +41,9 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
     {
         RequestFrame(Frame_RemoveEntity, entity);
     }
+}
+
+void Frame_RemoveEntity(int entity)
+{
+    RemoveEntity(entity);
 }
