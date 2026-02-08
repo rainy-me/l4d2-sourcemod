@@ -29,7 +29,7 @@ public Plugin myinfo =
     name        = "L4D2 Jockey Jump-Cap Patch",
     author      = "Visor, A1m`",
     description = "Prevent Jockeys from being able to land caps with non-ability jumps in unfair situations",
-    version     = "1.6",
+    version     = "1.7",
     url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -39,7 +39,7 @@ public void OnPluginStart()
 
     g_hCvarJumpCapBlockTime = CreateConVar(
         "l4d2_jumpcap_block_time",
-        "3.0",
+        "2.5",
         "Sets the block duration for jockey jumpcaps (in seconds)",
         _, true, 1.0, true, 10.0);
 
@@ -117,7 +117,7 @@ MRESReturn CLeap_OnTouch(int iAbility, DHookParam hParams)
         return MRES_Ignored;
     }
 
-    if (!IsAbilityActive(iAbility) && IsJumpBlocked(iJockey))
+    if (IsJumpBlocked(iJockey))
     {
         return MRES_Supercede;
     }
@@ -129,11 +129,6 @@ bool IsJumpBlocked(int iClient)
 {
     return (g_esShovedInfo[iClient].eiUserId == GetClientUserId(iClient)
             && g_esShovedInfo[iClient].efBlockUntil >= GetGameTime());
-}
-
-bool IsAbilityActive(int iAbility)
-{
-    return (GetEntProp(iAbility, Prop_Send, "m_isLeaping", 1) > 0);
 }
 
 bool IsJockey(int iClient)
