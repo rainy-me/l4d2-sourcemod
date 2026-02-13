@@ -8,7 +8,7 @@ public Plugin myinfo =
     name        = "L4D2 Ragdoll Vanish",
     author      = "Rainy",
     description = "CI/SI의 ragdoll을 즉시 제거합니다.",
-    version     = "1.0.1",
+    version     = "1.0.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_ragdoll_vanish"
 };
 
@@ -22,7 +22,7 @@ public void OnEntityCreated(int entity, const char[] classname)
     // Remove Smoker, Boomer, Hunter, Spitter, Jockey, Charger, Tank ragdolls
     if (StrEqual(classname, "cs_ragdoll"))
     {
-        RequestFrame(Frame_RemoveEntity, entity);
+        RemoveEntity(entity);
     }
 }
 
@@ -34,16 +34,11 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
-    // Remove CI, Witch ragdolls
+    // Remove CI ragdolls
     static char sClassName[64];
     GetEntityClassname(entity, sClassName, sizeof(sClassName));
-    if (StrEqual(sClassName, "infected") || StrEqual(sClassName, "witch"))
+    if (StrEqual(sClassName, "infected"))
     {
-        RequestFrame(Frame_RemoveEntity, entity);
+        RemoveEntity(entity);
     }
-}
-
-void Frame_RemoveEntity(int entity)
-{
-    RemoveEntity(entity);
 }
