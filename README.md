@@ -76,13 +76,10 @@ python 03_uninstall.py
 9. [l4d2_random_horde_notifier](/Plugin/l4d2_random_horde_notifier/)  
    랜덤 웨이브가 발생하면 알림을 표시합니다.
 
-10. [l4d2_si_assault](/Plugin/l4d2_si_assault/)  
-    모든 SI 봇이 대기하지 않고 생존자를 적극적으로 공격합니다.
-
-11. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+10. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-12. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+11. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
 ### B. 공개 플러그인
@@ -190,6 +187,10 @@ python 03_uninstall.py
 1. [l4d2_idle_unlock](/archive/l4d2_idle_unlock/)  
    플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.  
    ([l4d2_idle_fix](/Plugin/l4d2_idle_fix)에 포함됨)
+
+2. [l4d2_si_assault](/Plugin/l4d2_si_assault/)  
+   모든 SI 봇이 대기하지 않고 생존자를 적극적으로 공격합니다.  
+   (행동 패턴이 이상해져서 미사용)
 
 ## Rainy's 리포지토리
 
