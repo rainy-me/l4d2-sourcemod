@@ -147,22 +147,19 @@ python 03_uninstall.py
 20. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-21. l4d2_script_cmd_swap  
-    <https://forums.alliedmods.net/showthread.php?p=2657025>
-
-22. l4d2_tickrate_sg552_fix  
+21. l4d2_tickrate_sg552_fix  
     <https://forums.alliedmods.net/showthread.php?t=322141>
 
-23. lagpreventor  
+22. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-24. Shove Direction Fix  
+23. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-25. Throwable Announcer  
+24. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-26. Upgrade Ammo Pack Deploy Announce  
+25. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
 ### C. 종속 플러그인
