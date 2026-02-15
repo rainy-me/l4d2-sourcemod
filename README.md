@@ -159,6 +159,9 @@ python 03_uninstall.py
 25. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
+26. l4d2_kill_sound  
+    출처 없음
+
 ### C. 종속 플러그인
 
 1. Actions  
