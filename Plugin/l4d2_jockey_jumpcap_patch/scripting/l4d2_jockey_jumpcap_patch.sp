@@ -29,7 +29,7 @@ public Plugin myinfo =
     name        = "L4D2 Jockey Jump-Cap Patch",
     author      = "Visor, A1m`",
     description = "Prevent Jockeys from being able to land caps with non-ability jumps in unfair situations",
-    version     = "1.7",
+    version     = "1.8",
     url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -39,7 +39,7 @@ public void OnPluginStart()
 
     g_hCvarJumpCapBlockTime = CreateConVar(
         "l4d2_jumpcap_block_time",
-        "2.5",
+        "2.0",
         "Sets the block duration for jockey jumpcaps (in seconds)",
         _, true, 1.0, true, 10.0);
 
