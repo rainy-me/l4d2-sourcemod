@@ -4,6 +4,8 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 
 ## 설치
 
+> 주의: 아래 방법은 저의 게임 환경과 똑같이 설정할 사람만 사용하세요.
+
 1. 컴퓨터에 Python이 설치되어 있어야 합니다.  
    없다면 [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install#windows-installation)를 설치하세요.
 
