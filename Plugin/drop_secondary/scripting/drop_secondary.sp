@@ -46,6 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
     }
 
     // Create forward for other plugins
+    RegPluginLibrary("drop_secondary");
     g_hForward_OnSecondaryWeaponDrop = new GlobalForward("L4D2_OnSecondaryWeaponDrop", ET_Ignore, Param_Cell, Param_Cell);
 
     return APLRes_Success;

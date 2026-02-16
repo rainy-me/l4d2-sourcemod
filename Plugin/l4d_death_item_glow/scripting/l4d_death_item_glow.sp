@@ -4,10 +4,7 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <left4dhooks>
-
-#undef REQUIRE_PLUGIN
 #include <drop_secondary>
-#define REQUIRE_PLUGIN
 
 #define PLUGIN_VERSION "1.2"
 
