@@ -20,7 +20,7 @@ def main():
                 raise ValueError("알 수 없는 파일 형식입니다.")
 
     # cfg 폴더 내 sourcemod 폴더 삭제
-    # shutil.rmtree(l4d2_dir / "left4dead2/cfg/sourcemod", ignore_errors=True)
+    shutil.rmtree(l4d2_dir / "left4dead2/cfg/sourcemod", ignore_errors=True)
 
     print(f"'{l4d2_dir}'에서 삭제 완료.")
 
