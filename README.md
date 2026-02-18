@@ -57,34 +57,40 @@ python 03_uninstall.py
 2. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
    근접무기와 전기톱을 명중률 통계에서 제외합니다.
 
-3. [l4d2_fix_si_sound](/Plugin/l4d2_fix_si_sound/)  
+3. [l4d2_block_idle](/Archive/l4d2_block_idle/)  
+   유휴 모드를 차단합니다.
+
+4. [l4d2_block_thirdperson](/Archive/l4d2_block_thirdperson/)  
+   3인칭 모드를 차단합니다.
+
+5. [l4d2_fix_si_sound](/Plugin/l4d2_fix_si_sound/)  
    특수좀비의 소리 문제를 개선합니다. (공개 플러그인 합본)
 
-4. [l4d2_getup_damage_fix](/Plugin/l4d2_getup_damage_fix/)  
+6. [l4d2_getup_damage_fix](/Plugin/l4d2_getup_damage_fix/)  
    일어나는 애니메이션이 진행되는 동안의 무적타임 불일치 문제를 고칩니다.
 
-5. [l4d2_hide_idle_message](/Plugin/l4d2_hide_idle_message/)  
+7. [l4d2_hide_idle_message](/Plugin/l4d2_hide_idle_message/)  
    유휴 상태 메시지를 채팅창에 표시하지 않도록 합니다.
 
-6. [l4d2_idle_adrenaline_fix](/Plugin/l4d2_idle_adrenaline_fix/)  
+8. [l4d2_idle_adrenaline_fix](/Plugin/l4d2_idle_adrenaline_fix/)  
    플레이어가 유휴 모드에서 복귀할 때 아드레날린 효과를 유지하도록 수정합니다.
 
-7. [l4d2_idle_fix](/Plugin/l4d2_idle_fix)  
+9. [l4d2_idle_fix](/Plugin/l4d2_idle_fix)  
    유휴 명령 미인식 문제를 해결합니다.
 
-8. [l4d2_idle_flashlight_fix](/Plugin/l4d2_idle_flashlight_fix/)  
-   유휴 전 손전등 on/off 상태를 유휴 후에도 유지합니다.
+10. [l4d2_idle_flashlight_fix](/Plugin/l4d2_idle_flashlight_fix/)  
+    유휴 전 손전등 on/off 상태를 유휴 후에도 유지합니다.
 
-9. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
-   모든 무기에서 유휴 장전이 가능하도록 합니다.
+11. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
+    모든 무기에서 유휴 장전이 가능하도록 합니다.
 
-10. [l4d2_random_horde_notifier](/Plugin/l4d2_random_horde_notifier/)  
+12. [l4d2_random_horde_notifier](/Plugin/l4d2_random_horde_notifier/)  
     랜덤 웨이브가 발생하면 알림을 표시합니다.
 
-11. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+13. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-12. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+14. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
 ### B. 공개 플러그인
