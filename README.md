@@ -187,7 +187,7 @@ python 03_uninstall.py
 7. Tickrate Enabler  
    <https://github.com/accelerator74/Tickrate-Enabler>
 
-### D. 미사용 플러그인
+### D. 보관 플러그인
 
 1. [l4d2_idle_unlock](/Archive/l4d2_idle_unlock/)  
    플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.  
