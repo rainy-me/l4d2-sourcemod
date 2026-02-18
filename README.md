@@ -51,7 +51,7 @@ python 03_uninstall.py
 
 ### A. 자작 플러그인
 
-1. [dingshot](/Plugin/dingshot/)  
+1. [dingshot](/Archive/dingshot/)  
    헤드샷 시 띵 소리를 출력합니다.
 
 2. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
@@ -189,11 +189,11 @@ python 03_uninstall.py
 
 ### D. 미사용 플러그인
 
-1. [l4d2_idle_unlock](/archive/l4d2_idle_unlock/)  
+1. [l4d2_idle_unlock](/Archive/l4d2_idle_unlock/)  
    플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.  
    ([l4d2_idle_fix](/Plugin/l4d2_idle_fix)에 포함됨)
 
-2. [l4d2_si_assault](/archive/l4d2_si_assault/)  
+2. [l4d2_si_assault](/Archive/l4d2_si_assault/)  
    모든 SI 봇이 대기하지 않고 생존자를 적극적으로 공격합니다.  
    (행동 패턴이 이상해져서 미사용)
 
