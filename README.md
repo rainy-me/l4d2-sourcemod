@@ -84,13 +84,16 @@ python 03_uninstall.py
 11. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
     모든 무기에서 유휴 장전이 가능하도록 합니다.
 
-12. [l4d2_random_horde_notifier](/Plugin/l4d2_random_horde_notifier/)  
+12. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
+    CI/SI의 ragdoll을 즉시 제거합니다.
+
+13. [l4d2_random_horde_notifier](/Plugin/l4d2_random_horde_notifier/)  
     랜덤 웨이브가 발생하면 알림을 표시합니다.
 
-13. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+14. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-14. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+15. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
 ### B. 공개 플러그인
