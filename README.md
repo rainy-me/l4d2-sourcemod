@@ -64,7 +64,7 @@ python 03_uninstall.py
    3인칭 모드를 차단합니다.
 
 5. [l4d2_fix_si_sound](/Plugin/l4d2_fix_si_sound/)  
-   특수좀비의 소리 문제를 개선합니다. (공개 플러그인 합본)
+   특수좀비의 무음 문제를 개선합니다. (공개 플러그인 합본)
 
 6. [l4d2_getup_damage_fix](/Plugin/l4d2_getup_damage_fix/)  
    일어나는 애니메이션이 진행되는 동안의 무적타임 불일치 문제를 고칩니다.

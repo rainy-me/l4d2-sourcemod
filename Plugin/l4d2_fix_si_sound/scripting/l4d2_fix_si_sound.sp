@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
-    description = "특수좀비의 소리 문제를 개선합니다.",
+    description = "특수좀비의 무음 문제를 개선합니다.",
     version     = "1.3.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
