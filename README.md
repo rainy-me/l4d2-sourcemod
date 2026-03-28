@@ -205,10 +205,6 @@ python 03_uninstall.py
    플레이어 1명, 대전, 스캐빈지에서 유휴 모드가 가능하도록 합니다.  
    ([l4d2_idle_fix](/Plugin/l4d2_idle_fix)에 포함됨)
 
-2. [l4d2_si_assault](/Archive/l4d2_si_assault/)  
-   모든 SI 봇이 대기하지 않고 생존자를 적극적으로 공격합니다.  
-   (행동 패턴이 이상해져서 미사용)
-
 ## Rainy's 리포지토리
 
 - [l4d2-settings](https://github.com/rainy-me/l4d2-settings): Left 4 Dead 2 설정 모음
