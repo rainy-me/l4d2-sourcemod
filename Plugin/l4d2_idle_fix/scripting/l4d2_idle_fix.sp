@@ -9,7 +9,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Fix",
     author      = "Rainy",
     description = "유휴 명령 미인식 문제를 해결합니다.",
-    version     = "1.4.3",
+    version     = "1.4.4",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
 };
 
@@ -29,7 +29,7 @@ public void OnPluginStart()
     g_hIdleMessage     = CreateConVar("l4d2_idle_fix_idle_message", "0",
                                       "ON/OFF idle message. (1=ON, 0=OFF)",
                                       FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hCooldownTime    = CreateConVar("l4d2_idle_fix_cooldown_time", "0.2",
+    g_hCooldownTime    = CreateConVar("l4d2_idle_fix_cooldown_time", "0.0",
                                       "Cooldown time in seconds a player can use the idle command again.",
                                       FCVAR_NOTIFY, true, 0.0);
     g_hCooldownMessage = CreateConVar("l4d2_idle_fix_cooldown_message", "0",
