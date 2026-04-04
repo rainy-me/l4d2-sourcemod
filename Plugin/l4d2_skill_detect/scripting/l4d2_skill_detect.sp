@@ -113,12 +113,6 @@
 #define ZC_TANK			8
 #define HITGROUP_HEAD	1
 
-#define DMG_CRUSH				(1 << 0)		// crushed by falling or moving object. 
-#define DMG_BULLET				(1 << 1)		// shot
-#define DMG_SLASH				(1 << 2)		// cut, clawed, stabbed
-#define DMG_CLUB				(1 << 7)		// crowbar, punch, headbutt
-#define DMG_BUCKSHOT			(1 << 29)		// not quite a bullet. Little, rounder, different. 
-
 #define DMGARRAYEXT		7						// MAXPLAYERS+# -- extra indices in witch_dmg_array + 1
 
 #define CUT_SHOVED		1						// smoker got shoved
@@ -499,7 +493,7 @@ public OnPluginStart()
 	HookEvent("round_end",					Event_RoundEnd,		EventHookMode_PostNoCopy); //trigger twice in versus mode, one when all survivors wipe out or make it to saferom, one when first round ends (second round_start begins).
 	HookEvent("map_transition", 			Event_RoundEnd,		EventHookMode_PostNoCopy); //all survivors make it to saferoom, and server is about to change next level in coop mode (does not trigger round_end) 
 	HookEvent("mission_lost", 				Event_RoundEnd,		EventHookMode_PostNoCopy); //all survivors wipe out in coop mode (also triggers round_end)
-	HookEvent("finale_vehicle_leaving", 	Event_RoundEnd,		EventHookMode_PostNoCopy); //final map final rescue vehicle leaving  (does not trigger round_end)
+	HookEvent("finale_win", 				Event_RoundEnd,		EventHookMode_PostNoCopy);
 	
 	HookEvent("player_spawn",				Event_PlayerSpawn,				EventHookMode_Post);
 	HookEvent("player_hurt",				Event_PlayerHurt,				EventHookMode_Pre);
