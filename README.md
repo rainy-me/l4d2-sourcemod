@@ -194,7 +194,7 @@ python 03_uninstall.py
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
 7. Tickrate Enabler  
-   <https://github.com/accelerator74/Tickrate-Enabler>
+   <https://github.com/accelerator74/Tickrate-Enabler/releases>
 
 ### D. 보관 플러그인
 
