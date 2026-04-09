@@ -7,7 +7,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 > 주의: 아래 방법은 저의 게임 환경과 똑같이 설정할 사람만 사용하세요.
 
 1. 컴퓨터에 Python이 설치되어 있어야 합니다.  
-   없다면 [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install#windows-installation)를 설치하세요.
+   없다면 [uv](https://docs.astral.sh/uv/getting-started/installation/)를 설치하세요.
 
 2. `L4D2_설치경로.ini` 파일에 레포데2 설치 경로를 입력합니다.  
    설치 경로는 아래 과정으로 얻을 수 있습니다.  
@@ -21,14 +21,14 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    이때 플러그인은 소스파일(.sp)만 복사되며, 컴파일을 해야합니다.
 
    ```powershell
-   python 01_install.py
+   uv run 01_install.py
    ```
 
 4. 플러그인을 컴파일합니다.  
    컴파일된 결과물(.smx)은 자동으로 `sourcemod/plugins` 폴더로 이동됩니다.
 
    ```powershell
-   python 02_compile.py
+   uv run 02_compile.py
    ```
 
 ## 삭제
@@ -36,7 +36,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 API, 플러그인을 모두 삭제합니다.
 
 ```powershell
-python 03_uninstall.py
+uv run 03_uninstall.py
 ```
 
 ## API
@@ -140,23 +140,23 @@ python 03_uninstall.py
 15. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-16. Hunter_pounce_alignment_fix  
+16. l4d2_sg552_zoom_fix  
+    <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
+
+17. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-17. spit_fizzle  
+18. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-18. Explosion Announcer  
+19. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-19. Gear Transfer  
+20. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-20. l4d2_bugfix_deathspit  
+21. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
-
-21. l4d2_tickrate_sg552_fix  
-    <https://forums.alliedmods.net/showthread.php?t=322141>
 
 22. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
