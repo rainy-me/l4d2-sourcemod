@@ -937,7 +937,7 @@ void Event_PlayerHurt( Handle:event, const String:name[], bool:dontBroadcast )
 							
 							// charger was killed, was it a full level?
 							//LogError("health: %d, damage: %d, chip-level: %d", health, damage, iChargeHealth * 0.8);
-							if ( damage >= (iChargeHealth * 0.5) ) {
+							if ( damage > (iChargeHealth * 0.8125) ) {
 								HandleLevel( attacker, victim, hitgroup == HITGROUP_HEAD );
 							}
 							else {

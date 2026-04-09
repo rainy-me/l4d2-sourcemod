@@ -107,7 +107,7 @@ uv run 03_uninstall.py
 4. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-5. l4d2_skill_detect  
+5. l4d2_skill_detect (full/chip level 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
 
 6. l4dffannounce  
