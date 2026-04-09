@@ -17,7 +17,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    Steam 라이브러리에서 Left 4 Dead 2를 우클릭 → 속성 → 설치된 파일 → 로컬 파일 탐색 클릭
    ```
 
-3. API와 스크립트를 레포데2 설치 경로에 복사합니다.  
+3. API와 스크립트를 레포데2 설치 경로에 복사합니다.
 
    ```powershell
    uv run 01_copy.py
@@ -115,70 +115,73 @@ uv run 03_uninstall.py
 7. l4dffannounce  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-8. trigger_horde_notify  
+8. LMC_Black_and_White_Notifier  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/LMC_Black_and_White_Notifier>
+
+9. trigger_horde_notify  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
-9. firebulletsfix  
-   <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
+10. firebulletsfix  
+    <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
 
-10. l4d_death_item_glow (보조무기 glow 추가)  
+11. l4d_death_item_glow (보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-11. l4d_fix_common_shove  
+12. l4d_fix_common_shove  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_common_shove>
 
-12. l4d_tongue_float_fix  
+13. l4d_tongue_float_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tongue_float_fix>
 
-13. l4d2_charge_target_fix  
+14. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-14. l4d2_fix_jockey_hitbox (자키 bbox 버그, 밀치기 후 즉시 잡기 고침)  
+15. l4d2_fix_jockey_hitbox (자키 bbox 버그, 밀치기 후 즉시 잡기 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-15. l4d_tank_damage_announce  
+16. l4d_tank_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_tank_damage_announce.sp>
 
-16. l4d_witch_damage_announce  
+17. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-17. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
+18. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-18. l4d2_sg552_zoom_fix  
+19. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-19. Hunter_pounce_alignment_fix  
+20. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-20. spit_fizzle  
+21. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-21. Explosion Announcer  
+22. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-22. Gear Transfer  
+23. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-23. l4d2_bugfix_deathspit  
+24. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-24. lagpreventor  
+25. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-25. noteam_nudging  
+26. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-26. Shove Direction Fix  
+27. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-27. Throwable Announcer  
+28. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-28. Upgrade Ammo Pack Deploy Announce  
+29. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-29. l4d2_kill_sound  
+30. l4d2_kill_sound  
     출처 없음
 
 ### C. 종속 플러그인
@@ -186,25 +189,28 @@ uv run 03_uninstall.py
 1. Actions  
    <https://forums.alliedmods.net/showthread.php?p=2771520>
 
-2. l4dtoolz  
+2. l4d_heartbeat  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
+
+3. l4dtoolz  
    <https://github.com/accelerator74/l4dtoolz/releases>
 
-3. Left4DHooks  
+4. Left4DHooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
 
-4. Multi Colors  
+5. Multi Colors  
    <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
 
-5. SourceScramble  
+6. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-6. Use Priority Patch  
+7. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
-7. ThirdPersonShoulder_Detect  
+8. ThirdPersonShoulder_Detect  
    <https://forums.alliedmods.net/showthread.php?t=298649>
 
-8. Tickrate Enabler  
+9. Tickrate Enabler  
    <https://github.com/accelerator74/Tickrate-Enabler/releases>
 
 ### D. 보관 플러그인
