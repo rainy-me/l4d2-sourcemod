@@ -101,79 +101,82 @@ uv run 03_uninstall.py
 2. drop_secondary (forward 추가)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/drop_secondary>
 
-3. l4d_witch_retreat_panic_fix  
+3. l4d_shotgun_sound_fix  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_shotgun_sound_fix>
+
+4. l4d_witch_retreat_panic_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_witch_retreat_panic_fix>
 
-4. l4d2_item_hint  
+5. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-5. l4d2_skill_detect (full/chip level 수정)  
+6. l4d2_skill_detect (full/chip level 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
 
-6. l4dffannounce  
+7. l4dffannounce  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-7. trigger_horde_notify  
+8. trigger_horde_notify  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
-8. firebulletsfix  
+9. firebulletsfix  
    <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
 
-9. l4d_death_item_glow (보조무기 glow 추가)  
-   <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
+10. l4d_death_item_glow (보조무기 glow 추가)  
+    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-10. l4d_fix_common_shove  
+11. l4d_fix_common_shove  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_common_shove>
 
-11. l4d_tongue_float_fix  
+12. l4d_tongue_float_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tongue_float_fix>
 
-12. l4d2_charge_target_fix  
+13. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-13. l4d2_fix_jockey_hitbox (자키 bbox 버그, 밀치기 후 즉시 잡기 고침)  
+14. l4d2_fix_jockey_hitbox (자키 bbox 버그, 밀치기 후 즉시 잡기 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-14. l4d_tank_damage_announce  
+15. l4d_tank_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_tank_damage_announce.sp>
 
-15. l4d_witch_damage_announce  
+16. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-16. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
+17. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-17. l4d2_sg552_zoom_fix  
+18. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-18. Hunter_pounce_alignment_fix  
+19. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-19. spit_fizzle  
+20. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-20. Explosion Announcer  
+21. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-21. Gear Transfer  
+22. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-22. l4d2_bugfix_deathspit  
+23. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-23. lagpreventor  
+24. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-24. Shove Direction Fix  
+25. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-25. Throwable Announcer  
+26. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-26. Upgrade Ammo Pack Deploy Announce  
+27. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-27. l4d2_kill_sound  
+28. l4d2_kill_sound  
     출처 없음
 
 ### C. 종속 플러그인
@@ -196,7 +199,10 @@ uv run 03_uninstall.py
 6. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
-7. Tickrate Enabler  
+7. ThirdPersonShoulder_Detect  
+   <https://forums.alliedmods.net/showthread.php?t=298649>
+
+8. Tickrate Enabler  
    <https://github.com/accelerator74/Tickrate-Enabler/releases>
 
 ### D. 보관 플러그인
