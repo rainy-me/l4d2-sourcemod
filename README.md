@@ -167,16 +167,19 @@ uv run 03_uninstall.py
 24. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-25. Shove Direction Fix  
+25. noteam_nudging  
+    <https://forums.alliedmods.net/showthread.php?p=2758622>
+
+26. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-26. Throwable Announcer  
+27. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-27. Upgrade Ammo Pack Deploy Announce  
+28. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-28. l4d2_kill_sound  
+29. l4d2_kill_sound  
     출처 없음
 
 ### C. 종속 플러그인
