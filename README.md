@@ -17,14 +17,13 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    Steam 라이브러리에서 Left 4 Dead 2를 우클릭 → 속성 → 설치된 파일 → 로컬 파일 탐색 클릭
    ```
 
-3. API와 플러그인을 설치합니다.  
-   이때 플러그인은 소스파일(.sp)만 복사되며, 컴파일을 해야합니다.
+3. API와 스크립트를 레포데2 설치 경로에 복사합니다.  
 
    ```powershell
-   uv run 01_install.py
+   uv run 01_copy.py
    ```
 
-4. 플러그인을 컴파일합니다.  
+4. 스크립트를 컴파일합니다.  
    컴파일된 결과물(.smx)은 자동으로 `sourcemod/plugins` 폴더로 이동됩니다.
 
    ```powershell
