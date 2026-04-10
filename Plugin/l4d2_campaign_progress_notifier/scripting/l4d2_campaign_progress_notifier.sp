@@ -45,6 +45,14 @@ public void OnMapStart()
     }
 }
 
+public void OnMapEnd()
+{
+    if (g_hUpdateTimer != null)
+    {
+        delete g_hUpdateTimer;
+    }
+}
+
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     char sGameMode[16];
