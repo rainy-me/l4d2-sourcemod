@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <left4dhooks>
 
 public Plugin myinfo =
 {
@@ -14,7 +15,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    HookEvent("map_transition", Event_MapTransition);
+    HookEvent("map_transition", Event_MapTransition, EventHookMode_PostNoCopy);
 }
 
 void Event_MapTransition(Event event, const char[] name, bool dontBroadcast)
@@ -26,27 +27,26 @@ void Event_MapTransition(Event event, const char[] name, bool dontBroadcast)
             continue;
         }
 
-        if (GetEntProp(i, Prop_Send, "m_isIncapacitated"))
+        if (L4D_IsPlayerIncapacitated(i))
         {
-            SetEntProp(i, Prop_Send, "m_isIncapacitated", 0);
-            SetEntProp(i, Prop_Send, "m_isHangingFromLedge", 0);
+            L4D_ReviveSurvivor(i);
         }
-        SetEntProp(i, Prop_Send, "m_currentReviveCount", 0);
-        SetEntProp(i, Prop_Send, "m_isGoingToDie", 0);
+        L4D_SetPlayerReviveCount(i, 0);
+        L4D_SetPlayerThirdStrikeState(i, false);
+        L4D_SetPlayerIsGoingToDie(i, false);
 
         int currentHealth = GetClientHealth(i);
         if (currentHealth < 50)
         {
             SetEntityHealth(i, 50);
-            float currentTempHealth = GetEntPropFloat(i, Prop_Send, "m_healthBuffer");
+            float currentTempHealth = L4D_GetTempHealth(i);
             float addedHealth       = float(50 - currentHealth);
             float newTempHealth     = currentTempHealth - addedHealth;
             if (newTempHealth < 0.0)
             {
                 newTempHealth = 0.0;
             }
-            SetEntPropFloat(i, Prop_Send, "m_healthBuffer", newTempHealth);
-            SetEntPropFloat(i, Prop_Send, "m_healthBufferTime", GetGameTime());
+            L4D_SetTempHealth(i, newTempHealth);
         }
     }
 }
