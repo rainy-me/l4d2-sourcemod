@@ -193,7 +193,10 @@ uv run 03_uninstall.py
 29. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-30. l4d2_kill_sound  
+30. weapon_give_no_auto_switch  
+    <https://forums.alliedmods.net/showthread.php?t=341173>
+
+31. l4d2_kill_sound  
     출처 없음
 
 ### C. 종속 플러그인
