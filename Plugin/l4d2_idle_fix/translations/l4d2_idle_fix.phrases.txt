@@ -4,7 +4,6 @@
     {
         "en"    "Idle Cooldown."
         "ko"    "유휴 쿨다운."
-
     }
     "Idle Message"
     {
