@@ -5,16 +5,10 @@
 #include <left4dhooks>
 #include <multicolors>
 
-bool   g_bLateLoad;
 ConVar g_hSoundEnabled;
+ConVar g_hSoundVolume;
 Handle g_hUpdateTimer     = null;
 bool   g_bReachedPoint[3] = { false, ... };
-
-public APLRes AskPluginLoad2(Handle plugin, bool late, char[] error, int errMax)
-{
-    g_bLateLoad = late;
-    return APLRes_Success;
-}
 
 public Plugin myinfo =
 {
@@ -27,24 +21,20 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+    LoadTranslations("l4d2_campaign_progress_notifier.phrases");
+
     g_hSoundEnabled = CreateConVar("l4d2_campaign_progress_notifier_sound_enabled", "1",
                                    "ON/OFF progress notification sound (1=ON, 0=OFF)",
+                                   FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hSoundVolume  = CreateConVar("l4d2_campaign_progress_notifier_sound_volume", "0.8",
+                                   "Progress notification sound volume",
                                    FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_campaign_progress_notifier");
 
     RegConsoleCmd("sm_p", Cmd_Progress);
     RegConsoleCmd("sm_ㅔ", Cmd_Progress);
 
-    char sGameMode[16];
-    FindConVar("mp_gamemode").GetString(sGameMode, sizeof(sGameMode));
-    if (sGameMode[0] != 's' && sGameMode[0] != 'v' && sGameMode[0] != 'h')
-    {
-        HookEvent("round_start", Event_RoundStart);
-        if (g_bLateLoad)
-        {
-            CheckProgress();
-        }
-    }
+    HookEvent("round_start", Event_RoundStart);
 }
 
 public void OnMapStart()
@@ -57,16 +47,20 @@ public void OnMapStart()
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-    CheckProgress();
-}
-
-void CheckProgress()
-{
-    if (g_hUpdateTimer != null)
+    char sGameMode[16];
+    FindConVar("mp_gamemode").GetString(sGameMode, sizeof(sGameMode));
+    if (sGameMode[0] != 's' && sGameMode[0] != 'v' && sGameMode[0] != 'h')
     {
-        delete g_hUpdateTimer;
+        for (int i = 0; i < 3; i++)
+        {
+            g_bReachedPoint[i] = false;
+        }
+        if (g_hUpdateTimer != null)
+        {
+            delete g_hUpdateTimer;
+        }
+        g_hUpdateTimer = CreateTimer(1.0, Timer_CheckProgress, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
     }
-    g_hUpdateTimer = CreateTimer(1.0, Timer_CheckProgress, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
 Action Timer_CheckProgress(Handle timer)
@@ -96,7 +90,8 @@ void NotifyPlayerProgress(int iProgress)
     CPrintToChatAll("%t", "Furthest Progress", iProgress);
     if (g_hSoundEnabled.BoolValue)
     {
-        EmitSoundToAll("ui/survival_teamrec.wav");
+        EmitSoundToAll("ui/survival_teamrec.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO,
+                       SNDLEVEL_NONE, SND_NOFLAGS, g_hSoundVolume.FloatValue);
     }
 }
 
