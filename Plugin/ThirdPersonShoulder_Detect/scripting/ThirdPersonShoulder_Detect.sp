@@ -16,8 +16,8 @@ public Plugin myinfo =
 };
 
 static bool bVersus = false;
-static bool bThirdPerson[MAXPLAYERS+1] = false;
-static bool bThirdPersonFix[MAXPLAYERS+1] = false;
+static bool bThirdPerson[MAXPLAYERS+1] = {false, ...};
+static bool bThirdPersonFix[MAXPLAYERS+1] = {false, ...};
 
 static Handle hCvar_GameMode = INVALID_HANDLE;
 Handle g_hOnThirdPersonChanged = INVALID_HANDLE;
@@ -82,7 +82,7 @@ void CvarsChanged()
 	}
 }
 
-public Action tThirdPersonCheck(Handle hTimer)
+public void tThirdPersonCheck(Handle hTimer)
 {
 	for(int i = 1; i <= MaxClients; i++)
 	{

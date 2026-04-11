@@ -25,7 +25,7 @@ public void OnPluginStart()
 	CreateTimer(1.0, UpdateAvoid, _, TIMER_REPEAT);
 }
 
-public Action UpdateAvoid(Handle timer)
+public void UpdateAvoid(Handle timer)
 {
 	float flTime = GetGameTime();
 	float flPropTime;
