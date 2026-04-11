@@ -9,7 +9,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Fix",
     author      = "Rainy",
     description = "유휴 명령 미인식 문제를 해결합니다.",
-    version     = "1.4.4",
+    version     = "1.4.5",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
 };
 
@@ -38,6 +38,7 @@ public void OnPluginStart()
     AutoExecConfig(true, "l4d2_idle_fix");
 
     RegConsoleCmd("go_away_from_keyboard", Cmd_ForceIdle, "Override with forced idle mode.");
+    HookEvent("round_start", Event_RoundStart);
 }
 
 public void OnClientPutInServer(int client)
@@ -48,6 +49,14 @@ public void OnClientPutInServer(int client)
 public void OnClientDisconnect(int client)
 {
     g_fUseAllowTime[client] = 0.0;
+}
+
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+    for (int i = 0; i <= MAXPLAYERS; i++)
+    {
+        g_fUseAllowTime[i] = 0.0;
+    }
 }
 
 Action Cmd_ForceIdle(int client, int args)

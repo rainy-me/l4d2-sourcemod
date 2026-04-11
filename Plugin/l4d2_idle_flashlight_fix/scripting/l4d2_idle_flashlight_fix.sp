@@ -11,7 +11,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Flashlight Fix",
     author      = "Rainy",
     description = "유휴 전 손전등 on/off 상태를 유휴 후에도 유지합니다.",
-    version     = "1.0.1",
+    version     = "1.0.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_flashlight_fix"
 };
 
@@ -20,6 +20,7 @@ bool g_bFlashlightState[MAXPLAYERS + 1] = { false, ... };
 
 public void OnPluginStart()
 {
+    HookEvent("round_start", Event_RoundStart);
     HookEvent("player_bot_replace", Event_GoIdle);
     HookEvent("bot_player_replace", Event_ReturnFromIdle);
 }
@@ -27,6 +28,14 @@ public void OnPluginStart()
 public void OnClientPutInServer(int client)
 {
     g_bFlashlightState[client] = false;
+}
+
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+    for (int i = 0; i <= MAXPLAYERS; i++)
+    {
+        g_bFlashlightState[i] = false;
+    }
 }
 
 Action Event_GoIdle(Event event, const char[] name, bool dontBroadcast)

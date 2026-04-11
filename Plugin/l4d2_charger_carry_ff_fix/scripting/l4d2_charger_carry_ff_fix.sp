@@ -16,6 +16,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+    HookEvent("round_start", Event_RoundStart);
     HookEvent("charger_carry_start", Event_ChargerCarryStart);
     HookEvent("charger_carry_end", Event_ChargerCarryEnd);
     HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Pre);
@@ -29,6 +30,14 @@ public void OnClientPutInServer(int client)
 public void OnClientDisconnect(int client)
 {
     g_bIsCarried[client] = false;
+}
+
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+    for (int i = 0; i <= MAXPLAYERS; i++)
+    {
+        g_bIsCarried[i] = false;
+    }
 }
 
 void Event_ChargerCarryStart(Event event, const char[] name, bool dontBroadcast)

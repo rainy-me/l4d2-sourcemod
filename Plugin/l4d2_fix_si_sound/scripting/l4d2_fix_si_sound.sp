@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
     description = "특수좀비의 무음 문제를 개선합니다.",
-    version     = "1.3.0",
+    version     = "1.3.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
@@ -90,6 +90,7 @@ public void OnPluginStart()
 
     AutoConvars(g_hAutoConvars.BoolValue);
     AddNormalSoundHook(SoundHook);
+    HookEvent("round_start", Event_RoundStart);
     HookEvent("player_spawn", Event_PlayerSpawn);
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("charger_charge_end", Event_ChargerChargeEnd);
@@ -121,6 +122,23 @@ public void OnMapStart()
         g_hHunterSoundTimer[i]  = null;
         g_hJockeySoundTimer[i]  = null;
         g_hChargerSoundTimer[i] = null;
+    }
+}
+
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+    for (int i = 0; i <= MAXPLAYERS; i++)
+    {
+        g_bHunterWasDucking[i] = false;
+        g_bEmitSmokerSound[i]  = false;
+        g_bEmitHunterSound[i]  = false;
+        g_bEmitJockeySound[i]  = false;
+        g_bEmitChargerSound[i] = false;
+
+        KillSmokerSoundTimer(i);
+        KillHunterSoundTimer(i);
+        KillJockeySoundTimer(i);
+        KillChargerSoundTimer(i);
     }
 }
 

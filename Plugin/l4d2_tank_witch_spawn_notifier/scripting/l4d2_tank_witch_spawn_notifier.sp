@@ -31,6 +31,7 @@ public void OnPluginStart()
                                         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_tank_witch_spawn_notifier");
 
+    HookEvent("round_start", Event_RoundStart);
     HookEvent("tank_spawn", Event_TankSpawn);
     HookEvent("witch_spawn", Event_WitchSpawn);
 }
@@ -38,6 +39,10 @@ public void OnPluginStart()
 public void OnMapStart()
 {
     PrecacheSound(WARN_SOUND);
+}
+
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
     g_fTankSoundAllowTime  = 0.0;
     g_fWitchSoundAllowTime = 0.0;
 }

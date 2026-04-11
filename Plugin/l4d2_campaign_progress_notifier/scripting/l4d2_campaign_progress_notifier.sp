@@ -7,8 +7,8 @@
 
 ConVar g_hSoundEnabled;
 ConVar g_hSoundVolume;
-Handle g_hUpdateTimer     = null;
 bool   g_bReachedPoint[3] = { false, ... };
+Handle g_hUpdateTimer     = null;
 
 public Plugin myinfo =
 {
