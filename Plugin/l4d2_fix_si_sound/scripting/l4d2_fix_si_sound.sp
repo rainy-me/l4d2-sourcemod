@@ -90,7 +90,7 @@ public void OnPluginStart()
 
     AutoConvars(g_hAutoConvars.BoolValue);
     AddNormalSoundHook(SoundHook);
-    HookEvent("round_start", Event_RoundStart);
+    HookEvent("round_end", Event_RoundEnd);
     HookEvent("player_spawn", Event_PlayerSpawn);
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("charger_charge_end", Event_ChargerChargeEnd);
@@ -125,7 +125,7 @@ public void OnMapStart()
     }
 }
 
-void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
     for (int i = 0; i <= MAXPLAYERS; i++)
     {
