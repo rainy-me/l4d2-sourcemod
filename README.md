@@ -101,7 +101,10 @@ uv run 03_uninstall.py
 17. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-18. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+18. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+    탱크 및 윗치의 스폰을 알립니다.
+
+19. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
 ### B. 공개 플러그인
