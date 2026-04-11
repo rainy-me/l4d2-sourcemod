@@ -172,13 +172,13 @@ uv run 03_uninstall.py
 18. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-19. l4d2_fix_jockey_hitbox (자키 bbox 버그, 밀치기 후 즉시 잡기 고침)  
+19. l4d2_fix_jockey_hitbox (버그 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
 20. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-21. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
+21. l4d2_jockey_jumpcap_patch (봇 제한 제거, 밀치기 후 즉시 잡기 고침)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
 22. l4d2_sg552_zoom_fix  
