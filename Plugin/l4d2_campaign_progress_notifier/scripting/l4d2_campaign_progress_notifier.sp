@@ -32,7 +32,6 @@ public void OnPluginStart()
     AutoExecConfig(true, "l4d2_campaign_progress_notifier");
 
     RegConsoleCmd("sm_p", Cmd_Progress);
-    RegConsoleCmd("sm_ㅔ", Cmd_Progress);
 
     HookEvent("round_start", Event_RoundStart);
 }
