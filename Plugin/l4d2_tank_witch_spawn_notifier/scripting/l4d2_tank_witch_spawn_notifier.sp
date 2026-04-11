@@ -33,7 +33,6 @@ public void OnPluginStart()
 
     HookEvent("tank_spawn", Event_TankSpawn);
     HookEvent("witch_spawn", Event_WitchSpawn);
-    // HookEvent("player_death", Event_PlayerDeath);
 }
 
 public void OnMapStart()
@@ -64,22 +63,3 @@ void Event_WitchSpawn(Event event, const char[] name, bool dontBroadcast)
     }
     CPrintToChatAll("{green}[{lightgreen}!{green}]{olive} Witch {green}has spawned!");
 }
-
-// void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
-// {
-//     int client = GetClientOfUserId(event.GetInt("userid"));
-//     if (!IsValidTank(client))
-//     {
-//         return;
-//     }
-
-//     if (GetEntProp(client, Prop_Send, "m_zombieClass") == 8)
-//     {
-//         CPrintToChatAll("{green}[{lightgreen}!{green}]{olive} Tank {green}has been killed!");
-//     }
-// }
-
-// bool IsValidTank(int client)
-// {
-//     return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetEntProp(client, Prop_Send, "m_zombieClass") == 8);
-// }
