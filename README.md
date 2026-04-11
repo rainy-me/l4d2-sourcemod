@@ -95,16 +95,19 @@ uv run 03_uninstall.py
 15. [l4d2_no_ci_melee_kill_collision](/Plugin/l4d2_no_ci_melee_kill_collision/)  
     근접무기로 죽인 일반좀비와의 충돌을 제거합니다.
 
-16. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
+16. [l4d2_quick_healing](/Plugin/l4d2_quick_healing/)  
+    시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.
+
+17. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
     CI/SI의 ragdoll을 즉시 제거합니다.
 
-17. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+18. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-18. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+19. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-19. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+20. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
 ### B. 공개 플러그인
