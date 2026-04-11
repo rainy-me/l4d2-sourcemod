@@ -2,12 +2,12 @@
 {
     "Furthest Progress"
     {
-        "en"    "{green}The survivors have reached {lightgreen}%d%%{default}!"
+        "en"    "{green}Survivors have reached {lightgreen}%d%%{green}!"
         "ko"    "{green}생존자들이 {lightgreen}%d%%{green}까지 도달했습니다!"
     }
     "Current Progress"
     {
-        "en"    "{green}%N{default}, your current progress is {lightgreen}%d%%{default}."
-        "ko"    "{green}%N{default}님의 현재 위치는 {lightgreen}%d%%{default}입니다."
+        "en"    "{green}%N{default}'s current progress: {lightgreen}%d%%"
+        "ko"    "{green}%N{default}님의 현재 진행률: {lightgreen}%d%%"
     }
 }
