@@ -151,7 +151,7 @@ uv run 03_uninstall.py
 15. l4d2_fix_jockey_hitbox (자키 bbox 버그, 밀치기 후 즉시 잡기 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-16. l4d_tank_damage_announce  
+16. l4d_tank_damage_announce (탱 스폰 사운드 제거)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_tank_damage_announce.sp>
 
 17. l4d_witch_damage_announce  
