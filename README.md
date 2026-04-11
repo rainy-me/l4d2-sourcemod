@@ -101,13 +101,16 @@ uv run 03_uninstall.py
 17. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
     CI/SI의 ragdoll을 즉시 제거합니다.
 
-18. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+18. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
+    스모커가 월드스폰이 아닌 엔티티 위에 서 있는 생존자를 잡을 때 즉시 끌려가는 버그를 고칩니다.
+
+19. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-19. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+20. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-20. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+21. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
 ### B. 공개 플러그인
@@ -163,58 +166,55 @@ uv run 03_uninstall.py
 17. l4d_tank_damage_announce  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/blob/master/The%20Last%20Stand/l4d_tank_damage_announce/README.md>
 
-18. l4d_tongue_float_fix  
-    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tongue_float_fix>
-
-19. l4d2_charge_target_fix  
+18. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-20. l4d2_fix_jockey_hitbox (자키 bbox 버그, 밀치기 후 즉시 잡기 고침)  
+19. l4d2_fix_jockey_hitbox (자키 bbox 버그, 밀치기 후 즉시 잡기 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-21. l4d_witch_damage_announce  
+20. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-22. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
+21. l4d2_jockey_jumpcap_patch (봇 제한 제거)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-23. l4d2_sg552_zoom_fix  
+22. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-24. Hunter_pounce_alignment_fix  
+23. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-25. spit_fizzle  
+24. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-26. Explosion Announcer  
+25. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-27. Gear Transfer  
+26. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-28. l4d2_bugfix_deathspit  
+27. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-29. lagpreventor  
+28. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-30. noteam_nudging  
+29. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-31. Shove Direction Fix  
+30. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-32. Throwable Announcer  
+31. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-33. Upgrade Ammo Pack Deploy Announce  
+32. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-34. weapon_give_no_auto_switch  
+33. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
-35. l4d2_kill_sound  
+34. l4d2_kill_sound  
     출처 없음
 
 ### C. 종속 플러그인
