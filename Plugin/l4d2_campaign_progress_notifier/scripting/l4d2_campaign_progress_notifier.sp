@@ -24,16 +24,16 @@ public void OnPluginStart()
     LoadTranslations("l4d2_campaign_progress_notifier.phrases");
 
     g_hSoundEnabled = CreateConVar("l4d2_campaign_progress_notifier_sound_enabled", "1",
-                                   "ON/OFF progress notification sound (1=ON, 0=OFF)",
+                                   "ON/OFF progress notification sound. (1=ON, 0=OFF)",
                                    FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hSoundVolume  = CreateConVar("l4d2_campaign_progress_notifier_sound_volume", "0.8",
-                                   "Progress notification sound volume",
+                                   "Progress notification sound volume.",
                                    FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_campaign_progress_notifier");
 
-    RegConsoleCmd("sm_p", Cmd_Progress);
-
     HookEvent("round_start", Event_RoundStart);
+
+    RegConsoleCmd("sm_p", Cmd_Progress);
 }
 
 public void OnMapStart()
