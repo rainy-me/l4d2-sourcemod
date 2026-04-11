@@ -47,6 +47,10 @@ public void OnMapStart()
 
 public void OnMapEnd()
 {
+    for (int i = 0; i < 3; i++)
+    {
+        g_bReachedPoint[i] = false;
+    }
     if (g_hUpdateTimer != null)
     {
         delete g_hUpdateTimer;
