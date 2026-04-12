@@ -11,7 +11,7 @@ public Plugin myinfo =
     name        = "L4D2 Quick Healing",
     author      = "Rainy",
     description = "시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_quick_healing"
 };
 
@@ -89,13 +89,13 @@ void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
     // Notify quick healing use
     if (healer == healee)
     {
-        PrintToChat(healee, "Quick healing used.");
+        PrintToChat(healee, "Quick healing used");
         EmitSoundToClient(healee, "ui/littlereward.wav");
     }
     else
     {
-        CPrintToChat(healee, "{green}%N{default} quick healed you.", healee);
-        CPrintToChat(healer, "Used quick healing to {green}%N", healer);
+        CPrintToChat(healee, "{green}%N{default} quick healed you", healer);
+        CPrintToChat(healer, "Used quick healing to {green}%N", healee);
         EmitSoundToClient(healee, "ui/littlereward.wav");
         EmitSoundToClient(healer, "ui/littlereward.wav");
     }
