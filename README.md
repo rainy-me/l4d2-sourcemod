@@ -139,7 +139,7 @@ uv run 03_uninstall.py
 7. l4dffannounce  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-8. LMC_Black_and_White_Notifier  
+8. LMC_Black_and_White_Notifier (알림 문구 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/LMC_Black_and_White_Notifier>
 
 9. trigger_horde_notify  
