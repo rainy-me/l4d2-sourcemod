@@ -87,7 +87,7 @@ uv run 03_uninstall.py
     유휴 상태 메시지를 채팅창에 표시하지 않도록 합니다.
 
 13. [l4d2_idle_adrenaline_fix](/Plugin/l4d2_idle_adrenaline_fix/)  
-    플레이어가 유휴 모드에서 복귀할 때 아드레날린 효과를 유지하도록 수정합니다.
+    플레이어가 유휴 모드에서 복귀할 때 아드레날린 효과를 유지하도록 합니다.
 
 14. [l4d2_idle_fix](/Plugin/l4d2_idle_fix)  
     유휴 명령 미인식 문제를 해결합니다.

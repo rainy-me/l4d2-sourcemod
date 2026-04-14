@@ -8,7 +8,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Idle Adrenaline Fix",
     author      = "Rainy",
-    description = "플레이어가 유휴 모드에서 복귀할 때 아드레날린 효과를 유지하도록 수정합니다.",
+    description = "플레이어가 유휴 모드에서 복귀할 때 아드레날린 효과를 유지하도록 합니다.",
     version     = "1.1.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_adrenaline_fix"
 };
