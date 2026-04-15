@@ -187,35 +187,35 @@ uv run 03_uninstall.py
 22. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-23. Explosion Announcer  
+23. l4d2_kill_sound  
+    <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
+
+24. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-24. Gear Transfer  
+25. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-25. l4d2_bugfix_deathspit  
+26. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-26. lagpreventor  
+27. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-27. noteam_nudging  
+28. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-28. Shove Direction Fix  
+29. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-29. Throwable Announcer  
+30. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-30. Upgrade Ammo Pack Deploy Announce  
+31. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-31. weapon_give_no_auto_switch  
+32. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
-
-32. l4d2_kill_sound  
-    출처 없음
 
 ### C. 종속 플러그인
 
