@@ -1,0 +1,33 @@
+"Phrases"
+{
+    "Ammo Reset"
+    {
+        "en"        "Reset the maximum reserve ammo capacity.\nReset remaining ammo."
+        "ko"        "최대 예비 탄약 소지량을 초기화했습니다.\n남은 탄약을 재설정합니다."
+    }
+    "Ammo Setting"
+    {
+        "en"        "The maximum reserve ammo capacity has been set to {lightgreen}%.2f{default}x.\nReset remaining ammo."
+        "ko"        "최대 예비 탄약 소지량이 {lightgreen}%.2f{default}배로 설정되었습니다.\n남은 탄약을 재설정합니다."
+    }
+    "Ammo Setting Load"
+    {
+        "en"        "The maximum reserve ammo capacity has been set to {lightgreen}%.2f{default} times."
+        "ko"        "최대 예비 탄약 소지량이 {lightgreen}%.2f{default}배로 설정되었습니다."
+    }
+    "Current Multiplier"
+    {
+        "en"        "Current reserve ammo multiplier: {lightgreen}%.2f{default}"
+        "ko"        "현재 예비 탄약 배수: {lightgreen}%.2f{default}"
+    }
+    "Invalid Value"
+    {
+        "en"        "Please enter a valid value."
+        "ko"        "올바른 값을 입력해 주세요."
+    }
+    "Help"
+    {
+        "en"        "Usage: !amm <1.0~5.0>, Enter the reserve ammo multiplier.\nExample: !amm 1.5 (Increase by 1.5x) | !amm 1 (Reset)"
+        "ko"        "사용법: !amm <1.0~5.0>, 예비 탄약 배수 입력.\n예시: !amm 1.5 (1.5배 증가) | !amm 1 (초기화)"
+    }
+}
