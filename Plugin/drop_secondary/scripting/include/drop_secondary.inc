@@ -21,10 +21,3 @@ public SharedPlugin __pl_drop_secondary = {
     required = 0,
 #endif
 };
-
-#if !defined REQUIRE_PLUGIN
-
-public void __pl_drop_secondary_SetNTVOptional()
-{
-}
-#endif
