@@ -73,21 +73,21 @@
 	"HandleLevelHurt_1"
 	{
 		"#format"		"{1:N},{2:N},{3:i}"
-		"en"		"{lightgreen}★★★ {olive}{1}{default} chip-leveled {green}{2}{default} ({lightgreen}{3}{default} low damage)."
+		"en"		"{lightgreen}★★★ {olive}{1}{default} chip-leveled {green}{2}{default} ({lightgreen}{3}{default} damage)."
 		"zho"		"{lightgreen}★★★ {olive}{1}{default} 近戰砍死了衝鋒的 {green}{2}{default} ({lightgreen}{3}{default} 低傷害)."
 		"chi"		"{lightgreen}★★★ {olive}{1}{default} 近战砍死了冲锋的 {green}{2}{default} ({lightgreen}{3}{default} 低伤害)."
 	}
 	"HandleLevelHurt_2"
 	{
 		"#format"		"{1:N},{2:i}"
-		"en"		"{lightgreen}★★★ {olive}{1}{default} chip-leveled {green}a charger{default} ({lightgreen}{2}{default} low damage)."
+		"en"		"{lightgreen}★★★ {olive}{1}{default} chip-leveled {green}a charger{default} ({lightgreen}{2}{default} damage)."
 		"zho"		"{lightgreen}★★★ {olive}{1}{default} 近戰砍死了衝鋒的 {green}Charger{default} ({lightgreen}{2}{default} 低傷害)."
 		"chi"		"{lightgreen}★★★ {olive}{1}{default} 近战砍死了冲锋的 {green}Charger{default} ({lightgreen}{2}{default} 低伤害)."
 	}
 	"HandleLevelHurt_3"
 	{
 		"#format"		"{1:i}"
-		"en"		"{lightgreen}★★★ {green}A charger{default} was chip-leveled ({lightgreen}{1}{default} low damage)."
+		"en"		"{lightgreen}★★★ {green}A charger{default} was chip-leveled ({lightgreen}{1}{default} damage)."
 		"zho"		"{lightgreen}★★★ {green}Charger{default} 被 {olive}倖存者{default} 近戰砍死了 ({lightgreen}{1}{default} 低傷害)."
 		"chi"		"{lightgreen}★★★ {green}Charger{default} 被 {olive}幸存者{default} 近战砍死了.({lightgreen}{1}{default} 低伤害)."
 	}
