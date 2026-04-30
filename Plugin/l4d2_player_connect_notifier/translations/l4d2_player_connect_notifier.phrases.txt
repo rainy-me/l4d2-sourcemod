@@ -1,0 +1,9 @@
+"Phrases"
+{
+	"Player Joining"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} is joining the game."
+		"ko"		"{1} 님이 게임에 참가하고 있습니다."
+	}
+}

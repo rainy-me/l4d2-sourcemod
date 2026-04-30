@@ -101,25 +101,28 @@ uv run 03_uninstall.py
 17. [l4d2_no_ci_melee_kill_collision](/Plugin/l4d2_no_ci_melee_kill_collision/)  
     근접무기로 죽인 일반좀비와의 충돌을 제거합니다.
 
-18. [l4d2_quick_healing](/Plugin/l4d2_quick_healing/)  
+18. [l4d2_player_connect_notifier](/Plugin/l4d2_player_connect_notifier/)  
+    플레이어가 서버에 접속하면 채팅창에 알립니다.
+
+19. [l4d2_quick_healing](/Plugin/l4d2_quick_healing/)  
     시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.
 
-19. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
+20. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
     CI/SI의 ragdoll을 즉시 제거합니다.
 
-20. [l4d2_reserve_ammo_multiplier](/Plugin/l4d2_reserve_ammo_multiplier/)  
+21. [l4d2_reserve_ammo_multiplier](/Plugin/l4d2_reserve_ammo_multiplier/)  
     예비 탄약 소지량을 배율로 조정합니다.
 
-21. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
+22. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
     스모커가 월드스폰이 아닌 엔티티 위에 서 있는 생존자를 잡을 때 즉시 끌려가는 버그를 고칩니다.
 
-22. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+23. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-23. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+24. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-24. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+25. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
 ### B. 공개 플러그인
