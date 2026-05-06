@@ -34,7 +34,7 @@ public void OnClientDisconnect(int client)
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-    for (int i = 0; i <= MAXPLAYERS; i++)
+    for (int i = 0; i < sizeof(g_bIsCarried); i++)
     {
         g_bIsCarried[i] = false;
     }
