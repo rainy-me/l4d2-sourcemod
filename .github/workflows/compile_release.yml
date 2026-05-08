@@ -1,0 +1,116 @@
+name: Compile and Release
+
+on:
+  pull_request:
+    paths-ignore:
+      - "API/**"
+      - "Archive/**"
+      - "Plugin_metamod/**"
+      - ".python-version"
+      - "*.py"
+      - "*.cmd"
+      - "*.ini"
+      - "LICENSE"
+      - "README.md"
+    branches:
+      - main
+  push:
+    paths-ignore:
+      - "API/**"
+      - "Archive/**"
+      - "Plugin_metamod/**"
+      - ".python-version"
+      - "*.py"
+      - "*.cmd"
+      - "*.ini"
+      - "LICENSE"
+      - "README.md"
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: Compile
+    runs-on: ubuntu-latest
+    concurrency:
+      group: compile-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+    env:
+      SRC_PLUGIN_DIR: ${{ github.workspace }}/Plugin
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup SourcePawn
+        uses: rumblefrog/setup-sp@master
+        with:
+          version: "1.12.x"
+
+      - name: Copy include files
+        run: |
+          shopt -s nullglob
+          for inc in "$SRC_PLUGIN_DIR"/*/scripting/include; do
+            if [ -d "$inc" ]; then
+              cp -rv "$inc"/. "$includePath"/
+            fi
+          done
+
+      - name: Compile plugins
+        working-directory: ${{ env.SRC_PLUGIN_DIR }}
+        run: |
+          shopt -s nullglob
+          for dir in */; do
+            dir=${dir%/}
+            for file in "$dir"/scripting/*.sp; do
+              mkdir -p "$dir/plugins"
+              filename=$(basename "$file" .sp)
+              echo "Compile $filename.sp"
+              spcomp64_original \
+                "-i=$includePath" \
+                "-o=$dir/plugins/$filename.smx" \
+                "$file"
+              echo -------------------------------------------
+              echo " "
+            done
+          done
+          echo "All plugins compiled successfully."
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: rainy_plugins_sm1.12
+          path: Plugin
+
+  release:
+    name: Release
+    needs: compile
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release-latest
+      cancel-in-progress: true
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          path: tmp
+          skip-decompress: true
+
+      - name: Set release timestamp
+        run: echo "RELEASE_TIMESTAMP=$(TZ=Asia/Seoul date +%y%m%d%H%M%S)" >> "$GITHUB_ENV"
+
+      - name: Update latest release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release_${{ env.RELEASE_TIMESTAMP }}
+          prerelease: false
+          make_latest: "true"
+          files: tmp/*.zip
