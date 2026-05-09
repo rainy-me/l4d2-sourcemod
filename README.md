@@ -2,6 +2,12 @@
 
 Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 
+## 컴파일된 플러그인 모음
+
+아래 링크에서 최신 컴파일 결과물(.smx 포함 전체 `Plugin` 폴더)을 zip으로 받을 수 있습니다.
+
+- 다운로드: [`rainy_plugins_sm1.12.zip`](https://github.com/rainy-me/l4d2-sourcemod/releases/download/main/rainy_plugins_sm1.12.zip)
+
 ## 설치
 
 > 주의: 아래 방법은 저의 게임 환경과 똑같이 설정할 사람만 사용하세요.
