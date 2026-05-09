@@ -109,7 +109,7 @@ jobs:
       - name: Update latest release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: latest
           name: Release_${{ env.RELEASE_TIMESTAMP }}
           prerelease: false
           make_latest: "true"
