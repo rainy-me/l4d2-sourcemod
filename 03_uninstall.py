@@ -22,6 +22,9 @@ def main():
     # cfg 폴더 내 sourcemod 폴더 삭제
     shutil.rmtree(l4d2_dir / "left4dead2/cfg/sourcemod", ignore_errors=True)
 
+    # ems 폴더 삭제
+    shutil.rmtree(l4d2_dir / "left4dead2/ems", ignore_errors=True)
+
     print(f"'{l4d2_dir}'에서 삭제 완료.")
 
 
