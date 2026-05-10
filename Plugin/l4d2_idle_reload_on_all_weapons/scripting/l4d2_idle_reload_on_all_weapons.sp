@@ -54,8 +54,8 @@ public void OnPluginStart()
     HookEvent("bot_player_replace", Event_BotPlayerReplace);
 
     // 예외 처리
-    HookEvent("player_death", Event_ResetState);
     HookEvent("round_end", Event_ResetStateAll);
+    HookEvent("player_death", Event_ResetState);
     HookEvent("give_weapon", Event_ResetState);
     HookEvent("upgrade_pack_used", Event_ResetState);
     HookEvent("weapon_drop", Event_ResetState);
