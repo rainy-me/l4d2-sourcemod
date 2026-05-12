@@ -9,7 +9,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Fix",
     author      = "Rainy",
     description = "유휴 명령 미인식 문제를 해결합니다.",
-    version     = "1.4.5",
+    version     = "1.5.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
 };
 
@@ -39,6 +39,11 @@ public void OnPluginStart()
 
     RegConsoleCmd("go_away_from_keyboard", Cmd_ForceIdle, "Override with forced idle mode.");
     HookEvent("round_start", Event_RoundStart);
+}
+
+public void OnConfigsExecuted()
+{
+    FindConVar("allow_all_bot_survivor_team").SetInt(1);
 }
 
 public void OnClientPutInServer(int client)
