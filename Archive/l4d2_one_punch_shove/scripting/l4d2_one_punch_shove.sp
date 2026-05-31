@@ -6,7 +6,7 @@ bool g_bEnabled = true;
 
 public Plugin myinfo =
 {
-    name        = "One Punch Shove",
+    name        = "One-Punch Shove",
     author      = "Rainy",
     description = "CI, SI를 밀치기 한 번으로 죽일 수 있습니다.",
     version     = "1.0.0",
