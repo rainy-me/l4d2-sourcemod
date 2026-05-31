@@ -14,7 +14,7 @@ public Plugin myinfo =
     author      = "Rainy",
     description = "헤드샷 시 띵 소리를 출력합니다.",
     version     = "1.1.1",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/dingshot"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Archive/dingshot"
 };
 
 ConVar g_hEnabled;

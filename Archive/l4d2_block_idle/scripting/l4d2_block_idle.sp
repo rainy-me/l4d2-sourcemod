@@ -9,7 +9,7 @@ public Plugin myinfo =
     author      = "Rainy",
     description = "유휴 모드를 차단합니다.",
     version     = "1.1.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_block_idle"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Archive/l4d2_block_idle"
 };
 
 public void OnPluginStart()
