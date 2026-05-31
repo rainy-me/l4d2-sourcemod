@@ -1,7 +1,6 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
-#include <multicolors>
 
 bool g_bEnabled = true;
 
@@ -16,20 +15,19 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    RegConsoleCmd("sm_ops", Cmd_OnePunchShove, "On/Off One-Punch Shove");
+    RegAdminCmd("sm_ops", Cmd_OnePunchShove, ADMFLAG_ROOT, "On/Off One-Punch Shove");
     HookEvent("player_shoved", Event_PlayerShoved);
     HookEvent("entity_shoved", Event_EntityShoved);
 }
 
-Action Cmd_OnePunchShove(int client, int args)
+public void OnMapStart()
 {
-    if (!IsClient(client) || !IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client))
-    {
-        return Plugin_Handled;
-    }
+    MeleeRagdollEffect(g_bEnabled);
+}
 
-    g_bEnabled = !g_bEnabled;
-    if (g_bEnabled)
+void MeleeRagdollEffect(bool enabled)
+{
+    if (enabled)
     {
         FindConVar("melee_force_scalar").IntValue                  = 7500;
         FindConVar("melee_force_scalar_combat_character").IntValue = 7500;
@@ -45,7 +43,18 @@ Action Cmd_OnePunchShove(int client, int args)
         FindConVar("z_push_mass_max").IntValue                     = 200;
         FindConVar("z_pushaway_force").IntValue                    = 100;
     }
-    CPrintToChat(client, "[One-Punch Shove] {green}%s", g_bEnabled ? "ON" : "OFF");
+}
+
+Action Cmd_OnePunchShove(int client, int args)
+{
+    if (!IsClient(client) || !IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client))
+    {
+        return Plugin_Handled;
+    }
+
+    g_bEnabled = !g_bEnabled;
+    MeleeRagdollEffect(g_bEnabled);
+    PrintToChatAll("\x01[One-Punch Shove] \x04%s", g_bEnabled ? "ON" : "OFF");
     return Plugin_Handled;
 }
 
@@ -64,7 +73,7 @@ void Event_PlayerShoved(Event event, const char[] name, bool dontBroadcast)
     }
 
     // One punch kill for SI
-    // Apply damage twice for the tank ragdoll launch effect.
+    // Apply damage twice for the tank ragdoll effect.
     SDKHooks_TakeDamage(victim, client, client, 100000.0, DMG_CLUB);
     SDKHooks_TakeDamage(victim, client, client, 100000.0, DMG_CLUB);
 }
