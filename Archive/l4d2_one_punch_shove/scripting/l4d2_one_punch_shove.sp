@@ -29,19 +29,13 @@ void MeleeRagdollEffect(bool enabled)
 {
     if (enabled)
     {
-        FindConVar("melee_force_scalar").IntValue                  = 7500;
-        FindConVar("melee_force_scalar_combat_character").IntValue = 7500;
-        FindConVar("z_push_force").IntValue                        = 10000;
-        FindConVar("z_push_mass_max").IntValue                     = 20000;
-        FindConVar("z_pushaway_force").IntValue                    = 1000;
+        FindConVar("melee_force_scalar").IntValue                  = 7000;
+        FindConVar("melee_force_scalar_combat_character").IntValue = 7000;
     }
     else
     {
         FindConVar("melee_force_scalar").IntValue                  = 20;
         FindConVar("melee_force_scalar_combat_character").IntValue = 5;
-        FindConVar("z_push_force").IntValue                        = 2000;
-        FindConVar("z_push_mass_max").IntValue                     = 200;
-        FindConVar("z_pushaway_force").IntValue                    = 100;
     }
 }
 
