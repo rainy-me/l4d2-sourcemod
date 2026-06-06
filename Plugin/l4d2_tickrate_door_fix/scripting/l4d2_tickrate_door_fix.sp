@@ -42,7 +42,7 @@ float     g_fDoorSpeed;
 
 public void OnPluginStart()
 {
-    g_hCvarDoorSpeed = CreateConVar("door_speed_multiplier", "1.55",
+    g_hCvarDoorSpeed = CreateConVar("door_speed_multiplier", "1.58",
                                     "Sets the speed of all prop_door entities on a map. 1.05 = 105% speed",
                                     FCVAR_NONE, true, 0.0);
     g_hCvarDoorSpeed.AddChangeHook(Cvar_Changed);
