@@ -215,43 +215,40 @@ uv run 03_uninstall.py
 25. priority_sounds  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
-26. skip_intro  
-    <https://github.com/neburaii/l4d2-plugins/tree/main/skip_intro>
-
-27. spit_fizzle  
+26. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-28. strict_despawn  
+27. strict_despawn  
     <https://github.com/neburaii/l4d2-plugins/tree/main/strict_despawn>
 
-29. l4d2_kill_sound  
+28. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-30. Explosion Announcer  
+29. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-31. Gear Transfer  
+30. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-32. l4d2_bugfix_deathspit  
+31. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-33. lagpreventor  
+32. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-34. noteam_nudging  
+33. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-35. Shove Direction Fix  
+34. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-36. Throwable Announcer  
+35. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-37. Upgrade Ammo Pack Deploy Announce  
+36. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-38. weapon_give_no_auto_switch  
+37. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
