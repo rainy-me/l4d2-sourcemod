@@ -85,7 +85,7 @@ uv run 03_uninstall.py
    다음 챕터로 넘어가는 데 걸리는 시간을 줄여줍니다.
 
 10. [l4d2_fix_si_sound](/Plugin/l4d2_fix_si_sound/)  
-    특수좀비의 무음 문제를 개선합니다. (공개 플러그인 합본)
+    특수좀비의 무음 문제를 개선합니다.
 
 11. [l4d2_getup_damage_fix](/Plugin/l4d2_getup_damage_fix/)  
     일어나는 애니메이션이 진행되는 동안의 무적타임 불일치 문제를 고칩니다.
@@ -209,37 +209,40 @@ uv run 03_uninstall.py
 23. hxlib  
     <https://github.com/neburaii/l4d2-plugins/tree/main/hxlib>
 
-24. spit_fizzle  
+24. priority_sounds  
+    <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
+
+25. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-25. l4d2_kill_sound  
+26. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-26. Explosion Announcer  
+27. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-27. Gear Transfer  
+28. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-28. l4d2_bugfix_deathspit  
+29. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-29. lagpreventor  
+30. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-30. noteam_nudging  
+31. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-31. Shove Direction Fix  
+32. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-32. Throwable Announcer  
+33. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-33. Upgrade Ammo Pack Deploy Announce  
+34. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-34. weapon_give_no_auto_switch  
+35. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
