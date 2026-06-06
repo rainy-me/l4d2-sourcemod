@@ -200,55 +200,58 @@ uv run 03_uninstall.py
 20. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-21. l4d2_jockey_jumpcap_patch (봇 제한 제거, 밀치기 후 즉시 잡기 고침)  
+21. l4d_skip_intro  
+    <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_skip_intro.sp>
+
+22. l4d2_jockey_jumpcap_patch (봇 제한 제거, 밀치기 후 즉시 잡기 고침)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-22. l4d2_sg552_zoom_fix  
+23. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-23. Hunter_pounce_alignment_fix  
+24. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-24. hxlib  
+25. hxlib  
     <https://github.com/neburaii/l4d2-plugins/tree/main/hxlib>
 
-25. priority_sounds  
+26. priority_sounds  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
-26. spit_fizzle  
+27. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-27. strict_despawn  
+28. strict_despawn  
     <https://github.com/neburaii/l4d2-plugins/tree/main/strict_despawn>
 
-28. l4d2_kill_sound  
+29. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-29. Explosion Announcer  
+30. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-30. Gear Transfer  
+31. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-31. l4d2_bugfix_deathspit  
+32. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-32. lagpreventor  
+33. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-33. noteam_nudging  
+34. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-34. Shove Direction Fix  
+35. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-35. Throwable Announcer  
+36. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-36. Upgrade Ammo Pack Deploy Announce  
+37. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-37. weapon_give_no_auto_switch  
+38. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
