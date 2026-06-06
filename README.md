@@ -212,7 +212,7 @@ uv run 03_uninstall.py
 24. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-25. hxlib  
+25. hxlib (gamedata read 실패 버그 고침)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/hxlib>
 
 26. priority_sounds  

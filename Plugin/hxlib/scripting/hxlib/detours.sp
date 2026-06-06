@@ -59,9 +59,9 @@ void InitDetours()
 		Detour_UpdateTempo_Pre, Detour_UpdateTempo_Post,
 		{Forward_OnUpdateTempo, Forward_OnUpdateTempo_Post, -1});
 
-	CreateDetour("HX::TerrorNavMesh::RemoveWanderersInActiveAreaSet",
-		Detour_RemoveWanderersInActiveAreaSet_Pre, Detour_RemoveWanderersInActiveAreaSet_Post,
-		{Forward_OnSustainPeakPopulationClear, Forward_OnSustainPeakPopulationClear_Post, -1});
+	// CreateDetour("HX::TerrorNavMesh::RemoveWanderersInActiveAreaSet",
+	// 	Detour_RemoveWanderersInActiveAreaSet_Pre, Detour_RemoveWanderersInActiveAreaSet_Post,
+	// 	{Forward_OnSustainPeakPopulationClear, Forward_OnSustainPeakPopulationClear_Post, -1});
 
 	CreateDetour("HX::CTerrorPlayer::GoAwayFromKeyboard",
 		Detour_GoAwayFromKeyboard_Pre, Detour_GoAwayFromKeyboard_Post,
