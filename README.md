@@ -206,37 +206,40 @@ uv run 03_uninstall.py
 22. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-23. spit_fizzle  
+23. hxlib  
+    <https://github.com/neburaii/l4d2-plugins/tree/main/hxlib>
+
+24. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-24. l4d2_kill_sound  
+25. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-25. Explosion Announcer  
+26. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-26. Gear Transfer  
+27. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-27. l4d2_bugfix_deathspit  
+28. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-28. lagpreventor  
+29. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-29. noteam_nudging  
+30. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-30. Shove Direction Fix  
+31. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-31. Throwable Announcer  
+32. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-32. Upgrade Ammo Pack Deploy Announce  
+33. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-33. weapon_give_no_auto_switch  
+34. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
