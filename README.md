@@ -213,46 +213,43 @@ uv run 03_uninstall.py
 24. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-25. hxlib (gamedata read 실패 버그 고침)  
-    <https://github.com/neburaii/l4d2-plugins/tree/main/hxlib>
-
-26. priority_sounds  
+25. priority_sounds  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
-27. spit_fizzle  
+26. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-28. strict_despawn  
+27. strict_despawn  
     <https://github.com/neburaii/l4d2-plugins/tree/main/strict_despawn>
 
-29. l4d2_kill_sound  
+28. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-30. Explosion Announcer  
+29. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-31. Gear Transfer  
+30. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-32. l4d2_bugfix_deathspit  
+31. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-33. lagpreventor  
+32. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-34. noteam_nudging  
+33. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-35. Shove Direction Fix  
+34. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-36. Throwable Announcer  
+35. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-37. Upgrade Ammo Pack Deploy Announce  
+36. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-38. weapon_give_no_auto_switch  
+37. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
@@ -260,29 +257,32 @@ uv run 03_uninstall.py
 1. Actions  
    <https://forums.alliedmods.net/showthread.php?p=2771520>
 
-2. l4d_heartbeat  
+2. hxlib (gamedata read 실패 버그 고침)  
+   <https://github.com/neburaii/l4d2-plugins/tree/main/hxlib>
+
+3. l4d_heartbeat  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
 
-3. l4dtoolz  
+4. l4dtoolz  
    <https://github.com/accelerator74/l4dtoolz/releases>
 
-4. Left4DHooks  
+5. Left4DHooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
 
-5. Multi Colors  
+6. Multi Colors  
    <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
 
-6. SourceScramble  
+7. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-7. Use Priority Patch  
+8. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
-8. ThirdPersonShoulder_Detect  
+9. ThirdPersonShoulder_Detect  
    <https://forums.alliedmods.net/showthread.php?t=298649>
 
-9. Tickrate Enabler  
-   <https://github.com/accelerator74/Tickrate-Enabler/releases>
+10. Tickrate Enabler  
+    <https://github.com/accelerator74/Tickrate-Enabler/releases>
 
 ### D. 보관 플러그인
 
