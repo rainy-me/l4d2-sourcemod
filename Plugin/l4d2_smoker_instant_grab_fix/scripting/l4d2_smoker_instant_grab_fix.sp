@@ -8,7 +8,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Smoker Instant Grab Fix",
     author      = "Rainy",
-    description = "스모커가 월드스폰이 아닌 엔티티 위에 서 있는 생존자를 잡을 때 즉시 끌려가는 버그를 고칩니다.",
+    description = "스모커가 worldspawn이 아닌 엔티티 위에 서 있는 생존자를 잡을 때 즉시 끌려가는 버그를 고칩니다.",
     version     = "1.0.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_smoker_instant_grab_fix"
 };
