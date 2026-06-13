@@ -213,7 +213,7 @@ uv run 03_uninstall.py
 24. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-25. priority_sounds  
+25. priority_sounds (탱크 data 제거)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
 26. spit_fizzle  
