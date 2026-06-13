@@ -3,15 +3,15 @@
 
 #include <sourcemod>
 #include <sdktools>
+#include <colors>
 #include <left4dhooks>
-#include <multicolors>
 
 public Plugin myinfo =
 {
     name        = "L4D2 Quick Healing",
     author      = "Rainy",
     description = "시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.",
-    version     = "1.0.1",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_quick_healing"
 };
 

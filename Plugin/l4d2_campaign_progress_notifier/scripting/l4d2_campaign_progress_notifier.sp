@@ -2,8 +2,8 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <left4dhooks>
-#include <multicolors>
 
 ConVar g_hSoundEnabled;
 ConVar g_hSoundVolume;
@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Campaign Progress Notifier",
     author      = "Rainy",
     description = "캠페인 진행 상황을 알립니다.",
-    version     = "1.0.0",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_campaign_progress_notifier"
 };
 

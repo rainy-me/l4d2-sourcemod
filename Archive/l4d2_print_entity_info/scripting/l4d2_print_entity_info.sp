@@ -1,13 +1,13 @@
 #include <sourcemod>
 #include <sdktools>
-#include <multicolors>
+#include <colors>
 
 public Plugin myinfo =
 {
     name        = "L4D2 Print Entity Info",
     author      = "Rainy",
     description = "크로스헤어가 가리키는 엔티티의 상세 정보를 출력합니다.",
-    version     = "1.0.0",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Archive/l4d2_print_entity_info"
 };
 
