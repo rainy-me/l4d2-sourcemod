@@ -541,6 +541,8 @@ enum EntityHook
 	EntityHook_CreateRagdollEntity,	// Player
 	EntityHook_EventKilled,			// CBaseEntity
 	EntityHook_SetObserverTarget,	// Player
+	EntityHook_FinishReload,		// CBaseCombatWeapon
+	EntityHook_RemoveAmmo,			// CBaseCombatCharacter
 
 	EntityHook_MAX
 };
@@ -667,6 +669,40 @@ typeset EntityHookCB
 	 * @param handled		true if pre-hook for this observer returned Plugin_Handled
 	 */
 	function void (int observer, int target, bool success, bool handled);
+
+	/** EntityHook_FinishReload, EHook_Pre
+	 *
+	 * @param weapon		entity index of weapon
+	 *
+	 * @return				Plugin_Continue to allow, Plugin_Handled to block
+	 */
+	function Action (int weapon);
+
+	/** EntityHook_FinishReload, EHook_Post
+	 *
+	 * @param weapon		entity index of weapon
+	 * @param handled		true if pre-hook returned Plugin_Handled
+	 */
+	function void (int weapon, bool handled);
+
+	/** EntityHook_RemoveAmmo, EHook_Pre
+	 *
+	 * @param client		client index to remove ammo from
+	 * @param amount		amount of ammo to remove
+	 * @param weaponID		type of ammo to remove from
+	 *
+	 * @return				Plugin_Continue to take no action, Plugin_Changed to change amount/weaponID, Plugin_Handled to block
+	 */
+	function Action (int client, int &amount, AmmoType &ammoType);
+
+	/** EntityHook_RemoveAmmo, EHook_Post
+	 *
+	 * @param client		client index to remove ammo from
+	 * @param amount		amount of ammo to remove
+	 * @param weaponID		type of ammo to remove from
+	 * @param handled		true if pre-hook returned Plugin_Handled
+	 */
+	function void (int client, int amount, AmmoType ammoType, bool handled);
 };
 
 /**
@@ -1414,6 +1450,27 @@ forward Action OnCycleZoom(int weapon);
  * @param handled		true of OnCycleZoom returned Plugin_Handled
  */
 forward void OnCycleZoom_Post(int weapon, bool handled);
+
+/**
+ * the reserve ammo of a client is about to be set to an amount
+ *
+ * @param client		client index of the player owning this reserve ammo
+ * @param amount		amount to set it to
+ * @param ammoType		reserve ammo is of this Ammo_* type
+ *
+ * @return				Plugin_Continue to take no action, Plugin_Changed to change amount/ammoType, Plugin_Handled to block
+ */
+forward Action OnSetReserveAmmo(int client, int &amount, AmmoType &ammoType);
+
+/**
+ * the reserve ammo of a client was set to an amount
+ *
+ * @param client		client index of the player owning this reserve ammo
+ * @param amount		amount to set it to
+ * @param ammoType		reserve ammo is of this Ammo_* type
+ * @param handled		true if OnSetReserveAmmo returned Plugin_Handled
+ */
+forward void OnSetReserveAmmo_Post(int client, int amount, AmmoType ammoType, bool handled);
 
 /***********
  * Natives
@@ -2533,9 +2590,123 @@ native int GetZoomLevel(int weapon);
  */
 native bool SetFOV(int client, int targetFOV = 0, float duration = 0.0, int startFOV = 0, int owner = 0);
 
+/**
+ * check if this ammo type can carry an infinite amount of ammo
+ *
+ * @param ammoType		Ammo_* enum
+ *
+ * @return				true if inifnite ammo, false otherwise
+ */
+native bool IsAmmoTypeInfinite(AmmoType ammoType);
+
+/**
+ * remove an amount of ammo from a client's reserve pool.
+ *
+ * @param client		client index to remove ammo from
+ * @param amount		amount to remove
+ * @param ammoType		ammo pool to remove from
+ *
+ * @note				same as directly setting m_iAmmo netprop, except it will also trigger EntityHook_RemoveAmmo
+ */
+native void RemoveAmmo(int client, int amount, AmmoType ammoType);
+
+/**
+ * get activity of this weapon's deploy animation
+ *
+ * @param weapon		entity index of weapon
+ *
+ * @return				activity
+ */
+native int GetDeployActivity(int weapon);
+
+/**
+ * select a sequence mapped to this activity. if there are more than 1, pick through weighted RNG
+ *
+ * @param entity		index of entity with animation
+ * @param activity		activity enum the sequence must be mapped to
+ *
+ * @return				sequence as an int. -1 if none found
+ */
+native int SelectWeightedSequence(int entity, int activity);
+
+/**
+ * get all sequences mapped to this activity.
+ *
+ * @param entity		index of entity with animation
+ * @param activity		activity enum the sequences must be mapped to
+ * @param seqTotal		size of the SequenceTupleList returned
+ * @param weightTotal	sum of weights of all sequences in the returned SequenceTupleList
+ *
+ * @return				SequenceTupleList methodmap, SequenceTupleList_Null if none found
+ */
+native SequenceTupleList GetSequencesForActivity(int entity, int activity, int &seqTotal = 0, int &weightTotal = 0);
+
+/**
+ * get all sequences for this entity's model
+ *
+ * @param entity		index of entity with animation
+ * @param seqTotal		size of the SequenceTupleList returned
+ *
+ * @return				SequenceTupleList methodmap, SequenceTupleList_Null if none found
+ */
+native SequenceTupleList GetSequences(int entity, int &seqTotal = 0);
+
+/**
+ * get duration in seconds of an entity's animation
+ *
+ * @param entity		index of entity with animation
+ * @param sequence		sequence int of the animation to check
+ *
+ * @return				duration in seconds
+ *
+ * @note				use GetWeightedSequence or GetSequences to convert activity enum to sequence int
+ */
+native float GetSequenceDuration(int entity, int sequence);
+
 /**************
  * Methodmaps
  *************/
+
+enum SequenceTupleList
+{
+	SequenceTupleList_Null = 0
+};
+
+/** GetSequencesForActivity, and GetSequences native return value. they also return list size */
+methodmap SequenceTupleList
+{
+	/**
+	 * @param index		element in array
+	 *
+	 * @return			SequenceTuple methodmap. will be garbage value if index is out of bounds
+	 */
+	public SequenceTuple Get(int index)
+	{
+		return view_as<SequenceTuple>(this) + view_as<SequenceTuple>(index * 4);
+	}
+}
+
+methodmap SequenceTuple
+{
+	/** identifier for a sequence/animation of a model. used as input for things like GetSequenceDuration() */
+	property int sequence
+	{
+		public get()
+		{
+			return LoadFromAddress(view_as<Address>(this), NumberType_Int16);
+		}
+	}
+
+	/** for multiple sequences mapped to the same activity, the weight is used to randomly choose one.
+	 * weight total for a given activity is acquired from GetSequencesForActivity native */
+	property int weight
+	{
+		public get()
+		{
+			return LoadFromAddress(view_as<Address>(this) + view_as<Address>(2), NumberType_Int16);
+		}
+	}
+}
 
 /** interface for variant_t buffers. */
 methodmap Variant
@@ -4032,5 +4203,12 @@ public SharedPlugin __pl_hxlib =
 		MarkNativeAsOptional("GetHibernationState");
 		MarkNativeAsOptional("GetZoomLevel");
 		MarkNativeAsOptional("SetFOV");
+		MarkNativeAsOptional("IsAmmoTypeInfinite");
+		MarkNativeAsOptional("RemoveAmmo");
+		MarkNativeAsOptional("GetDeployActivity");
+		MarkNativeAsOptional("SelectWeightedSequence");
+		MarkNativeAsOptional("GetSequencesForActivity");
+		MarkNativeAsOptional("GetSequences");
+		MarkNativeAsOptional("GetSequenceDuration");
 	}
 #endif

@@ -58,7 +58,7 @@ enum AmmoType
 	Ammo_Chainsaw,
 	Ammo_CarriedItem,
 
-	Ammo_MAX
+	Ammo_MAX = 32
 };
 
 /** there are likely l4d2 specific flags missing from this */
@@ -594,6 +594,18 @@ stock bool IsReloading(int client)
 {
 	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	return IsValidEdict(weapon) && GetEntProp(weapon, Prop_Send, "m_bInReload");
+}
+
+/**
+ * is this weapon in reload?
+ *
+ * @param weapon		entity index of weapon to check
+ *
+ * @return				true if in reload, false otherwise
+ */
+stock bool IsWeaponReloading(int weapon)
+{
+	return GetEntProp(weapon, Prop_Send, "m_bInReload");
 }
 
 /**
