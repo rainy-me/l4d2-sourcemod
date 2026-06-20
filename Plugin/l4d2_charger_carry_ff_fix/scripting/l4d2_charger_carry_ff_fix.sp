@@ -11,7 +11,7 @@ public Plugin myinfo =
     name        = "L4D2 Charger Carry FF Fix",
     author      = "Rainy",
     description = "차저에게 끌려가는 생존자에 대한 팀킬을 방지합니다.",
-    version     = "1.1.0",
+    version     = "1.2.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_charger_carry_ff_fix"
 };
 
@@ -63,6 +63,15 @@ void Event_ChargerCarryStart(Event event, const char[] name, bool dontBroadcast)
 void Event_ChargerCarryEnd(Event event, const char[] name, bool dontBroadcast)
 {
     int victim = GetClientOfUserId(event.GetInt("victim"));
+    if (victim > 0 && victim <= MaxClients)
+    {
+        CreateTimer(0.9, Timer_ClearCarried, event.GetInt("victim"), TIMER_FLAG_NO_MAPCHANGE);
+    }
+}
+
+void Timer_ClearCarried(Handle timer, int userid)
+{
+    int victim = GetClientOfUserId(userid);
     if (victim > 0 && victim <= MaxClients)
     {
         g_bIsCarried[victim] = false;
