@@ -27,6 +27,7 @@ public void OnPluginStart()
 		"spawn_attack_delay", "1.0",
 		"how long to block all actions from special infected on spawn",
 		CVAR_FLAGS, true, 0.0);
+	AutoExecConfig(true, "spawn_attack_delay");
 	g_hConVar_Delay.AddChangeHook(ConVarChanged_Update);
 	g_fDelay = g_hConVar_Delay.FloatValue;
 

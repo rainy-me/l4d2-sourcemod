@@ -222,7 +222,7 @@ uv run 03_uninstall.py
 26. round_restart_delay (기본값 1.0 설정)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/round_restart_delay>
 
-27. spawn_attack_delay  
+27. spawn_attack_delay (cfg 기능 추가)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spawn_attack_delay>
 
 28. spit_fizzle  
