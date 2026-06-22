@@ -213,23 +213,23 @@ uv run 03_uninstall.py
 23. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-24. Hunter_pounce_alignment_fix  
-    <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
-
-25. hunter_audio_feedback  
+24. hunter_audio_feedback  
     <https://github.com/neburaii/l4d2-plugins/tree/main/hunter_audio_feedback>
 
-26. priority_sounds (탱크 data 제거)  
+25. priority_sounds (탱크 data 제거)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
-27. round_restart_delay (기본값 1.0 설정)  
+26. round_restart_delay (기본값 1.0 설정)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/round_restart_delay>
 
-28. spit_fizzle  
+27. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-29. strict_despawn  
+28. strict_despawn  
     <https://github.com/neburaii/l4d2-plugins/tree/main/strict_despawn>
+
+29. Hunter_pounce_alignment_fix  
+    <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
 30. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
