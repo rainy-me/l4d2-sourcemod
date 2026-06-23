@@ -15,6 +15,10 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
     RegConsoleCmd("go_away_from_keyboard", Cmd_BlockIdle);
+}
+
+public void OnMapStart()
+{
     FindConVar("director_afk_timeout").IntValue = 9999;
 }
 
