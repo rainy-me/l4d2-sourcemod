@@ -216,7 +216,7 @@ uv run 03_uninstall.py
 24. hunter_audio_feedback  
     <https://github.com/neburaii/l4d2-plugins/tree/main/hunter_audio_feedback>
 
-25. priority_sounds (탱크 data 제거)  
+25. priority_sounds (탱크, 자키 data 제거)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
 26. round_restart_delay (기본값 1.0 설정)  
