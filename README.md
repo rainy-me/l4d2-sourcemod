@@ -222,49 +222,46 @@ uv run 03_uninstall.py
 26. round_restart_delay (기본값 1.0 설정)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/round_restart_delay>
 
-27. spawn_attack_delay (cfg 기능 추가)  
-    <https://github.com/neburaii/l4d2-plugins/tree/main/spawn_attack_delay>
-
-28. spit_fizzle  
+27. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-29. strict_despawn  
+28. strict_despawn  
     <https://github.com/neburaii/l4d2-plugins/tree/main/strict_despawn>
 
-30. Hunter_pounce_alignment_fix  
+29. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-31. l4d2_kill_sound  
+30. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-32. l4d2_a2s_fix  
+31. l4d2_a2s_fix  
     <https://github.com/lakwsh/l4d2_vomit_fix>
 
-33. Explosion Announcer  
+32. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-34. Gear Transfer  
+33. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-35. l4d2_bugfix_deathspit  
+34. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-36. lagpreventor  
+35. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-37. noteam_nudging  
+36. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-38. Shove Direction Fix  
+37. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-39. Throwable Announcer  
+38. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-40. Upgrade Ammo Pack Deploy Announce  
+39. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-41. weapon_give_no_auto_switch  
+40. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
