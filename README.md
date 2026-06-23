@@ -234,34 +234,31 @@ uv run 03_uninstall.py
 30. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-31. l4d2_a2s_fix  
-    <https://github.com/lakwsh/l4d2_vomit_fix>
-
-32. Explosion Announcer  
+31. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-33. Gear Transfer  
+32. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-34. l4d2_bugfix_deathspit  
+33. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-35. lagpreventor  
+34. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-36. noteam_nudging  
+35. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-37. Shove Direction Fix  
+36. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-38. Throwable Announcer  
+37. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-39. Upgrade Ammo Pack Deploy Announce  
+38. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-40. weapon_give_no_auto_switch  
+39. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
@@ -276,7 +273,7 @@ uv run 03_uninstall.py
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
 
 4. l4dtoolz  
-   <https://github.com/lakwsh/l4dtoolz/releases>
+   <https://github.com/accelerator74/l4dtoolz/releases>
 
 5. Left4DHooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
@@ -292,6 +289,9 @@ uv run 03_uninstall.py
 
 9. ThirdPersonShoulder_Detect  
    <https://forums.alliedmods.net/showthread.php?t=298649>
+
+10. Tickrate Enabler  
+    <https://github.com/accelerator74/Tickrate-Enabler/releases>
 
 ### D. 보관 플러그인
 
