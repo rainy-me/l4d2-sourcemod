@@ -61,7 +61,7 @@ uv run 03_uninstall.py
 1. [dingshot](/Archive/dingshot/)  
    헤드샷 시 띵 소리를 출력합니다.
 
-2. [l4d2_accuracy_stat_fix](/Plugin/l4d2_accuracy_stat_fix/)  
+2. [l4d2_accuracy_stat_fix](/Archive/l4d2_accuracy_stat_fix/)  
    근접무기와 전기톱을 명중률 통계에서 제외합니다.
 
 3. [l4d2_ai_stagger_claw_fix](/Plugin/l4d2_ai_stagger_claw_fix/)  
