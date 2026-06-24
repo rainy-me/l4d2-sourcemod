@@ -1,0 +1,27 @@
+"Phrases"
+{
+    "First Greeting"
+    {
+        "#format"   "{1:N},{2:d},{3:d},{4:d}"
+        "en"        "Welcome, {1}! First time here.\nServer guide: !info"
+        "ko"        "{1}님 처음 오셨네요!\n서버 안내: !info"
+    }
+    "Long Absence Greeting"
+    {
+        "#format"   "{1:N},{2:d},{3:d},{4:d}"
+        "en"        "Long time no see, {1}! It's been {3} days.\nServer guide: !info"
+        "ko"        "{1}님 오랜만이네요! 무려 {3}일 만이에요.\n서버 안내: !info"
+    }
+    "Regular Greeting"
+    {
+        "#format"   "{1:N},{2:d},{3:d},{4:d}"
+        "en"        "Welcome back, our regular {1}!\nVisit #{2}, {4}h played.\nServer guide: !info"
+        "ko"        "{1} 단골님 오늘도 와주셨군요!\n{2}번째 방문, 누적 {4}시간 플레이하셨습니다.\n서버 안내: !info"
+    }
+    "Greeting an Acquaintance"
+    {
+        "#format"   "{1:N},{2:d},{3:d},{4:d}"
+        "en"        "Welcome back, {1}! Visit #{2}.\nServer guide: !info"
+        "ko"        "{1}님 다시 오셨네요! {2}번째 방문이세요.\n서버 안내: !info"
+    }
+}
