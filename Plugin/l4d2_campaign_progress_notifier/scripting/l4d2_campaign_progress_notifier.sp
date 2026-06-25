@@ -15,12 +15,14 @@ public Plugin myinfo =
     name        = "L4D2 Campaign Progress Notifier",
     author      = "Rainy",
     description = "캠페인 진행 상황을 알립니다.",
-    version     = "1.2.0",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_campaign_progress_notifier"
 };
 
 public void OnPluginStart()
 {
+    LoadTranslations("l4d2_campaign_progress_notifier.phrases");
+
     g_hSoundEnabled = CreateConVar("l4d2_campaign_progress_notifier_sound_enabled", "1",
                                    "ON/OFF progress notification sound. (1=ON, 0=OFF)",
                                    FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -96,7 +98,7 @@ Action Timer_CheckProgress(Handle timer)
 
 void NotifyPlayerProgress(int iProgress)
 {
-    CPrintToChatAll("{green}Survivors have reached {lightgreen}%d%%{green}!", iProgress);
+    CPrintToChatAll("%t", "Furthest Progress", iProgress);
     if (g_hSoundEnabled.BoolValue)
     {
         EmitSoundToAll("ui/survival_teamrec.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO,
@@ -112,7 +114,7 @@ Action Cmd_Progress(int client, int args)
     }
 
     int iCurrentFlow = RoundFloat(L4D2Direct_GetFlowDistance(client) / L4D2Direct_GetMapMaxFlowDistance() * 100.0);
-    CPrintToChatAll("{green}%N{default}'s current progress: {lightgreen}%d%%", client, iCurrentFlow);
+    CPrintToChatAll("%t", "Current Progress", client, iCurrentFlow);
     return Plugin_Handled;
 }
 
