@@ -2,8 +2,8 @@
 {
     "Furthest Progress"
     {
-        "en"    "{green}Survivors have reached {lightgreen}%d%%{green}!"
-        "ko"    "{green}생존자들이 {lightgreen}%d%%{green}까지 도달했습니다!"
+        "en"    "{green}Survivors have reached {lightgreen}%d%%{green}."
+        "ko"    "{green}생존자들이 {lightgreen}%d%%{green}까지 도달했습니다."
     }
     "Current Progress"
     {
