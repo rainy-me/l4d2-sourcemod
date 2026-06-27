@@ -16,12 +16,6 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_rainy_server_assistant"
 };
 
-public void OnPluginStart()
-{
-    HookEvent("player_left_checkpoint", Event_PlayerLeft);
-    HookEvent("player_left_safe_area", Event_PlayerLeft);
-}
-
 public void OnClientPutInServer(int client)
 {
     if (IsFakeClient(client))
@@ -55,14 +49,8 @@ void Timer_RespawnNewPlayer(Handle timer, int userid)
     }
 }
 
-void Event_PlayerLeft(Event event, const char[] name, bool dontBroadcast)
+public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
 {
-    int client = GetClientOfUserId(event.GetInt("userid"));
-    if (!IsValidClient(client) || !L4D_HasAnySurvivorLeftSafeArea())
-    {
-        return;
-    }
-
     for (int i = 1; i <= MaxClients; i++)
     {
         if (!IsClientInGame(i) || !IsFakeClient(i) || !IsPlayerAlive(i) || GetClientTeam(i) != 2)
