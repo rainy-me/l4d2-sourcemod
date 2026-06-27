@@ -15,8 +15,8 @@
     "Regular Greeting"
     {
         "#format"   "{1:N},{2:d},{3:d},{4:d}"
-        "en"        "Welcome back, our regular {1}!\nVisit #{2}, {4}h played.\nServer guide: !info"
-        "ko"        "{1} 단골님 오늘도 와주셨군요!\n{2}번째 방문, 누적 {4}시간 플레이하셨습니다.\n서버 안내: !info"
+        "en"        "{1}, you're here again today!\nVisit #{2}, {4}h played.\nServer guide: !info"
+        "ko"        "{1}님 오늘도 와주셨군요!\n{2}번째 방문, 누적 {4}시간 플레이하셨습니다.\n서버 안내: !info"
     }
     "Greeting an Acquaintance"
     {
