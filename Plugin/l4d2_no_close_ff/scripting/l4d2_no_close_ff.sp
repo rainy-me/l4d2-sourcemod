@@ -20,10 +20,10 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hRadius  = CreateConVar("l4d2_no_close_ff_radius", "28",
+    g_hRadius  = CreateConVar("l4d2_no_close_ff_radius", "30",
                               "이 수평 거리(units) 이내면 FF 데미지를 차단",
                               FCVAR_NOTIFY, true, 0.0);
-    g_hVertGap = CreateConVar("l4d2_no_close_ff_vgap", "56",
+    g_hVertGap = CreateConVar("l4d2_no_close_ff_vgap", "40",
                               "두 생존자의 수직 높이 차가 이 값 이하일 때만 차단",
                               FCVAR_NOTIFY, true, 0.0);
 
