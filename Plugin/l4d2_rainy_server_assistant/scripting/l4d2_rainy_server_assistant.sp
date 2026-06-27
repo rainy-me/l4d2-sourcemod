@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <left4dhooks>
 
-#define RESPAWN_DELAY 1.0
+#define RESPAWN_DELAY 3.0
 
 public Plugin myinfo =
 {
@@ -29,7 +29,6 @@ public void OnClientPutInServer(int client)
         return;
     }
 
-    PrintToChatAll("OnClientPutInServer");
     CreateTimer(RESPAWN_DELAY, Timer_RespawnNewPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 }
 
