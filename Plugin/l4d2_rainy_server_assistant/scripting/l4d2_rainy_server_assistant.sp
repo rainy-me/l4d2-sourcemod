@@ -26,6 +26,17 @@ public void OnClientPutInServer(int client)
     CreateTimer(RESPAWN_DELAY, Timer_RespawnNewPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 }
 
+public void OnClientDisconnect(int client)
+{
+    if (IsFakeClient(client) || !IsPlayerAlive(client) || GetClientTeam(client) != 2)
+    {
+        return;
+    }
+
+    RemovePistol(client);
+    ForcePlayerSuicide(client);
+}
+
 void Timer_RespawnNewPlayer(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
