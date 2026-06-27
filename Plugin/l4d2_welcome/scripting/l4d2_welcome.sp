@@ -8,7 +8,7 @@
 #define LONG_ABSENCE_SECONDS   (DAY_SECONDS * 10)    // 10일
 #define REGULAR_VISITS         10                    // 이 횟수 이상이면 단골
 #define SESSION_RESUME_SECONDS 60 * 5                // 퇴장 후 이 시간 이내 재접속은 같은 세션(챕터 전환 등)으로 간주
-#define GREET_DELAY            4.0                   // 접속 후 인사 메시지를 띄우기까지의 지연(초)
+#define GREET_DELAY            1.0                   // 접속 후 인사 메시지를 띄우기까지의 지연(초)
 
 // 인사 종류
 #define GREET_NEW              0
@@ -201,8 +201,13 @@ void OnLookupDone(Handle owner, Handle hndl, const char[] error, any userid)
     }
     SQL_TQuery(g_hDB, OnUpdateDone, query);
 
-    SetGlobalTransTarget(client);
-    CPrintToChat(client, "%t", g_sGreetPhrases[greetType], client, newVisits, daysAbsent, playHours);
+    DataPack pack = new DataPack();
+    pack.WriteCell(userid);
+    pack.WriteCell(greetType);
+    pack.WriteCell(newVisits);
+    pack.WriteCell(daysAbsent);
+    pack.WriteCell(playHours);
+    CreateTimer(GREET_DELAY, Timer_Greet, pack, TIMER_DATA_HNDL_CLOSE);
 }
 
 void OnUpdateDone(Handle owner, Handle hndl, const char[] error, any data)
@@ -211,4 +216,28 @@ void OnUpdateDone(Handle owner, Handle hndl, const char[] error, any data)
     {
         LogError("Writing failed: %s", error);
     }
+}
+
+void Timer_Greet(Handle timer, DataPack pack)
+{
+    pack.Reset();
+    int userid     = pack.ReadCell();
+    int greetType  = pack.ReadCell();
+    int newVisits  = pack.ReadCell();
+    int daysAbsent = pack.ReadCell();
+    int playHours  = pack.ReadCell();
+
+    int client     = GetClientOfUserId(userid);
+    if (client == 0 || !IsClientInGame(client))
+    {
+        return;
+    }
+
+    if (greetType < 0 || greetType >= sizeof(g_sGreetPhrases))
+    {
+        LogError("Invalid greetType: %d", greetType);
+        return;
+    }
+
+    CPrintToChat(client, "%T", g_sGreetPhrases[greetType], client, client, newVisits, daysAbsent, playHours);
 }
