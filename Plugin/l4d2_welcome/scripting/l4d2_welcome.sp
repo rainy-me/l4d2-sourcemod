@@ -8,7 +8,7 @@
 #define LONG_ABSENCE_SECONDS   (DAY_SECONDS * 10)    // 10일
 #define REGULAR_VISITS         10                    // 이 횟수 이상이면 단골
 #define SESSION_RESUME_SECONDS 60 * 5                // 퇴장 후 이 시간 이내 재접속은 같은 세션(챕터 전환 등)으로 간주
-#define GREET_DELAY            1.0                   // 접속 후 인사 메시지를 띄우기까지의 지연(초)
+#define GREET_DELAY            3.0                   // 접속 후 인사 메시지를 띄우기까지의 지연(초)
 
 // 인사 종류
 #define GREET_NEW              0
