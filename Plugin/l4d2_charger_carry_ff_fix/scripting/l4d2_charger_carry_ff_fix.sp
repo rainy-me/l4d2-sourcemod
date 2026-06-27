@@ -4,6 +4,8 @@
 #include <sourcemod>
 #include <sdkhooks>
 
+#define CLEAR_CARRIED_DELAY 0.85
+
 bool g_bIsCarried[MAXPLAYERS + 1] = { false, ... };
 
 public Plugin myinfo =
@@ -11,7 +13,7 @@ public Plugin myinfo =
     name        = "L4D2 Charger Carry FF Fix",
     author      = "Rainy",
     description = "차저에게 끌려가는 생존자에 대한 팀킬을 방지합니다.",
-    version     = "1.2.0",
+    version     = "1.2.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_charger_carry_ff_fix"
 };
 
@@ -21,7 +23,7 @@ public void OnPluginStart()
     HookEvent("charger_carry_start", Event_ChargerCarryStart);
     HookEvent("charger_carry_end", Event_ChargerCarryEnd);
 
-    // Lateload
+    // Late load
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
@@ -65,7 +67,7 @@ void Event_ChargerCarryEnd(Event event, const char[] name, bool dontBroadcast)
     int victim = GetClientOfUserId(event.GetInt("victim"));
     if (victim > 0 && victim <= MaxClients)
     {
-        CreateTimer(0.9, Timer_ClearCarried, event.GetInt("victim"), TIMER_FLAG_NO_MAPCHANGE);
+        CreateTimer(CLEAR_CARRIED_DELAY, Timer_ClearCarried, event.GetInt("victim"), TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 
@@ -80,9 +82,8 @@ void Timer_ClearCarried(Handle timer, int userid)
 
 Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-    if (IsValidSurvivor(victim) && IsValidSurvivor(attacker) && g_bIsCarried[victim])
+    if (victim != attacker && IsValidSurvivor(victim) && IsValidSurvivor(attacker) && g_bIsCarried[victim])
     {
-        damage = 0.0;
         return Plugin_Handled;
     }
     return Plugin_Continue;
