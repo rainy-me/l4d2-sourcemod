@@ -258,7 +258,7 @@ public OnPluginStart()
     hCountTankDamage =  CreateConVar("sm_survivor_mvp_counttank", "1", "Damage on tank counts towards MVP-selection if enabled.");
     hCountWitchDamage = CreateConVar("sm_survivor_mvp_countwitch", "1", "Damage on witch counts towards MVP-selection if enabled.");
     hTrackFF =          CreateConVar("sm_survivor_mvp_showff", "1", "Track Friendly-fire stat.");
-    hBrevityFlags =     CreateConVar("sm_survivor_mvp_brevity", "0", "Flags for setting brevity of MVP report (hide 1:SI, 2:CI, 4:FF, 8:rank, 32:perc, 64:abs).");
+    hBrevityFlags =     CreateConVar("sm_survivor_mvp_brevity", "4", "Flags for setting brevity of MVP report (hide 1:SI, 2:CI, 4:FF, 8:rank, 32:perc, 64:abs).");
     
     bCountTankDamage =  GetConVarBool(hCountTankDamage);
     bCountWitchDamage = GetConVarBool(hCountWitchDamage);
