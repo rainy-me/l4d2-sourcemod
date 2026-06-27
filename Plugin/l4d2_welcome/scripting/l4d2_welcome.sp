@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 
 #define DAY_SECONDS            86400
 #define LONG_ABSENCE_SECONDS   (DAY_SECONDS * 10)    // 10일
@@ -200,13 +201,8 @@ void OnLookupDone(Handle owner, Handle hndl, const char[] error, any userid)
     }
     SQL_TQuery(g_hDB, OnUpdateDone, query);
 
-    DataPack pack = new DataPack();
-    pack.WriteCell(userid);
-    pack.WriteCell(greetType);
-    pack.WriteCell(newVisits);
-    pack.WriteCell(daysAbsent);
-    pack.WriteCell(playHours);
-    CreateTimer(GREET_DELAY, Timer_Greet, pack, TIMER_DATA_HNDL_CLOSE);
+    SetGlobalTransTarget(client);
+    CPrintToChat(client, "%t", g_sGreetPhrases[greetType], client, newVisits, daysAbsent, playHours);
 }
 
 void OnUpdateDone(Handle owner, Handle hndl, const char[] error, any data)
@@ -215,29 +211,4 @@ void OnUpdateDone(Handle owner, Handle hndl, const char[] error, any data)
     {
         LogError("Writing failed: %s", error);
     }
-}
-
-void Timer_Greet(Handle timer, DataPack pack)
-{
-    pack.Reset();
-    int userid     = pack.ReadCell();
-    int greetType  = pack.ReadCell();
-    int newVisits  = pack.ReadCell();
-    int daysAbsent = pack.ReadCell();
-    int playHours  = pack.ReadCell();
-
-    int client     = GetClientOfUserId(userid);
-    if (client == 0 || !IsClientInGame(client))
-    {
-        return;
-    }
-
-    if (greetType < 0 || greetType >= sizeof(g_sGreetPhrases))
-    {
-        LogError("Invalid greetType: %d", greetType);
-        return;
-    }
-
-    SetGlobalTransTarget(client);
-    PrintHintText(client, "%t", g_sGreetPhrases[greetType], client, newVisits, daysAbsent, playHours);
 }
