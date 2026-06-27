@@ -281,7 +281,7 @@ uv run 03_uninstall.py
 1. Actions  
    <https://forums.alliedmods.net/showthread.php?p=2771520>
 
-2. hxlib (gamedata read 실패 버그 고침)  
+2. hxlib  
    <https://github.com/neburaii/l4d2-plugins/tree/main/hxlib>
 
 3. l4d_heartbeat  
