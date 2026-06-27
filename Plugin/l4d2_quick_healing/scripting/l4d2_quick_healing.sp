@@ -11,17 +11,20 @@ public Plugin myinfo =
     name        = "L4D2 Quick Healing",
     author      = "Rainy",
     description = "시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.",
-    version     = "1.1.0",
+    version     = "1.1.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_quick_healing"
 };
 
-bool g_bFastHealUsed[MAXPLAYERS + 1] = { false, ... };
+bool   g_bFastHealUsed[MAXPLAYERS + 1] = { false, ... };
+ConVar g_hHealPercent;
 
 public void OnPluginStart()
 {
+    g_hHealPercent = FindConVar("first_aid_heal_percent");
+
     HookEvent("round_start", Event_RoundStart);
-    HookEvent("player_left_checkpoint", Event_PlayerLeftCheckpoint);
-    HookEvent("player_left_safe_area", Event_PlayerLeftSafeArea);
+    HookEvent("player_left_checkpoint", Event_PlayerLeft);
+    HookEvent("player_left_safe_area", Event_PlayerLeft);
     HookEvent("heal_begin", Event_HealBegin);
 }
 
@@ -43,19 +46,10 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
     }
 }
 
-void Event_PlayerLeftCheckpoint(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerLeft(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (IsValidClient(client) && L4D_HasAnySurvivorLeftSafeArea())
-    {
-        g_bFastHealUsed[client] = true;
-    }
-}
-
-void Event_PlayerLeftSafeArea(Event event, const char[] name, bool dontBroadcast)
-{
-    int client = GetClientOfUserId(event.GetInt("userid"));
-    if (IsValidClient(client))
     {
         g_bFastHealUsed[client] = true;
     }
@@ -77,9 +71,8 @@ void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
 
     // Use quick healing
     g_bFastHealUsed[healee] = true;
-    float healPercent       = FindConVar("first_aid_heal_percent").FloatValue;
-    int   rawHealth         = GetClientHealth(healee);
-    int   newHealth         = RoundToFloor(float(rawHealth) + (100.0 - float(rawHealth)) * healPercent);
+    int rawHealth           = GetClientHealth(healee);
+    int newHealth           = RoundToFloor(float(rawHealth) + (100.0 - float(rawHealth)) * g_hHealPercent.FloatValue);
     SetEntityHealth(healee, newHealth);
     L4D_SetTempHealth(healee, 0.0);
     L4D_SetPlayerReviveCount(healee, 0);
@@ -114,7 +107,11 @@ void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
 
 void Timer_CancelStagger(Handle timer, int userid)
 {
-    L4D_CancelStagger(GetClientOfUserId(userid));
+    int client = GetClientOfUserId(userid);
+    if (IsValidClient(client))
+    {
+        L4D_CancelStagger(client);
+    }
 }
 
 bool IsValidClient(int index)
