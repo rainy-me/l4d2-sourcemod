@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <left4dhooks>
 
-#define RESPAWN_DELAY 3.0
+#define RESPAWN_DELAY 2.5
 
 public Plugin myinfo =
 {
