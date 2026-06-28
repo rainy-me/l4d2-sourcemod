@@ -50,30 +50,6 @@ public void OnPluginStart()
     }
 
     SQL_FastQuery(g_hDB, "CREATE TABLE IF NOT EXISTS visitors (" ... "steamid TEXT PRIMARY KEY, " ... "first_seen INTEGER, " ... "last_seen INTEGER, " ... "visits INTEGER, " ... "play_time INTEGER DEFAULT 0)");
-
-    RegConsoleCmd("sm_info", Cmd_Info);
-}
-
-Action Cmd_Info(int client, int args)
-{
-    if (client == 0)
-    {
-        ReplyToCommand(client, "This command can only be used in-game.");
-        return Plugin_Handled;
-    }
-
-    char lang[6];
-    GetLanguageInfo(GetClientLanguage(client), lang, sizeof(lang));
-
-    if (StrEqual(lang, "ko", false))
-    {
-        ShowMOTDPanel(client, "Rainy 로컬 서버", "motd_rainy_ko.txt", MOTDPANEL_TYPE_FILE);
-    }
-    else
-    {
-        ShowMOTDPanel(client, "Rainy Local Server", "motd_rainy_en.txt", MOTDPANEL_TYPE_FILE);
-    }
-    return Plugin_Handled;
 }
 
 public void OnClientDisconnect(int client)
