@@ -28,7 +28,7 @@ public void OnClientPutInServer(int client)
 
 public void OnClientDisconnect(int client)
 {
-    if (IsFakeClient(client) || !IsPlayerAlive(client) || GetClientTeam(client) != 2)
+    if (!IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client) || GetClientTeam(client) != 2)
     {
         return;
     }
