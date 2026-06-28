@@ -37,6 +37,24 @@ public void OnClientDisconnect(int client)
     ForcePlayerSuicide(client);
 }
 
+public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
+{
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (!IsClientInGame(i) || !IsFakeClient(i) || !IsPlayerAlive(i) || GetClientTeam(i) != 2)
+        {
+            continue;
+        }
+        if (IsIdlePlayer(i))
+        {
+            continue;
+        }
+
+        RemovePistol(i);
+        ForcePlayerSuicide(i);
+    }
+}
+
 void Timer_RespawnNewPlayer(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
@@ -57,24 +75,6 @@ void Timer_RespawnNewPlayer(Handle timer, int userid)
         GetClientAbsAngles(target, ang);
         TeleportEntity(client, pos, ang);
         L4D_WarpToValidPositionIfStuck(client);
-    }
-}
-
-public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
-{
-    for (int i = 1; i <= MaxClients; i++)
-    {
-        if (!IsClientInGame(i) || !IsFakeClient(i) || !IsPlayerAlive(i) || GetClientTeam(i) != 2)
-        {
-            continue;
-        }
-        if (IsIdlePlayer(i))
-        {
-            continue;
-        }
-
-        RemovePistol(i);
-        ForcePlayerSuicide(i);
     }
 }
 
