@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"#MOTD_Title"
+	{
+		"en"	"Rainy Local Server"
+		"ko"	"Rainy 로컬 서버"
+	}
+}

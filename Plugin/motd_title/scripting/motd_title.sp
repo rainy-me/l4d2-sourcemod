@@ -1,0 +1,225 @@
+#pragma newdecls required
+#pragma semicolon 1
+
+#include <sourcemod>
+#include <hxstocks>
+
+#define MOTD_TITLE_LIBRARY	"motd_title"
+
+#define CVAR_FLAGS			FCVAR_NOTIFY
+#define MAX_MOTD_TITLE_LEN	192
+
+public Plugin myinfo =
+{
+	name = "MOTD Title",
+	author = "Neburai",
+	description = "Provides ConVar for modifying the \"Message of the day\" title",
+	version = "2.2",
+	url = "https://github.com/neburaii/l4d2-plugins/tree/main/motd_title"
+};
+
+enum MOTDTitle
+{
+	MOTDTitle_Vanilla = 0,
+	MOTDTitle_ConVar,
+	MOTDTitle_Translation
+};
+
+/** convars */
+ConVar		g_hConVarMOTDTitleType;
+ConVar		g_hConVarMOTDTitle;
+
+MOTDTitle	g_MOTDTitleType;
+char 		g_sMOTDTitle[MAX_MOTD_TITLE_LEN];
+
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
+{
+	RegPluginLibrary(MOTD_TITLE_LIBRARY);
+	return APLRes_Success;
+}
+
+public void OnPluginStart()
+{
+	g_hConVarMOTDTitleType = CreateConVar(
+		"motd_title_type", "2",
+		"source of the title string. 0 = vanilla | 1 = convar | 2 = SM translation (sourcemod/translations/motd_title.phrases.txt)",
+		CVAR_FLAGS);
+
+	g_hConVarMOTDTitle = CreateConVar(
+		"motd_title", "non-translated title",
+	 	"title text that displays above motd html. only used if motd_title_type is set to 1",
+		CVAR_FLAGS);
+
+	g_hConVarMOTDTitleType.AddChangeHook(ConVarChanged_Read);
+	g_hConVarMOTDTitle.AddChangeHook(ConVarChanged_Read);
+	ReadConVars();
+
+	LoadTranslations("motd_title.phrases");
+
+	HookUserMessage(GetUserMessageId("VGUIMenu"), MsgHook_VGUIMenu, true);
+}
+
+/**********
+ * ConVars
+ *********/
+
+void ConVarChanged_Read(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+{
+	ReadConVars();
+}
+
+void ReadConVars()
+{
+	g_MOTDTitleType = view_as<MOTDTitle>(g_hConVarMOTDTitleType.IntValue);
+	g_hConVarMOTDTitle.GetString(g_sMOTDTitle, sizeof(g_sMOTDTitle));
+}
+
+/*************************
+ * record/send motd buffer
+ ************************/
+
+MOTDBuffer g_motd;
+enum struct MOTDBuffer
+{
+	int flags;
+	int players[MAXPLAYERS_L4D2];
+	int playersRef[MAXPLAYERS_L4D2];
+	int playersNum;
+
+	char buffer[256];
+	int bufferLen;
+
+	void Record(BfRead hBuffer, const int[] iPlayers, int iPlayersNum, bool bReliable, bool bInit, char sLine[MAX_MOTD_TITLE_LEN])
+	{
+		this.bufferLen = 0;
+
+		bool bTitleFound;
+		int iTotalKVIndex;
+
+		this.AppendString("info");
+		this.AppendByte(hBuffer.ReadByte()); 					// for formatting
+		iTotalKVIndex = this.AppendByte(hBuffer.ReadByte());	// total kayvalue pairs
+
+		/** the remainder of the buffer are keyvalue pairs. it alternates, starting with a key, then a value */
+		bool bSkipKV;
+		for (bool bKey = true; hBuffer.BytesLeft; bKey = !bKey)
+		{
+			hBuffer.ReadString(sLine, sizeof(sLine), true);
+
+			if (bSkipKV)
+			{
+				/** bKey being true here means we're at the key of the pair after the key that set bSkipKV to true */
+				if (bKey) bSkipKV = false;
+				else continue;
+			}
+
+			if (bKey && strcmp(sLine, "title") == 0)
+			{
+				bSkipKV = true;
+				bTitleFound = true;
+				continue;
+			}
+
+			this.AppendString(sLine);
+		}
+
+		/** title key without value. value gets appended in post hook */
+		this.AppendString("title");
+
+		if (!bTitleFound)
+			this.buffer[iTotalKVIndex] = view_as<int>(this.buffer[iTotalKVIndex]) + 1;
+
+		this.flags = USERMSG_BLOCKHOOKS;
+		if (bReliable) this.flags |= USERMSG_RELIABLE;
+		if (bInit) this.flags |= USERMSG_INITMSG;
+
+		this.playersNum = iPlayersNum;
+
+		for (int i = 0; i < iPlayersNum; i++)
+		{
+			this.players[i] = iPlayers[i];
+			this.playersRef[i] = EntIndexToEntRef(iPlayers[i]);
+		}
+	}
+
+	void Send()
+	{
+		if (g_MOTDTitleType == MOTDTitle_Vanilla)
+			return;
+
+		static char sTranslatedTitle[MAX_MOTD_TITLE_LEN];
+		int iRecipient[1];
+
+		for (int p = 0; p < this.playersNum; p++)
+		{
+			if (EntIndexToEntRef(this.players[p]) != this.playersRef[p])
+				continue;
+
+			iRecipient[0] = this.players[p];
+
+			if (g_MOTDTitleType == MOTDTitle_Translation)
+			{
+				FormatEx(sTranslatedTitle, sizeof(sTranslatedTitle), "%T", "#MOTD_Title", this.players[p]);
+				this.SendUserMessage(iRecipient, 1, sTranslatedTitle);
+			}
+			else this.SendUserMessage(iRecipient, 1, g_sMOTDTitle);
+		}
+	}
+
+	/**********
+	 * helpers
+	 **********/
+
+	void AppendString(const char[] sString)
+	{
+		for (int i = 0;; i++)
+		{
+			this.buffer[this.bufferLen++] = sString[i];
+			if (sString[i] == '\0') break;
+		}
+	}
+
+	int AppendByte(int iByte)
+	{
+		this.buffer[this.bufferLen++] = iByte;
+		return this.bufferLen - 1;
+	}
+
+	void SendUserMessage(const int[] iPlayers, int iPlayersNum, const char[] sTitle)
+	{
+		BfWrite hBuffer = view_as<BfWrite>(StartMessage("VGUIMenu", iPlayers, iPlayersNum, this.flags));
+
+		for (int i = 0; i < this.bufferLen; i++)
+			hBuffer.WriteByte(this.buffer[i]);
+
+		hBuffer.WriteString(sTitle);
+
+		EndMessage();
+	}
+}
+
+/**************
+ * UserMessage
+ *************/
+
+Action MsgHook_VGUIMenu(UserMsg msg_id, BfRead hBuffer, const int[] iPlayers, int iPlayersNum, bool bReliable, bool bInit)
+{
+	static char sLine[MAX_MOTD_TITLE_LEN];
+
+	if (g_MOTDTitleType == MOTDTitle_Vanilla)
+		return Plugin_Continue;
+
+	hBuffer.ReadString(sLine, sizeof(sLine), true);
+	if (strcmp(sLine, "info") != 0)
+		return Plugin_Continue;
+
+	g_motd.Record(hBuffer, iPlayers, iPlayersNum, bReliable, bInit, sLine);
+	RequestFrame(SendNewMsg);
+
+	return Plugin_Handled;
+}
+
+void SendNewMsg()
+{
+	g_motd.Send();
+}

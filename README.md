@@ -231,49 +231,52 @@ uv run 03_uninstall.py
 25. hunter_audio_feedback  
     <https://github.com/neburaii/l4d2-plugins/tree/main/hunter_audio_feedback>
 
-26. priority_sounds (탱크, 자키 data 제거)  
+26. motd_title  
+    <https://github.com/neburaii/l4d2-plugins/tree/main/motd_title>
+
+27. priority_sounds (탱크, 자키 data 제거)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
-27. round_restart_delay (기본값 1.0 설정)  
+28. round_restart_delay (기본값 1.0 설정)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/round_restart_delay>
 
-28. spit_fizzle  
+29. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-29. strict_despawn  
+30. strict_despawn  
     <https://github.com/neburaii/l4d2-plugins/tree/main/strict_despawn>
 
-30. Hunter_pounce_alignment_fix  
+31. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-31. l4d2_kill_sound  
+32. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-32. Explosion Announcer  
+33. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-33. Gear Transfer  
+34. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-34. l4d2_bugfix_deathspit  
+35. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-35. lagpreventor  
+36. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-36. noteam_nudging  
+37. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-37. Shove Direction Fix  
+38. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-38. Throwable Announcer  
+39. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-39. Upgrade Ammo Pack Deploy Announce  
+40. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-40. weapon_give_no_auto_switch  
+41. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
