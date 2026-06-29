@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <sdkhooks>
 #include <sdktools>
 
 public Plugin myinfo =
@@ -9,13 +10,22 @@ public Plugin myinfo =
     name        = "L4D2 Ragdoll Vanish",
     author      = "Rainy",
     description = "CI/SI의 ragdoll을 즉시 제거합니다.",
-    version     = "1.1.0",
+    version     = "1.2.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_ragdoll_vanish"
 };
 
 public void OnPluginStart()
 {
     HookEvent("player_death", Event_PlayerDeath);
+}
+
+public void OnEntityCreated(int entity, const char[] classname)
+{
+    // Remove SI ragdolls
+    if (StrEqual(classname, "cs_ragdoll"))
+    {
+        AcceptEntityInput(entity, "kill");
+    }
 }
 
 void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -27,24 +37,11 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
         int entity = event.GetInt("entityid");
         if (entity > MaxClients && IsValidEntity(entity))
         {
-            static char sClassName[64];
-            GetEntityClassname(entity, sClassName, sizeof(sClassName));
-            if (StrEqual(sClassName, "infected"))
+            static char classname[64];
+            GetEntityClassname(entity, classname, sizeof(classname));
+            if (StrEqual(classname, "infected"))
             {
                 AcceptEntityInput(entity, "kill");
-            }
-        }
-    }
-    else
-    {
-        // Remove SI ragdolls
-        int client = GetClientOfUserId(userid);
-        if (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3)
-        {
-            int ragdoll = GetEntPropEnt(client, Prop_Send, "m_hRagdoll");
-            if (ragdoll > MaxClients && IsValidEntity(ragdoll))
-            {
-                AcceptEntityInput(ragdoll, "kill");
             }
         }
     }
