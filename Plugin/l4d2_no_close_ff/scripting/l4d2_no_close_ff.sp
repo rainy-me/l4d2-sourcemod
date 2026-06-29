@@ -14,7 +14,7 @@ public Plugin myinfo =
     name        = "L4D2 No Close FF",
     author      = "Rainy",
     description = "팀원이 너무 가까이 있을 때 팀킬을 차단합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_no_close_ff"
 };
 
@@ -23,9 +23,10 @@ public void OnPluginStart()
     g_hRadius  = CreateConVar("l4d2_no_close_ff_radius", "30",
                               "이 수평 거리(units) 이내면 FF 데미지를 차단",
                               FCVAR_NOTIFY, true, 0.0);
-    g_hVertGap = CreateConVar("l4d2_no_close_ff_vgap", "40",
+    g_hVertGap = CreateConVar("l4d2_no_close_ff_vgap", "60",
                               "두 생존자의 수직 높이 차가 이 값 이하일 때만 차단",
                               FCVAR_NOTIFY, true, 0.0);
+    AutoExecConfig(true, "l4d2_no_close_ff");
 
     // Late load
     for (int i = 1; i <= MaxClients; i++)
