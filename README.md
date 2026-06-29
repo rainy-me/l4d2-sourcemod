@@ -231,7 +231,7 @@ uv run 03_uninstall.py
 25. hunter_audio_feedback  
     <https://github.com/neburaii/l4d2-plugins/tree/main/hunter_audio_feedback>
 
-26. motd_title  
+26. motd_title (커스텀)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/motd_title>
 
 27. priority_sounds (탱크, 자키 data 제거)  
