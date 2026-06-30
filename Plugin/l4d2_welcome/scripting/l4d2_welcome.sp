@@ -215,5 +215,5 @@ void Timer_Greet(Handle timer, DataPack pack)
         return;
     }
 
-    CPrintToChat(client, "%T", g_sGreetPhrases[greetType], client, client, newVisits, daysAbsent, playHours);
+    CPrintToChat(client, "%t", g_sGreetPhrases[greetType], client, newVisits, daysAbsent, playHours);
 }
