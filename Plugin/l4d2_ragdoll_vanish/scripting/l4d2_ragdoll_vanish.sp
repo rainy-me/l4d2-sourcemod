@@ -24,7 +24,7 @@ public void OnEntityCreated(int entity, const char[] classname)
     // Remove SI ragdolls
     if (StrEqual(classname, "cs_ragdoll"))
     {
-        AcceptEntityInput(entity, "kill");
+        RemoveEntity(entity);
     }
 }
 
@@ -41,7 +41,7 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
             GetEntityClassname(entity, classname, sizeof(classname));
             if (StrEqual(classname, "infected"))
             {
-                AcceptEntityInput(entity, "kill");
+                RemoveEntity(entity);
             }
         }
     }
