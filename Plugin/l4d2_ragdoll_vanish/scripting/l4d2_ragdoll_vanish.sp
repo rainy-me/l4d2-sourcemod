@@ -16,7 +16,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    HookEvent("player_death", Event_PlayerDeath);
+    HookEvent("player_death", Event_PlayerDeath, EventHookMode_Pre);
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
