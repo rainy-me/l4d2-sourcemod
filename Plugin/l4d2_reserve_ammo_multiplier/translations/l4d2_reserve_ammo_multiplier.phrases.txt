@@ -27,7 +27,7 @@
     }
     "Help"
     {
-        "en"        "Usage: !amm <1.0~5.0>, Enter the reserve ammo multiplier.\nExample: !amm 1.5 (Increase by 1.5x) | !amm 1 (Reset)"
-        "ko"        "사용법: !amm <1.0~5.0>, 예비 탄약 배수 입력.\n예시: !amm 1.5 (1.5배 증가) | !amm 1 (초기화)"
+        "en"        "Usage: !amm <1.0~5.0>, Enter the reserve ammo multiplier."
+        "ko"        "사용법: !amm <1.0~5.0>, 예비 탄약 배수 입력."
     }
 }

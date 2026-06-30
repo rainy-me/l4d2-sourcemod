@@ -40,7 +40,7 @@ public Plugin myinfo =
     name        = "L4D2 Reserve Ammo Multiplier",
     author      = "Rainy",
     description = "예비 탄약 소지량을 배율로 조정합니다.",
-    version     = "1.1.0",
+    version     = "1.2.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_reserve_ammo_multiplier"
 };
 
@@ -90,7 +90,7 @@ Action Cmd_PrintInfo(int client, int args)
     float multiplier = DEFAULT_MULTIPLIER;
     if (ReadMultiplierFromFile(multiplier))
     {
-        CReplyToCommand(client, "%t", "Current Multiplier", multiplier);
+        CPrintToChatAll("%t", "Current Multiplier", multiplier);
     }
     return Plugin_Handled;
 }
@@ -207,7 +207,7 @@ int ReCalcReserveAmmoByCvarIdx(int currentAmmo, int idx)
 // FILE I/O
 // ==========================================================================
 
-void WriteMultiplierToFile(float multiplier)
+bool WriteMultiplierToFile(float multiplier)
 {
     char sPath[PLATFORM_MAX_PATH];
     BuildPath(Path_SM, sPath, sizeof(sPath), "data/%s", STORED_FILE);
@@ -215,15 +215,16 @@ void WriteMultiplierToFile(float multiplier)
     if (file == null)
     {
         LogError("Failed to open %s for writing", sPath);
-        return;
+        return false;
     }
     if (!file.WriteLine("%.2f", multiplier))
     {
         LogError("Failed to write to %s", sPath);
         delete file;
-        return;
+        return false;
     }
     delete file;
+    return true;
 }
 
 bool ReadMultiplierFromFile(float &multiplier)
