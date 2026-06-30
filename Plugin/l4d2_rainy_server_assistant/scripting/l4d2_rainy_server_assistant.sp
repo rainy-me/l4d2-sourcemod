@@ -16,9 +16,14 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_rainy_server_assistant"
 };
 
+public void OnPluginStart()
+{
+    RegAdminCmd("sm_killbots", Cmd_Killbots, ADMFLAG_ROOT, "Kill bot survivors");
+}
+
 public void OnClientPutInServer(int client)
 {
-    if (IsFakeClient(client))
+    if (!IsClientInGame(client) || IsFakeClient(client))
     {
         return;
     }
@@ -28,6 +33,8 @@ public void OnClientPutInServer(int client)
 
 public void OnClientDisconnect(int client)
 {
+    // Does not work if disconnecting due to a crash.
+    // In that case, kill the bot manually.
     if (!IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client) || GetClientTeam(client) != 2)
     {
         return;
@@ -38,6 +45,11 @@ public void OnClientDisconnect(int client)
 }
 
 public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
+{
+    ServerCommand("sm_killbots");
+}
+
+Action Cmd_Killbots(int client, int args)
 {
     for (int i = 1; i <= MaxClients; i++)
     {
@@ -53,6 +65,7 @@ public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
         RemovePistol(i);
         ForcePlayerSuicide(i);
     }
+    return Plugin_Handled;
 }
 
 void Timer_RespawnNewPlayer(Handle timer, int userid)
@@ -84,7 +97,6 @@ int GetLowestFlowSurvivor(int exclude)
 {
     int   best = -1;
     float bestFlow;
-
     for (int i = 1; i <= MaxClients; i++)
     {
         if (i == exclude || !IsClientInGame(i) || !IsPlayerAlive(i) || GetClientTeam(i) != 2)
@@ -99,7 +111,6 @@ int GetLowestFlowSurvivor(int exclude)
             bestFlow = flow;
         }
     }
-
     return best;
 }
 
