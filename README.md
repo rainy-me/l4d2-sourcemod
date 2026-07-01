@@ -234,7 +234,7 @@ uv run 03_uninstall.py
 26. motd_title (커스텀)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/motd_title>
 
-27. priority_sounds (탱크, 자키 data 제거)  
+27. priority_sounds (탱크 data 제거)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
 28. round_restart_delay (기본값 1.0 설정)  
