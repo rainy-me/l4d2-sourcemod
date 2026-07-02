@@ -6,6 +6,7 @@
 #include <left4dhooks>
 
 #define RESPAWN_DELAY 2.5
+#define KILL_DELAY    0.3
 
 public Plugin myinfo =
 {
@@ -21,6 +22,12 @@ public void OnPluginStart()
     RegAdminCmd("sm_killbots", Cmd_Killbots, ADMFLAG_ROOT, "Kill bot survivors");
 }
 
+Action Cmd_Killbots(int client, int args)
+{
+    KillBots();
+    return Plugin_Handled;
+}
+
 public void OnClientPutInServer(int client)
 {
     if (!IsClientInGame(client) || IsFakeClient(client))
@@ -33,23 +40,31 @@ public void OnClientPutInServer(int client)
 
 public void OnClientDisconnect(int client)
 {
-    // Does not work if disconnecting due to a crash.
-    // In that case, kill the bot manually.
-    if (!IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client) || GetClientTeam(client) != 2)
+    if (IsFakeClient(client))
     {
         return;
     }
 
-    RemovePistol(client);
-    ForcePlayerSuicide(client);
+    CreateTimer(KILL_DELAY, Timer_KillBots, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
 {
-    ServerCommand("sm_killbots");
+    KillBots();
 }
 
-Action Cmd_Killbots(int client, int args)
+void Timer_RespawnNewPlayer(Handle timer, int userid)
+{
+    int client = GetClientOfUserId(userid);
+    RespawnNewPlayer(client);
+}
+
+void Timer_KillBots(Handle timer)
+{
+    KillBots();
+}
+
+void KillBots()
 {
     for (int i = 1; i <= MaxClients; i++)
     {
@@ -65,12 +80,10 @@ Action Cmd_Killbots(int client, int args)
         RemovePistol(i);
         ForcePlayerSuicide(i);
     }
-    return Plugin_Handled;
 }
 
-void Timer_RespawnNewPlayer(Handle timer, int userid)
+void RespawnNewPlayer(int client)
 {
-    int client = GetClientOfUserId(userid);
     if (!IsValidClient(client) || IsFakeClient(client) || IsPlayerAlive(client) || GetClientTeam(client) != 2)
     {
         return;
