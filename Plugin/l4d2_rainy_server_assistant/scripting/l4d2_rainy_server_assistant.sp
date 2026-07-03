@@ -6,7 +6,7 @@
 #include <left4dhooks>
 
 #define RESPAWN_DELAY 2.5
-#define KILL_DELAY    0.3
+#define KILL_DELAY    0.5
 
 public Plugin myinfo =
 {
@@ -64,6 +64,8 @@ void Timer_KillBots(Handle timer)
     KillBots();
 }
 
+// Methods
+// ------------------------------------
 void KillBots()
 {
     for (int i = 1; i <= MaxClients; i++)
@@ -104,6 +106,22 @@ void RespawnNewPlayer(int client)
     }
 }
 
+void RemovePistol(int client)
+{
+    int weapon = GetPlayerWeaponSlot(client, 1);
+    if (weapon == -1)
+    {
+        return;
+    }
+
+    char classname[32];
+    GetEntityClassname(weapon, classname, sizeof(classname));
+    if (StrEqual(classname, "weapon_pistol"))
+    {
+        RemovePlayerItem(client, weapon);
+    }
+}
+
 // Helpers
 // ------------------------------------
 int GetLowestFlowSurvivor(int exclude)
@@ -125,22 +143,6 @@ int GetLowestFlowSurvivor(int exclude)
         }
     }
     return best;
-}
-
-void RemovePistol(int client)
-{
-    int weapon = GetPlayerWeaponSlot(client, 1);
-    if (weapon == -1)
-    {
-        return;
-    }
-
-    char classname[32];
-    GetEntityClassname(weapon, classname, sizeof(classname));
-    if (StrEqual(classname, "weapon_pistol"))
-    {
-        RemovePlayerItem(client, weapon);
-    }
 }
 
 bool IsIdlePlayer(int client)
