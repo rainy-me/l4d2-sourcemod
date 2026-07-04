@@ -10,15 +10,6 @@
 #define JOCKEY_SOUND_INTERVAL  1.7
 #define CHARGER_SOUND_INTERVAL 1.7
 
-public Plugin myinfo =
-{
-    name        = "L4D2 Fix SI Sound",
-    author      = "Rainy",
-    description = "특수좀비의 무음 문제를 개선합니다.",
-    version     = "1.3.1",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
-};
-
 ConVar      g_hAutoConvars;
 
 bool        g_bHunterWasDucking[MAXPLAYERS + 1]  = { false, ... };
@@ -79,6 +70,15 @@ static char g_sChargerSound[][] = {
     "player/charger/voice/idle/charger_lurk_08.wav",
     "player/charger/voice/idle/charger_lurk_09.wav",
     "player/charger/voice/idle/charger_lurk_10.wav"
+};
+
+public Plugin myinfo =
+{
+    name        = "L4D2 Fix SI Sound",
+    author      = "Rainy",
+    description = "특수좀비의 무음 문제를 개선합니다.",
+    version     = "1.3.1",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
 public void OnPluginStart()

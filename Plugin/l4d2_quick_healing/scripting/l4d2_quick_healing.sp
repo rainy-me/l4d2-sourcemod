@@ -6,6 +6,9 @@
 #include <colors>
 #include <left4dhooks>
 
+ConVar g_hHealPercent;
+bool   g_bFastHealUsed[MAXPLAYERS + 1] = { false, ... };
+
 public Plugin myinfo =
 {
     name        = "L4D2 Quick Healing",
@@ -14,9 +17,6 @@ public Plugin myinfo =
     version     = "1.2.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_quick_healing"
 };
-
-ConVar g_hHealPercent;
-bool   g_bFastHealUsed[MAXPLAYERS + 1] = { false, ... };
 
 public void OnPluginStart()
 {

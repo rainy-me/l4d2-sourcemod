@@ -6,6 +6,9 @@
 
 #define EF_DIMLIGHT 4
 
+// true == ON, false == OFF
+bool g_bFlashlightState[MAXPLAYERS + 1] = { false, ... };
+
 public Plugin myinfo =
 {
     name        = "L4D2 Idle Flashlight Fix",
@@ -14,9 +17,6 @@ public Plugin myinfo =
     version     = "1.0.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_flashlight_fix"
 };
-
-// true == ON, false == OFF
-bool g_bFlashlightState[MAXPLAYERS + 1] = { false, ... };
 
 public void OnPluginStart()
 {

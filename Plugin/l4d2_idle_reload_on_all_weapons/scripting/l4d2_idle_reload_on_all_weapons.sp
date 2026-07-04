@@ -7,15 +7,6 @@
 #define RELOAD_TIMEOUT   2.5
 #define MAX_WEAPON_SLOTS 5
 
-public Plugin myinfo =
-{
-    name        = "L4D2 Idle Reload On All Weapons",
-    author      = "Rainy",
-    description = "모든 무기에서 유휴 장전이 가능하도록 합니다.",
-    version     = "1.1.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_reload_on_all_weapons"
-};
-
 Handle    g_hFinishReload           = null;
 StringMap g_smIdleReloadableWeapons = null;
 
@@ -28,6 +19,15 @@ int        g_iActiveWeapon[MAXPLAYERS + 1]        = { -1, ... };
 int        g_iReloadingWeaponSlot[MAXPLAYERS + 1] = { -1, ... };
 EventState g_esEventState[MAXPLAYERS + 1]         = { State_None, ... };
 float      g_fStateTimeout[MAXPLAYERS + 1]        = { 0.0, ... };
+
+public Plugin myinfo =
+{
+    name        = "L4D2 Idle Reload On All Weapons",
+    author      = "Rainy",
+    description = "모든 무기에서 유휴 장전이 가능하도록 합니다.",
+    version     = "1.1.0",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_reload_on_all_weapons"
+};
 
 public void OnPluginStart()
 {

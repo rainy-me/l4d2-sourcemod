@@ -7,6 +7,11 @@
 #define Z_TANK        8
 #define TEAM_INFECTED 3
 
+ConVar g_hEnabled;
+ConVar g_hGlowColor;
+ConVar g_hGlowRange;
+ConVar g_hFlashing;
+
 public Plugin myinfo =
 {
     name        = "L4D2 Tank Props Glow",
@@ -15,11 +20,6 @@ public Plugin myinfo =
     version     = "1.1.5",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_props_glow"
 };
-
-ConVar g_hEnabled;
-ConVar g_hGlowColor;
-ConVar g_hGlowRange;
-ConVar g_hFlashing;
 
 public void OnPluginStart()
 {

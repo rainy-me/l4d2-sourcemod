@@ -4,6 +4,12 @@
 #include <sourcemod>
 #include <left4dhooks>
 
+ConVar g_hIdleSolo;
+ConVar g_hIdleMessage;
+ConVar g_hCooldownTime;
+ConVar g_hCooldownMessage;
+float  g_fUseAllowTime[MAXPLAYERS + 1] = { 0.0, ... };
+
 public Plugin myinfo =
 {
     name        = "L4D2 Idle Fix",
@@ -12,12 +18,6 @@ public Plugin myinfo =
     version     = "1.6.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
 };
-
-ConVar g_hIdleSolo;
-ConVar g_hIdleMessage;
-ConVar g_hCooldownTime;
-ConVar g_hCooldownMessage;
-float  g_fUseAllowTime[MAXPLAYERS + 1] = { 0.0, ... };
 
 public void OnPluginStart()
 {

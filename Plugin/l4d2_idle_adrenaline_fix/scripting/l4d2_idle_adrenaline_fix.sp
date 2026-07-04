@@ -4,6 +4,9 @@
 #include <sourcemod>
 #include <left4dhooks>
 
+ConVar g_hAdrenalineDuration;
+float  g_fAdrenalineEndTime[MAXPLAYERS + 1] = { 0.0, ... };
+
 public Plugin myinfo =
 {
     name        = "L4D2 Idle Adrenaline Fix",
@@ -12,9 +15,6 @@ public Plugin myinfo =
     version     = "1.1.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_adrenaline_fix"
 };
-
-ConVar g_hAdrenalineDuration;
-float  g_fAdrenalineEndTime[MAXPLAYERS + 1] = { 0.0, ... };
 
 public void OnPluginStart()
 {

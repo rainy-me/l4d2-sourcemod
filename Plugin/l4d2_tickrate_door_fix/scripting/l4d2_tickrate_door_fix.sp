@@ -8,15 +8,6 @@
 #define MAX_EDICTS             2048    //(1 << 11)
 #define ENTITY_MAX_NAME_LENGTH 64
 
-public Plugin myinfo =
-{
-    name        = "L4D2 Tickrate Door Fix",
-    author      = "Rainy",
-    description = "틱레이트 변경에 따른 문 속도 문제를 고칩니다.",
-    version     = "1.0.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tickrate_door_fix"
-};
-
 enum
 {
     DoorsTypeTracked_None                         = -1,
@@ -39,6 +30,15 @@ enum struct DoorsData
 DoorsData g_ddDoors[MAX_EDICTS];
 ConVar    g_hCvarDoorSpeed;
 float     g_fDoorSpeed;
+
+public Plugin myinfo =
+{
+    name        = "L4D2 Tickrate Door Fix",
+    author      = "Rainy",
+    description = "틱레이트 변경에 따른 문 속도 문제를 고칩니다.",
+    version     = "1.0.0",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tickrate_door_fix"
+};
 
 public void OnPluginStart()
 {
