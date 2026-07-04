@@ -5,8 +5,15 @@
 #include <sdktools>
 #include <left4dhooks>
 
-#define RESPAWN_DELAY 2.5
+#define RESPAWN_DELAY 3.0
 #define KILL_DELAY    0.5
+
+static const char g_SurvivorNames[][] = {
+    "nick",
+    "rochelle",
+    "coach",
+    "ellis"
+};
 
 public Plugin myinfo =
 {
@@ -91,9 +98,11 @@ void RespawnNewPlayer(int client)
         return;
     }
 
-    L4D_RespawnPlayer(client);
-    GivePlayerItem(client, "weapon_shotgun_chrome");
-    GivePlayerItem(client, "weapon_first_aid_kit");
+    int character = GetEntProp(client, Prop_Send, "m_survivorCharacter");
+    ServerCommand("scripted_user_func respawn,%s", g_SurvivorNames[character]);
+    ServerCommand("scripted_user_func ent_fire,!%s,sethealth,100", g_SurvivorNames[character]);
+    ServerCommand("scripted_user_func give,%s,first_aid_kit", g_SurvivorNames[character]);
+    ServerCommand("scripted_user_func give,%s,shotgun_chrome", g_SurvivorNames[character]);
 
     int target = GetLowestFlowSurvivor(client);
     if (target != -1)
