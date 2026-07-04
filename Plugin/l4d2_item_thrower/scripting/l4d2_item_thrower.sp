@@ -44,7 +44,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    RegConsoleCmd("sm_throw", Cmd_Throw, "들고 있는 무기/아이템을 앞으로 던집니다.");
+    RegConsoleCmd("sm_throw", Cmd_Throw);
 }
 
 public void OnMapStart()
@@ -78,7 +78,7 @@ void ThrowItem(int client)
         return;
     }
 
-    // 던질 위치/방향/속도 계산: 눈 위치에서 시선 방향으로 500u/s + 플레이어 속도
+    // 던질 위치/방향/속도 계산: 눈 위치에서 시선 방향으로 THROW_SPEED u/s + 플레이어 속도
     float pos[3], angles[3], fwd[3], velocity[3];
     GetClientEyePosition(client, pos);
     GetClientEyeAngles(client, angles);
@@ -106,9 +106,9 @@ void ThrowItem(int client)
                 SetEntProp(secondPistol, Prop_Send, "m_iClip1", newClip);
                 TeleportEntity(secondPistol, pos, angles, velocity);
 
-                float pistolSpin[3];
-                GetRandomSpin(pistolSpin);
-                L4D_AngularVelocity(secondPistol, pistolSpin);
+                float pistolAngVel[3];
+                GetRandomSpin(pistolAngVel);
+                L4D_AngularVelocity(secondPistol, pistolAngVel);
             }
         }
     }
@@ -143,21 +143,13 @@ void ThrowItem(int client)
         SetEntProp(weapon, Prop_Send, "m_iWorldModelIndex", g_iDefibModelIndex);
     }
 
-    // 원본 vscript와 동일한 무작위 스핀을 준비합니다.
-    float angVel[3];
-    GetRandomSpin(angVel);
-
-    // 근접 무기는 몸통 요(yaw) 기준으로 롤을 무작위로 틀고, 수평으로 빠르게 회전하며 날아갑니다.
+    // 근접 무기는 몸통 요(yaw) 기준으로 롤을 무작위로 틉니다.
     if (StrEqual(weaponClass, "weapon_melee"))
     {
         float bodyAngles[3];
         GetClientAbsAngles(client, bodyAngles);
         angles[1] = bodyAngles[1];
         angles[2] = float(GetRandomInt(-90, 90));
-
-        angVel[0] = 0.0;
-        angVel[1] = 1500.0;
-        angVel[2] = float(GetRandomInt(-20, 20));
     }
 
     // 드랍된 무기를 눈 위치로 옮기고 시선 각도로 정렬한 뒤 시선 방향 속도를 부여해 던집니다.
@@ -165,6 +157,8 @@ void ThrowItem(int client)
 
     // Weapon_Drop이 추가한 기존 각속도를 제거한 뒤 의도한 스핀을 부여합니다.
     ZeroAngularVelocity(weapon);
+    float angVel[3];
+    GetRandomSpin(angVel);
     L4D_AngularVelocity(weapon, angVel);
 
     // 남은 예비 탄약을 무기에 실어 보내고 플레이어의 예비 탄약은 비웁니다.
