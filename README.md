@@ -91,70 +91,73 @@ uv run 03_uninstall.py
 11. [l4d2_getup_damage_fix](/Plugin/l4d2_getup_damage_fix/)  
     일어나는 애니메이션이 진행되는 동안의 무적타임 불일치 문제를 고칩니다.
 
-12. [l4d2_hide_idle_message](/Plugin/l4d2_hide_idle_message/)  
+12. [l4d2_hang_fall_death_defib_fix](/Plugin/l4d2_hang_fall_death_defib_fix/)  
+    매달리는 중에 떨어져 사망한 생존자의 소생 불가 버그를 고칩니다.
+
+13. [l4d2_hide_idle_message](/Plugin/l4d2_hide_idle_message/)  
     유휴 상태 메시지를 채팅창에 표시하지 않도록 합니다.
 
-13. [l4d2_idle_adrenaline_fix](/Plugin/l4d2_idle_adrenaline_fix/)  
+14. [l4d2_idle_adrenaline_fix](/Plugin/l4d2_idle_adrenaline_fix/)  
     플레이어가 유휴 모드에서 복귀할 때 아드레날린 효과를 유지하도록 합니다.
 
-14. [l4d2_idle_fix](/Plugin/l4d2_idle_fix)  
+15. [l4d2_idle_fix](/Plugin/l4d2_idle_fix)  
     유휴 명령 미인식 문제를 해결합니다.
 
-15. [l4d2_idle_flashlight_fix](/Plugin/l4d2_idle_flashlight_fix/)  
+16. [l4d2_idle_flashlight_fix](/Plugin/l4d2_idle_flashlight_fix/)  
     유휴 전 손전등 on/off 상태를 유휴 후에도 유지합니다.
 
-16. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
+17. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
     모든 무기에서 유휴 장전이 가능하도록 합니다.
 
-17. [l4d2_item_thrower](/Plugin/l4d2_item_thrower/)  
+18. [l4d2_item_thrower](/Plugin/l4d2_item_thrower/)  
     들고 있는 무기/아이템을 앞으로 던집니다.
 
-18. [l4d2_no_ci_melee_kill_collision](/Plugin/l4d2_no_ci_melee_kill_collision/)  
+19. [l4d2_no_ci_melee_kill_collision](/Plugin/l4d2_no_ci_melee_kill_collision/)  
     근접무기로 죽인 일반좀비와의 충돌을 제거합니다.
 
-19. [l4d2_no_close_ff](/Plugin/l4d2_no_close_ff/)  
+20. [l4d2_no_close_ff](/Plugin/l4d2_no_close_ff/)  
     팀원이 너무 가까이 있을 때 팀킬을 차단합니다.
 
-20. [l4d2_no_deathfall_cam](/Plugin/l4d2_no_deathfall_cam/)  
+21. [l4d2_no_deathfall_cam](/Plugin/l4d2_no_deathfall_cam/)  
     추락 시 카메라 시점 전환을 차단합니다.
 
-21. [l4d2_one_punch_shove](/Archive/l4d2_one_punch_shove/)  
+22. [l4d2_one_punch_shove](/Archive/l4d2_one_punch_shove/)  
     CI, SI를 밀치기 한 번으로 죽일 수 있습니다.
 
-22. [l4d2_player_connect_notifier](/Plugin/l4d2_player_connect_notifier/)  
+23. [l4d2_player_connect_notifier](/Plugin/l4d2_player_connect_notifier/)  
     플레이어가 서버에 접속하면 채팅창에 알립니다.
 
-23. [l4d2_print_entity_info](/Archive/l4d2_print_entity_info/)  
+24. [l4d2_print_entity_info](/Archive/l4d2_print_entity_info/)  
     크로스헤어가 가리키는 엔티티의 상세 정보를 출력합니다.
 
-24. [l4d2_quick_healing](/Plugin/l4d2_quick_healing/)  
+25. [l4d2_quick_healing](/Plugin/l4d2_quick_healing/)  
     시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.
 
-25. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
+26. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
     CI/SI의 ragdoll을 즉시 제거합니다.
 
-26. [l4d2_rainy_server_assistant](/Plugin/l4d2_rainy_server_assistant/)  
+27. [l4d2_rainy_server_assistant](/Plugin/l4d2_rainy_server_assistant/)  
     Rainy 서버 자동화 플러그인
 
-27. [l4d2_reserve_ammo_multiplier](/Plugin/l4d2_reserve_ammo_multiplier/)  
+28. [l4d2_reserve_ammo_multiplier](/Plugin/l4d2_reserve_ammo_multiplier/)  
     예비 탄약 소지량을 배율로 조정합니다.
 
-28. [l4d2_skip_outtro](/Plugin/l4d2_skip_outtro/)  
+29. [l4d2_skip_outtro](/Plugin/l4d2_skip_outtro/)  
     맵 클리어 시 아웃트로를 빠르게 건너뜁니다.
 
-29. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
+30. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
     스모커가 worldspawn이 아닌 엔티티 위에 서 있는 생존자를 잡을 때 즉시 끌려가는 버그를 고칩니다.
 
-30. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+31. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-31. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+32. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-32. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+33. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-33. [l4d2_welcome](/Plugin/l4d2_welcome/)  
+34. [l4d2_welcome](/Plugin/l4d2_welcome/)  
     환영 인사와 서버 안내를 합니다.
 
 ### B. 공개 플러그인
