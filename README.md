@@ -243,7 +243,7 @@ uv run 03_uninstall.py
 27. priority_sounds (탱크 data 제거)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
-28. round_restart_delay (기본값 1.0 설정)  
+28. round_restart_delay (convar 기본값 수정)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/round_restart_delay>
 
 29. spit_fizzle  

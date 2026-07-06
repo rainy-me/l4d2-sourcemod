@@ -33,7 +33,7 @@ public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErr
 public void OnPluginStart()
 {
 	g_hConVar_Delay = CreateConVar(
-		"round_restart_delay", "1.0",
+		"round_restart_delay", "0.5",
 		"override the delay between round restarts on mission lost. vanilla is 7.0",
 		FCVAR_NOTIFY, true, 0.0);
 	g_hConVar_Delay.AddChangeHook(ConVarChanged_Update);
