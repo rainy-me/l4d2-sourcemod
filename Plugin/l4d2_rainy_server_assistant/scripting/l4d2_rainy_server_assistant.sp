@@ -8,13 +8,6 @@
 #define RESPAWN_DELAY 3.0
 #define KILL_DELAY    0.5
 
-static const char g_SurvivorNames[][] = {
-    "nick",
-    "rochelle",
-    "coach",
-    "ellis"
-};
-
 public Plugin myinfo =
 {
     name        = "L4D2 Rainy Server Assistant",
@@ -98,11 +91,9 @@ void RespawnNewPlayer(int client)
         return;
     }
 
-    int character = GetEntProp(client, Prop_Send, "m_survivorCharacter");
-    ServerCommand("scripted_user_func respawn,%s", g_SurvivorNames[character]);
-    ServerCommand("scripted_user_func ent_fire,!%s,sethealth,100", g_SurvivorNames[character]);
-    ServerCommand("scripted_user_func give,%s,first_aid_kit", g_SurvivorNames[character]);
-    ServerCommand("scripted_user_func give,%s,shotgun_chrome", g_SurvivorNames[character]);
+    L4D_RespawnPlayer(client);
+    GivePlayerItem(client, "weapon_shotgun_chrome");
+    GivePlayerItem(client, "weapon_first_aid_kit");
 
     int target = GetLowestFlowSurvivor(client);
     if (target != -1)
