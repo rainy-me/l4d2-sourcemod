@@ -20,11 +20,7 @@ public void OnPluginStart()
 
 Action Cmd_Kill(int client, int args)
 {
-    if (args > 0)
-    {
-        return Plugin_Continue;
-    }
-    if (client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
+    if (args > 0 || client == 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
     {
         return Plugin_Handled;
     }
