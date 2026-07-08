@@ -148,16 +148,19 @@ uv run 03_uninstall.py
 30. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
     스모커가 worldspawn이 아닌 엔티티 위에 서 있는 생존자를 잡을 때 즉시 끌려가는 버그를 고칩니다.
 
-31. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+31. [l4d2_suicide](/Plugin/l4d2_suicide/)  
+    admin 권한 없이도 자살 명령을 사용할 수 있도록 합니다.
+
+32. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-32. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+33. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-33. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+34. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-34. [l4d2_welcome](/Plugin/l4d2_welcome/)  
+35. [l4d2_welcome](/Plugin/l4d2_welcome/)  
     환영 인사와 서버 안내를 합니다.
 
 ### B. 공개 플러그인
