@@ -3,25 +3,25 @@
     "First Greeting"
     {
         "#format"   "{1:N},{2:d},{3:d},{4:d}"
-        "en"        "{default}Welcome, {olive}{1}{default}! First time here.\nServer guide: {green}!motd"
-        "ko"        "{olive}{1}{default}님 처음 오셨네요!\n서버 가이드: {green}!motd"
+        "en"        "{default}Welcome, {olive}{1}{default}! First time here.\nServer guide: {green}/motd"
+        "ko"        "{olive}{1}{default}님 처음 오셨네요!\n서버 가이드: {green}/motd"
     }
     "Long Absence Greeting"
     {
         "#format"   "{1:N},{2:d},{3:d},{4:d}"
-        "en"        "{default}Long time no see, {olive}{1}{default}! It's been a whopping {lightgreen}{3}{default} days.\nServer guide: {green}!motd"
-        "ko"        "{olive}{1}{default}님 오랜만이네요! 무려 {lightgreen}{3}{default}일 만이에요.\n서버 가이드: {green}!motd"
+        "en"        "{default}Long time no see, {olive}{1}{default}! It's been a whopping {lightgreen}{3}{default} days.\nServer guide: {green}/motd"
+        "ko"        "{olive}{1}{default}님 오랜만이네요! 무려 {lightgreen}{3}{default}일 만이에요.\n서버 가이드: {green}/motd"
     }
     "Regular Greeting"
     {
         "#format"   "{1:N},{2:d},{3:d},{4:d}"
-        "en"        "{olive}{1}{default}, you're here again today!\nVisit #{lightgreen}{2}{default}, {lightgreen}{4}{default}h spent together.\nServer guide: {green}!motd"
-        "ko"        "{olive}{1}{default}님 오늘도 와주셨군요!\n{lightgreen}{2}{default}번째 방문, {lightgreen}{4}{default}시간 동안 함께했어요.\n서버 가이드: {green}!motd"
+        "en"        "{olive}{1}{default}, you're here again today!\nVisit #{lightgreen}{2}{default}, {lightgreen}{4}{default}h spent together.\nServer guide: {green}/motd"
+        "ko"        "{olive}{1}{default}님 오늘도 와주셨군요!\n{lightgreen}{2}{default}번째 방문, {lightgreen}{4}{default}시간 동안 함께했어요.\n서버 가이드: {green}/motd"
     }
     "Greeting an Acquaintance"
     {
         "#format"   "{1:N},{2:d},{3:d},{4:d}"
-        "en"        "{default}Welcome back, {olive}{1}{default}! Visit #{lightgreen}{2}{default}.\nServer guide: {green}!motd"
-        "ko"        "{olive}{1}{default}님 다시 오셨네요! {lightgreen}{2}{default}번째 방문이세요.\n서버 가이드: {green}!motd"
+        "en"        "{default}Welcome back, {olive}{1}{default}! Visit #{lightgreen}{2}{default}.\nServer guide: {green}/motd"
+        "ko"        "{olive}{1}{default}님 다시 오셨네요! {lightgreen}{2}{default}번째 방문이세요.\n서버 가이드: {green}/motd"
     }
 }
