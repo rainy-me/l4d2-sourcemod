@@ -38,13 +38,13 @@ public Plugin myinfo =
     name        = "L4D2 Item Thrower",
     author      = "Rainy",
     description = "들고 있는 무기/아이템을 앞으로 던집니다.",
-    version     = "1.1.0",
+    version     = "1.0.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_item_thrower"
 };
 
 public void OnPluginStart()
 {
-    RegConsoleCmd("sm_drop", Cmd_Drop);
+    RegConsoleCmd("sm_throw", Cmd_Throw);
 }
 
 public void OnMapStart()
@@ -52,7 +52,7 @@ public void OnMapStart()
     g_iDefibModelIndex = PrecacheModel(DEFIB_WORLD_MODEL, true);
 }
 
-Action Cmd_Drop(int client, int args)
+Action Cmd_Throw(int client, int args)
 {
     if (client <= 0 || !IsClientInGame(client) || GetClientTeam(client) != 2 || !IsPlayerAlive(client))
     {
