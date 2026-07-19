@@ -145,7 +145,7 @@ uv run 03_uninstall.py
 29. [l4d2_skip_outtro](/Plugin/l4d2_skip_outtro/)  
     맵 클리어 시 아웃트로를 빠르게 건너뜁니다.
 
-30. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
+30. [l4d2_smoker_instant_grab_fix](/Archive/l4d2_smoker_instant_grab_fix/)  
     스모커가 worldspawn이 아닌 엔티티 위에 서 있는 생존자를 잡을 때 즉시 끌려가는 버그를 고칩니다.
 
 31. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
@@ -237,52 +237,55 @@ uv run 03_uninstall.py
 25. hunter_audio_feedback  
     <https://github.com/neburaii/l4d2-plugins/tree/main/hunter_audio_feedback>
 
-26. motd_title (커스텀)  
+26. insta_smoke_fix  
+    <https://github.com/neburaii/l4d2-plugins/tree/main/insta_smoke_fix>
+
+27. motd_title (커스텀)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/motd_title>
 
-27. priority_sounds (탱크 data 제거)  
+28. priority_sounds (탱크 data 제거)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
-28. round_restart_delay (convar 기본값 수정)  
+29. round_restart_delay (convar 기본값 수정)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/round_restart_delay>
 
-29. spit_fizzle  
+30. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-30. strict_despawn  
+31. strict_despawn  
     <https://github.com/neburaii/l4d2-plugins/tree/main/strict_despawn>
 
-31. Hunter_pounce_alignment_fix  
+32. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-32. l4d2_kill_sound  
+33. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-33. Explosion Announcer  
+34. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-34. Gear Transfer  
+35. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-35. l4d2_bugfix_deathspit  
+36. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-36. lagpreventor  
+37. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-37. noteam_nudging  
+38. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-38. Shove Direction Fix  
+39. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-39. Throwable Announcer  
+40. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-40. Upgrade Ammo Pack Deploy Announce  
+41. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-41. weapon_give_no_auto_switch  
+42. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
