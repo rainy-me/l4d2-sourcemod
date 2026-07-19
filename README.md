@@ -267,25 +267,28 @@ uv run 03_uninstall.py
 35. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-36. l4d2_bugfix_deathspit  
+36. l4d_path_to_goal  
+    <https://forums.alliedmods.net/showthread.php?t=352685>
+
+37. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-37. lagpreventor  
+38. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-38. noteam_nudging  
+39. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-39. Shove Direction Fix  
+40. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-40. Throwable Announcer  
+41. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-41. Upgrade Ammo Pack Deploy Announce  
+42. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-42. weapon_give_no_auto_switch  
+43. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
