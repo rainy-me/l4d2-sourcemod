@@ -17,13 +17,20 @@ public Plugin myinfo =
 	url = "https://forums.alliedmods.net/showthread.php?t=341173"
 };
 
-bool Gived[MAXPLAYERS+1];
-
-bool Late_load;
+bool Given[MAXPLAYERS+1];
 
 void reset_player(int client)
 {
-	Gived[client] = false;
+	Given[client] = false;
+}
+
+int get_idled_of_bot(int bot)
+{
+    if(!HasEntProp(bot, Prop_Send, "m_humanSpectatorUserID"))
+    {
+        return -1;
+    }
+	return GetClientOfUserId(GetEntProp(bot, Prop_Send, "m_humanSpectatorUserID"));			
 }
 
 public void OnClientPutInServer(int client)
@@ -38,7 +45,7 @@ public void OnClientDisconnect_Post(int client)
 
 Action OnWeaponSwitch(int client, int weapon)
 {
-	if(Gived[client])
+	if(Given[client])
 	{
 		reset_player(client);
 		return Plugin_Handled;
@@ -46,9 +53,9 @@ Action OnWeaponSwitch(int client, int weapon)
 	return Plugin_Continue;
 }
 
-void remove_gived_mark(int client, int item)
+void remove_given_mark(int client, int item)
 {
-	if(!Gived[client])
+	if(!Given[client])
 	{
 		return;
 	}
@@ -62,21 +69,21 @@ void remove_gived_mark(int client, int item)
 
 public void GearTransfer_OnWeaponGive(int client, int target, int item)
 {
-	remove_gived_mark(target, item);
+	remove_given_mark(target, item);
 }
 
 public void GearTransfer_OnWeaponGrab(int client, int target, int item)
 {
 	if(target > 0)
 	{
-		remove_gived_mark(client, item);
+		remove_given_mark(client, item);
 	}
 }
 
 public void GearTransfer_OnWeaponSwap(int client, int target, int itemGiven, int itemTaken)
 {
-	remove_gived_mark(client, itemTaken);
-	remove_gived_mark(target, itemGiven);
+	remove_given_mark(client, itemTaken);
+	remove_given_mark(target, itemGiven);
 }
 
 void event_weapon_given(Event event, const char[] name, bool dontBroadcast)
@@ -87,9 +94,9 @@ void event_weapon_given(Event event, const char[] name, bool dontBroadcast)
 		return;
 	}
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	if(client > 0 && !Gived[client] && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client))
+	if(client > 0 && !Given[client] && IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client))
 	{
-		Gived[client] = true;
+		Given[client] = true;
 	}
 }
 
@@ -107,7 +114,15 @@ void event_player_team(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if(client > 0 && IsClientInGame(client))
 	{
-		reset_player(client);
+        int oldteam = event.GetInt("oldteam");
+		if(IsFakeClient(client) && event.GetInt("team") == 1 && oldteam == 2)
+		{
+			return;
+		}
+        if(oldteam == 2)
+        {
+            reset_player(client);
+        }
 	}
 }
 
@@ -117,6 +132,11 @@ void event_player_death(Event event, const char[] name, bool dontBroadcast)
 	if(client > 0 && IsClientInGame(client))
 	{
 		reset_player(client);
+		int idled = get_idled_of_bot(client);
+		if(idled > 0 && IsClientInGame(idled))
+		{
+			reset_player(idled);
+		}
 	}
 }
 
@@ -127,7 +147,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
         strcopy(error, err_max, "this plugin only runs in \"Left 4 Dead 2\"");
         return APLRes_SilentFailure;
     }
-    Late_load = late;
     return APLRes_Success;
 }
 
@@ -140,14 +159,11 @@ public void OnPluginStart()
 
     CreateConVar("weapon_give_no_auto_switch_version", PLUGIN_VERSION, "version of Weapon Give No Auto Switch", FCVAR_NOTIFY | FCVAR_DONTRECORD); 
 
-    if(Late_load)
-    {
-		for(int client = 1; client <= MaxClients; client++)
+	for(int client = 1; client <= MaxClients; client++)
+	{
+		if(IsClientInGame(client))
 		{
-			if(IsClientInGame(client))
-			{
-				OnClientPutInServer(client);
-			}
+			OnClientPutInServer(client);
 		}
-    }   
+	} 
 }

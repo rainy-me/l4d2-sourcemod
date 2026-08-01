@@ -17,13 +17,13 @@
 #include <dhooks>
 #include <l4d_path_to_goal>
 
-#define PLUGIN_VERSION 			"1.50 2026-06-25"
+#define PLUGIN_VERSION 			"1.58 2026-07-27"
 
 public Plugin myinfo =
 {
 	name = "[L4D1/L4D2] Path To Goal",
 	author = "gvazdas, zyiks",
-	description = "Automatic path to goal indicator.",
+	description = "Automatic path to goal indicator for Survivor team.",
 	version = PLUGIN_VERSION,
 	url = "https://forums.alliedmods.net/showthread.php?t=352685, https://github.com/gvazdas/l4d2_zombie_master"
 }
@@ -53,29 +53,37 @@ public void OnPluginStart()
     RegAdminCmd("l4d_path_to_goal_recomputeflow", CmdRecomputeFlow, ADMFLAG_ROOT,"Force TerrorNavMesh::RecomputeFlowDistances to fire.");
 
     g_hCvarEnable = CreateConVar("l4d_path_to_goal_enable", "1",
-    "0=OFF, 1=ON.",FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    "0=OFF, 1=ON.",
+    FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hCvarEnable.AddChangeHook(ConVarChanged_Cvars);
   	
     g_hCvarMax = CreateConVar("l4d_path_to_goal_max", "32",
-    "Max beams per request. Increasing this can potentially cause crashes for clients.",FCVAR_NOTIFY, true, 1.0, true, 1000.0);
+    "Max beams per request. Increasing this can potentially cause crashes for clients.",
+    FCVAR_NOTIFY, true, 1.0, true, 1000.0);
 
     g_hCvarSurvivors = CreateConVar("l4d_path_to_goal_survivor", "1",
-    "Allow survivors to request.",FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    "Allow survivors to request.",
+    FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
     g_hCvarInfected = CreateConVar("l4d_path_to_goal_infected", "1",
-    "Allow infected to request.",FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    "Allow infected to request.",
+    FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
     g_hCvarSpec = CreateConVar("l4d_path_to_goal_spec", "1",
-    "Allow observers/spectators to request.",FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    "Allow observers/spectators to request.",
+    FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
     g_hCvarAlive = CreateConVar("l4d_path_to_goal_alive", "0",
-    "Allow request based on alive state: 0=all,1=alive only,2=dead only.",FCVAR_NOTIFY, true, 0.0, true, 2.0);
+    "Allow request based on alive state: 0=all,1=alive only,2=dead only.",
+    FCVAR_NOTIFY, true, 0.0, true, 2.0);
 
     g_hCvarBudget = CreateConVar("l4d_path_to_goal_budget", "0.5",
-    "Max CPU budget (ms per frame) for escape route calculation. Larger budget makes requests available faster at the expense of server lag. 0 for infinite budget.",FCVAR_NOTIFY, true, 0.0, true, 1000.0);
+    "Max CPU budget (ms per frame) for escape route calculation. Larger budget makes requests available faster at the expense of server lag. 0 for infinite budget.",
+    FCVAR_NOTIFY, true, 0.0, true, 1000.0);
 
     g_hCvarDetourBudget = CreateConVar("l4d_path_to_goal_detour_budget", "10.0",
-    "Max CPU budget (ms) for detour beams. 0 for infinite budget.",FCVAR_NOTIFY, true, 0.0, true, 100.0);
+    "Max CPU budget (ms) for detour beams. 0 for infinite budget.",
+    FCVAR_NOTIFY, true, 0.0, true, 100.0);
 
     #if DEBUG
     SetConVarFloat(g_hCvarDetourBudget,0.0);
@@ -110,10 +118,27 @@ public void OnPluginStart()
 
 }
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+    if(GetEngineVersion()!=Engine_Left4Dead2 && GetEngineVersion()!=Engine_Left4Dead)
+	{
+		strcopy(error,err_max,"Plugin only supports L4D1/L4D2.");
+		return APLRes_SilentFailure;
+	}
+    MarkNativeAsOptional("L4D_NavArea_GetZ");
+    MarkNativeAsOptional("L4D_NavArea_GetElevator");
+    MarkNativeAsOptional("L4D_NavArea_IsBlocked");
+    MarkNativeAsOptional("L4D_NavArea_GetCorner");
+    MarkNativeAsOptional("L4D_NavArea_GetLadder");
+    CreateNative("L4D_Path_To_Goal", Native_RequestGuide);
+	return APLRes_Success;
+}
+
 public void OnAllPluginsLoaded()
 {
     elevator_available = GetFeatureStatus(FeatureType_Native,"L4D_NavArea_GetElevator")==FeatureStatus_Available;
-    if (!elevator_available) LogMessage("Please update l4dhooks for better performance.");
+    blocked_available = GetFeatureStatus(FeatureType_Native,"L4D_NavArea_IsBlocked")==FeatureStatus_Available;
+    if (!elevator_available || !blocked_available) LogMessage("Please update l4dhooks for better performance.");
     if (g_bL4D2) g_hCvarZM = FindConVar("zm_enable"); // check if zombie master is active
 }
 
@@ -508,12 +533,6 @@ public void OnClientPutInServer(int client)
 }
 
 // NATIVE //
-
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	CreateNative("L4D_Path_To_Goal", Native_RequestGuide);
-	return APLRes_Success;
-}
 
 void Native_RequestGuide(Handle plugin, int numParams)
 {

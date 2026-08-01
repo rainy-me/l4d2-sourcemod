@@ -3,10 +3,10 @@
 #endif
 #define _multicolors_included
 
-#define MuCo_VERSION "2.1.2"
+#define MuCo_VERSION "2.2.0"
 
-#include <multicolors/morecolors>
-#include <multicolors/colors>
+#include "multicolors/morecolors"
+#include "multicolors/colors"
 
 /*
 *
@@ -15,6 +15,7 @@
 *       - Powerlord
 *       - exvel
 *       - Dr. McKay
+*       - Rushaway / maxime1907 (SRCDSLAB)
 *
 *   Based on stamm-colors
 *       - https://github.com/popoklopsi/Stamm/blob/master/include/stamm/stamm-colors.inc
@@ -108,7 +109,7 @@ stock void CPrintToChatAll(const char[] message, any ...) {
 		}
 	}
 	else {
-		MC_CheckTrie();
+		MC_InitFastColors();
 
 		char buffer2[MAX_BUFFER_LENGTH];
 
@@ -143,16 +144,24 @@ stock void CPrintToChatObservers(int target, const char[] message, any ...) {
 		CFixColors();
 	}
 
- 	for (int client = 1; client <= MaxClients; client++) {
- 		if (IsClientInGame(client) && !IsPlayerAlive(client) && !IsFakeClient(client)) {
- 			int observee = GetEntPropEnt(client, Prop_Send, "m_hObserverTarget");
- 			int ObserverMode = GetEntProp(client, Prop_Send, "m_iObserverMode");
- 
- 			if (observee == target && (ObserverMode == 4 || ObserverMode == 5)) {
- 				CPrintToChat(client, buffer);
- 			}
- 		}
- 	}
+	int observee;
+	int ObserverMode;
+
+	for (int client = 1; client <= MaxClients; client++) {
+		if (!IsClientInGame(client) || IsPlayerAlive(client) || IsFakeClient(client)) {
+			continue;
+		}
+
+		ObserverMode = GetEntProp(client, Prop_Send, "m_iObserverMode");
+		if (ObserverMode != 4 && ObserverMode != 5) {
+			continue;
+		}
+
+		observee = GetEntPropEnt(client, Prop_Send, "m_hObserverTarget");
+		if (observee == target) {
+			CPrintToChat(client, buffer);
+		}
+	}
 }
 
 /**
@@ -188,7 +197,7 @@ stock void CPrintToChatEx(int client, int author, const char[] message, any ...)
  * @param message       Message (formatting rules).
  */
 stock void CPrintToChatAllEx(int author, const char[] message, any ...) {
-	/*char buffer[MAX_MESSAGE_LENGTH];
+	char buffer[MAX_MESSAGE_LENGTH];
 	SetGlobalTransTarget(LANG_SERVER);
 	VFormat(buffer, sizeof(buffer), message, 3);
 
@@ -201,27 +210,6 @@ stock void CPrintToChatAllEx(int author, const char[] message, any ...) {
 	}
 	else {
 		MC_PrintToChatAllEx(author, "%s%s", g_sCPrefix, buffer);
-	}*/
-
-	if (author < 0 || author > MaxClients) {
-		ThrowError("Invalid client index %d", author);
-	}
-
-	if (!IsClientInGame(author)) {
-		ThrowError("Client %d is not in game", author);
-	}
-
-	char szBuffer[MAX_MESSAGE_LENGTH];
-
-	for (int i = 1; i <= MaxClients; ++i) {
-		if (IsClientInGame(i) && !IsFakeClient(i) && !C_SkipList[i]) {
-			SetGlobalTransTarget(i);
-			VFormat(szBuffer, sizeof(szBuffer), message, 3);
-
-			C_PrintToChatEx(i, author, "%s", szBuffer);
-		}
-
-		C_SkipList[i] = false;
 	}
 }
 
@@ -241,16 +229,23 @@ stock void CPrintToChatObserversEx(int target, const char[] message, any ...) {
 		CFixColors();
 	}
 
- 	for (int client = 1; client <= MaxClients; client++) {
- 		if (IsClientInGame(client) && !IsPlayerAlive(client) && !IsFakeClient(client)) {
- 			int observee = GetEntPropEnt(client, Prop_Send, "m_hObserverTarget");
- 			int ObserverMode = GetEntProp(client, Prop_Send, "m_iObserverMode");
- 
- 			if (observee == target && (ObserverMode == 4 || ObserverMode == 5)) {
- 				CPrintToChatEx(client, target, buffer);
- 			}
- 		}
- 	}
+	int observee;
+	int ObserverMode;
+	for (int client = 1; client <= MaxClients; client++) {
+		if (!IsClientInGame(client) || IsPlayerAlive(client) || IsFakeClient(client)) {
+			continue;
+		}
+
+		ObserverMode = GetEntProp(client, Prop_Send, "m_iObserverMode");
+		if (ObserverMode != 4 && ObserverMode != 5) {
+			continue;
+		}
+
+		observee = GetEntPropEnt(client, Prop_Send, "m_hObserverTarget");
+		if (observee == target) {
+			CPrintToChatEx(client, target, buffer);
+		}
+	}
 }
 
 /**
@@ -413,6 +408,7 @@ stock void CShowActivityEx(int author, const char[] tag, const char[] message, a
 	}
 }
 
+
 /**
  * Replaces color tags in a string with color codes
  *
@@ -472,10 +468,48 @@ stock void CFixColors() {
 	}
 }
 
+/**
+ * Gets the color code from the color name
+ */
+stock bool CGetColor(const char[] key, char[] output, int maxlen)
+{
+	if (!IsSource2009()) {
+		for (int i = 0; i < sizeof(C_Tag); i++) {
+			if (strcmp(key, C_Tag[i]) != 0) {
+				continue;
+			}
+			
+			strcopy(output, maxlen, C_TagCode[i]);
+		}
+		
+		return true;
+	}
+	else {
+		return MC_FastGetColor(key, output, maxlen);
+	}
+}
+
+/** 
+* Inits the colors list 
+*/
+stock void CInitColors()
+{
+	if (!IsSource2009()) {
+		// Do Nothing. Not implanted yet
+	}
+	else {
+		MC_InitFastColors();
+	}
+}
+
 stock bool IsSource2009() {
-	return (GetEngineVersion() == Engine_CSS
-	|| GetEngineVersion() == Engine_HL2DM
-	|| GetEngineVersion() == Engine_DODS
-	|| GetEngineVersion() == Engine_TF2
-	|| GetEngineVersion() == Engine_SDK2013);
+	static bool checked = false;
+	static bool result = false;
+
+	if (!checked) {
+		EngineVersion engine = GetEngineVersion();
+		result = (engine == Engine_CSS || engine == Engine_HL2DM || engine == Engine_DODS || engine == Engine_TF2 || engine == Engine_SDK2013);
+		checked = true;
+	}
+	return result;
 }

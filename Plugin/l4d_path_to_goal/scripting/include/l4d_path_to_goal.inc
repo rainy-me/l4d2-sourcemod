@@ -115,7 +115,7 @@ bool g_bFlowRecomputeHooked;
 bool finale_stitched; // finale guide was drawn
 bool finale_backwards; // rescue vehicle is not at max flow -> flow cannot be used for guiding
 
-bool elevator_available; // check fi l4dhooks is up to date
+bool elevator_available, blocked_available; // check fi l4dhooks is up to date
 
 ConVar g_hCvarFinale;
 #define FINALE_ALWAYS 0 
@@ -301,8 +301,8 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
     }
 
     if (beams_cooldown(client)) return false;
-
     if (duration < 0.1) duration = 0.1; // prevent beams with infinite lifetime
+    beams_cooldown_update(client,duration);
 
     // Store info of latest request from client
     g_CellRequests[client].join_client = join_client;
@@ -512,7 +512,6 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
     }
     if (i_draw>0)
     {
-        beams_cooldown_update(client,duration);
         #if DEBUG
         LogMessage("RequestGuide: client %d flow %f cells %d g_iStart %d (%f ms)", client, flow, i_draw, g_iStart, (GetEngineTime()-t)*1000.0);
         #endif
@@ -682,7 +681,7 @@ int detour_join(int client, Address navArea, float pos[3], float flow, float dur
             if (nav_connection.navArea == navArea_curr) continue;
             if (explored.FindValue(nav_connection.navArea)>=0) continue;
             explored.Push(nav_connection.navArea);
-            if (L4D_NavArea_IsBlocked(nav_connection.navArea,team,true)) continue;
+            if (blocked_available && L4D_NavArea_IsBlocked(nav_connection.navArea,team,true)) continue;
             flow_temp =  L4D2Direct_GetTerrorNavAreaFlow(nav_connection.navArea);
             d_flow_temp = FloatAbs(flow_temp-flow_target);
             #if DEBUG>1
@@ -1018,6 +1017,8 @@ bool frame_budget_exceeded()
     return exceeded;
 }
 
+ArrayList explored_finale;
+
 void OnFramePrep(bool new_frame = true)
 {
     if (!enable || guide_ready || !gamemode_guidable || !map_started || !nav_started || g_iPrepStage<=STAGE_NONE || g_iPrepStage>=STAGE_END)
@@ -1036,7 +1037,9 @@ void OnFramePrep(bool new_frame = true)
     {
         #if DEBUG
         g_iPrepFrames += 1;
-        //LogMessage("OnFramePrep %d %d", g_iPrepFrames, g_iPrepStage);
+        #if DEBUG>2
+        LogMessage("OnFramePrep %d %d", g_iPrepFrames, g_iPrepStage);
+        #endif
         #endif
         g_tFrameStart = GetEngineTime();
     }
@@ -1045,6 +1048,17 @@ void OnFramePrep(bool new_frame = true)
         case STAGE_PREP:
         {
 
+            g_fMaxFlow = L4D2Direct_GetMapMaxFlowDistance();
+            if (g_fMaxFlow<=0.0)
+            {
+                guide_prep = false;
+                g_iPrepStage = STAGE_NONE;
+                #if DEBUG
+                    LogMessage("WARNING: L4D2Direct_GetMapMaxFlowDistance returned <=0.0");
+                #endif
+                return;
+            }
+
             delete allAreas;
             allAreas = new ArrayList();
             L4D_GetAllNavAreas(allAreas);
@@ -1052,17 +1066,12 @@ void OnFramePrep(bool new_frame = true)
             {
                 delete allAreas;
                 guide_prep = false;
+                #if DEBUG
+                    LogMessage("WARNING: L4D_GetAllNavAreas returned no areas");
+                #endif
                 return;
             }
 
-            g_fMaxFlow = L4D2Direct_GetMapMaxFlowDistance();
-
-            if (g_fMaxFlow<=0.0)
-            {
-                guide_prep = false;
-                g_iPrepStage = STAGE_NONE;
-                return;
-            }
 
             g_fFlowRescueVehicle = -1.0;
             g_bFoundRescueVehicle = false;
@@ -1130,7 +1139,7 @@ void OnFramePrep(bool new_frame = true)
                     }
                 }
 
-                if (L4D_NavArea_IsBlocked(navArea,TEAM_SURVIVOR,true))
+                if (blocked_available && L4D_NavArea_IsBlocked(navArea,TEAM_SURVIVOR,true))
                 {
                     #if DEBUG
                     g_iNavBlocked += 1;
@@ -1221,6 +1230,9 @@ void OnFramePrep(bool new_frame = true)
                 {
                     delete all_cells;
                     guide_prep = false;
+                    #if DEBUG
+                    LogMessage("WARNING: all_cells has no cells");
+                    #endif
                     return;
                 }
 
@@ -1259,7 +1271,7 @@ void OnFramePrep(bool new_frame = true)
                 guide_prep = false;
                 return;
             }
-            while (g_iLoop<all_cells.Length)
+            while (all_cells.Length>1 && g_iLoop<all_cells.Length)
             {
                 if (frame_budget_exceeded()) { budget_spent = true; break; }
                 all_cells.GetArray(g_iLoop,cell,sizeof(Cell));
@@ -1305,6 +1317,8 @@ void OnFramePrep(bool new_frame = true)
                     LogMessage("rescue vehicle flow %f max guide flow %f", g_fFlowRescueVehicle, max_guide_flow);
                     #endif
                     finale_backwards = g_fFlowRescueVehicle<max_guide_flow;
+                    if (explored_finale==null) explored_finale = new ArrayList();
+                    explored_finale.Clear();
                 }
                 g_iLoop = 1;
             }
@@ -1345,7 +1359,9 @@ void OnFramePrep(bool new_frame = true)
                         ConAdj.GetArray(i,nav_connection,sizeof(NavConnection));
                         if (nav_connection.navArea == Address_Null || nav_connection.connectiontype <= CONNECTED_NOT) continue;
                         if (nav_connection.navArea == navArea_curr) continue;
-                        if (L4D_NavArea_IsBlocked(nav_connection.navArea,TEAM_SURVIVOR,true)) continue;
+                        if (blocked_available && L4D_NavArea_IsBlocked(nav_connection.navArea,TEAM_SURVIVOR,true)) continue;
+                        if (explored_finale.FindValue(nav_connection.navArea)>=0) continue;
+                        explored_finale.Push(nav_connection.navArea);
                         flow_temp = L4D2Direct_GetTerrorNavAreaFlow(nav_connection.navArea);
                         #if DEBUG>1
                             LogMessage("STAGE_FINALE (%d %.1f) try %d %d %.1f", navArea_curr, flow_curr, nav_connection.connectiontype, nav_connection.navArea, flow_temp);
@@ -1384,7 +1400,6 @@ void OnFramePrep(bool new_frame = true)
                         }
                     }
                     
-
                     if (!found)
                     {
                         if (try_ladder(flow_curr,pos_curr,cell,finale_backwards))
@@ -1411,6 +1426,7 @@ void OnFramePrep(bool new_frame = true)
                 }
                 if (!budget_spent)
                 {
+                    explored_finale.Clear();
                     #if DEBUG
                     LogMessage("Rescue vehicle cells %d", RescueVehicleCells.Length);
                     #endif
@@ -1723,6 +1739,7 @@ ArrayList cells_explore;
 #define STITCH_GAP_OK 2 // how many cells ahead to check for further disjointed navAreas
 stock bool explore_stitch(ArrayList cells, int &i_start, int max_steps = 50)
 {
+    if (i_start<=1 || i_start>=cells.Length) return false;
     static Cell cell, cell2;
 
     int stitch_gap = STITCH_GAP_OK;
@@ -1764,7 +1781,7 @@ stock bool explore_stitch(ArrayList cells, int &i_start, int max_steps = 50)
             num_delete -= 1;
         }
     }
-    else if (i_start<(cells.Length-1)) // is i_start+1 connected to i_start-1?
+    else if (i_start>0 && i_start<(cells.Length-1)) // is i_start+1 connected to i_start-1?
     {
         cells.GetArray(i_start-1,cell,sizeof(Cell));
         cells.GetArray(i_start+1,cell2,sizeof(Cell));
@@ -1778,10 +1795,14 @@ stock bool explore_stitch(ArrayList cells, int &i_start, int max_steps = 50)
         }
     }
 
+    if (cells.Length<=1) return false;
+
     if (cells_explore==null) cells_explore = new ArrayList(sizeof(Cell));
     if (ConAdj==null) ConAdj = new ArrayList(sizeof(NavConnection));
     if (AdjNN==null) AdjNN = new ArrayList(); // nearest neighbor explore for dips in flow when about to climb a ladder
     cells_explore.Clear();
+    if (explored==null) explored = new ArrayList();
+    explored.Clear();
 
     cells.GetArray(i_start-1,cell,sizeof(Cell));
     static float pos_curr[3], pos_temp[3], pos_best[3];
@@ -1807,7 +1828,9 @@ stock bool explore_stitch(ArrayList cells, int &i_start, int max_steps = 50)
             ConAdj.GetArray(i,nav_connection,sizeof(NavConnection));
             if (nav_connection.navArea == Address_Null || nav_connection.connectiontype <= CONNECTED_NOT) continue;
             if (nav_connection.navArea == navArea_curr) continue;
-            if (L4D_NavArea_IsBlocked(nav_connection.navArea,TEAM_SURVIVOR,true)) continue;
+            if (explored.FindValue(nav_connection.navArea)>=0) continue;
+            explored.Push(nav_connection.navArea);
+            if (blocked_available && L4D_NavArea_IsBlocked(nav_connection.navArea,TEAM_SURVIVOR,true)) continue;
             flow_temp = L4D2Direct_GetTerrorNavAreaFlow(nav_connection.navArea);
             int count2 = navArea_ladder_navAreas(nav_connection.navArea,AdjNN,TEAM_SURVIVOR); // ladder intervention. flow dips when stepping onto ladder navmeshes...
             for (int i2 = 0; i2 < count2; i2++)
@@ -1852,7 +1875,6 @@ stock bool explore_stitch(ArrayList cells, int &i_start, int max_steps = 50)
                 if (success) break;
             }
         }
-        if (success) break;
         
         if (found)
         {
@@ -1917,8 +1939,8 @@ stock bool explore_stitch(ArrayList cells, int &i_start, int max_steps = 50)
     return success;
 }
 
-// Add cell to cells. If there is no LOS, attempt rescue.
-void guide_add_cell(ArrayList cells, Cell cell)
+// Add cell to cells. If there is no LOS, attempt rescue. If check_ladder, add ladder mounting points.
+void guide_add_cell(ArrayList cells, Cell cell, bool check_ladder = true)
 {
     if (cells.Length<1) // no shortcuts available
     {
@@ -1927,13 +1949,6 @@ void guide_add_cell(ArrayList cells, Cell cell)
     }
     static Cell cell_prev, cell_prev2;
     cells.GetArray(cells.Length-1,cell_prev,sizeof(Cell)); // last cell
-
-    //int ladder = ladder_from_to(cell_prev.navArea,cell.navArea);
-    //if (ladder>0)
-    //{
-    //    LogMessage("guide_add_cell ladder %d", ladder);
-    //    //static Cell cell_ladder;
-    //}
     
     bool prev2 = cells.Length>=2;
     if (prev2) cells.GetArray(cells.Length-2,cell_prev2,sizeof(Cell));
@@ -1966,6 +1981,36 @@ void guide_add_cell(ArrayList cells, Cell cell)
     }
     else if (!cell_rescue(cells,cell_prev,cell,cell_prev2,prev2))
     {
+        if (check_ladder) // Add ladder attachment points
+        {
+            int ladder = ladder_from_to(cell_prev.navArea,cell.navArea);
+            if (ladder>0 && !twopos_traversable(cell_prev.center,cell.center))
+            {
+                static float pos1[3],pos2[3];
+                GetEntPropVector(ladder, Prop_Send, "m_vecMaxs", pos1);
+                GetEntPropVector(ladder, Prop_Send, "m_vecMins", pos2);
+                SortTwoVectorsClosest(cell_prev.center,pos1,pos2);
+                if (!navmesh_xy_too_far(cell_prev.navArea,pos1) && !navmesh_xy_too_far(cell.navArea,pos2))
+                {
+                    pos1[2] = L4D_NavArea_GetZ(cell_prev.navArea,pos1); pos1[2] += 16.0;
+                    pos2[2] = L4D_NavArea_GetZ(cell.navArea,pos2); pos2[2] += 16.0;
+                    
+                    static Cell cell_ladder;
+                    
+                    cell_ladder = cell_prev;
+                    cell_ladder.center = pos1;
+                    // wiggle pos1 around so it has LOS with cell_prev
+                    //guide_add_cell(cells,cell_ladder,false);
+                    cells.PushArray(cell_ladder);
+                    
+                    cell_ladder = cell;
+                    cell_ladder.center = pos2;
+                    // wiggle pos2 around so it has LOS with cell
+                    //guide_add_cell(cells,cell_ladder,false);
+                    cells.PushArray(cell_ladder);
+                }
+            }
+        }
         cells.PushArray(cell);
     }
 }
@@ -1988,6 +2033,20 @@ bool cell_rescue(ArrayList cells, Cell cell_old, Cell cell_new, Cell cell_prev2,
 
     if (elevator_available)
     {
+        
+        if (cell_new.navArea!=Address_Null) // clip cell_old.center to cell_new.navArea
+        {
+            pos_candidate = cell_old.center;
+            navmesh_clip(cell_new.navArea,pos_candidate);
+            pos_candidate[2] += 16.0; pos_candidates.PushArray(pos_candidate);
+        }
+        if (cell_old.navArea!=Address_Null) // clip cell_new.center to cell_old.navArea
+        {
+            pos_candidate = cell_new.center;
+            navmesh_clip(cell_old.navArea,pos_candidate);
+            pos_candidate[2] += 16.0; pos_candidates.PushArray(pos_candidate);
+        }
+        
         for (int dir = 0; dir < 4; dir++) // Add all 4 corners of navmesh. These are usually in very good positions for LOS.
         {
             L4D_NavArea_GetCorner(cell_new.navArea,view_as<NavCornerType>(dir),pos_candidate); pos_candidate[2] += 16.0; pos_candidates.PushArray(pos_candidate);
@@ -2058,15 +2117,15 @@ bool cell_rescue(ArrayList cells, Cell cell_old, Cell cell_new, Cell cell_prev2,
     while (!success)
     {
         int length = (priority) ? pos_candidates.Length : pos_candidates2.Length;
-        bool projected = false;
         for (int i = 0; i<length; i++) 
         {
+            bool projected = false;
             if (priority) pos_candidates.GetArray(i,pos_candidate,sizeof(pos_candidate));
             else pos_candidates2.GetArray(i,pos_candidate,sizeof(pos_candidate));
-            if (elevator_available && priority) // try to project xy onto navmesh z
+            pos_template = pos_candidate;
+            if (priority && elevator_available) // try to project xy onto navmesh z
             {
                 // Get appropriate z value for given xy position. Useful for slopes, stairs etc.
-                pos_template = pos_candidate;
                 projected = project_navmesh_xy(cell_new.navArea,pos_candidate);
                 if (!projected) projected = project_navmesh_xy(cell_old.navArea,pos_candidate);
                 if (projected)
@@ -2125,7 +2184,7 @@ bool cell_rescue(ArrayList cells, Cell cell_old, Cell cell_new, Cell cell_prev2,
             {
                 Address adjArea = adjAreas.Get(i);
                 if (adjArea == Address_Null) continue;
-                if (L4D_NavArea_IsBlocked(adjArea,TEAM_SURVIVOR,true)) continue;
+                if (blocked_available && L4D_NavArea_IsBlocked(adjArea,TEAM_SURVIVOR,true)) continue;
                 for (int i_try = 0; i_try < 2; i_try++)
                 {
                     if (i_try == 0) L4D_GetNavAreaCenter(adjArea,pos_candidate);
@@ -2310,6 +2369,7 @@ bool TraceFilterStatic(int entity, int contentsMask)
         case 'f':
         {
             if (strncmp(class,"func_brush",10,false)==0) return true;
+            if (strncmp(class,"func_simpleladder",17,false)==0) return false;
             //g_bHitLadder = strncmp(class,"func_simpleladder",17,false)==0;
         }
     }
@@ -2557,7 +2617,7 @@ stock bool navArea_connected(Address from, Address to, int team = TEAM_SURVIVOR)
     if (navmesh_adjacent_too_far(from,to))
     {
         #if DEBUG>1
-            LogMessage("navmesh_adjacent_too_far %d -> %d", navArea, adjArea);
+            LogMessage("navmesh_adjacent_too_far %d -> %d", from, to);
         #endif
         return false;
     }
@@ -2577,7 +2637,7 @@ stock bool adjacent_connected(Address from, Address to)
 ArrayList ladders1, ladders2;
 
 // Return func_simpleladder connecting from -> to. returns -1 on failure.
-stock int ladder_from_to(Address from, Address to, int team = TEAM_SURVIVOR)
+stock int ladder_from_to(Address from, Address to, int team = TEAM_SURVIVOR, bool verify = true)
 {
     if (from == Address_Null || to == Address_Null) return -1;
     if (ladders1 == null) ladders1 = new ArrayList();
@@ -2598,6 +2658,12 @@ stock int ladder_from_to(Address from, Address to, int team = TEAM_SURVIVOR)
         {
             if (ladders2.Get(i2)==ladder)
             {
+                if (verify) // verify classname
+                {
+                    static char class[32];
+                    GetEntityClassname(ladder,class,sizeof(class));
+                    if (strncmp(class,"func_simpleladder",17,false)!=0) continue;
+                }
                 int team_ladder = GetEntProp(ladder, Prop_Send, "m_iTeamNum");
                 if (team_ladder==0 || team_ladder==team) return ladder;
             }
@@ -2607,7 +2673,7 @@ stock int ladder_from_to(Address from, Address to, int team = TEAM_SURVIVOR)
 }
 
 // Find other navAreas connected to navArea via ladder.
-stock int navArea_ladder_navAreas(Address from, ArrayList navList, int team = TEAM_SURVIVOR)
+stock int navArea_ladder_navAreas(Address from, ArrayList navList, int team = TEAM_SURVIVOR, bool verify = true)
 {
     if (from==Address_Null || !elevator_available) return 0;
     if (ladders1 == null) ladders1 = new ArrayList();
@@ -2621,6 +2687,12 @@ stock int navArea_ladder_navAreas(Address from, ArrayList navList, int team = TE
     {
         int ladder = ladders1.Get(i);
         if (ladder<=0 || !IsValidEntity(ladder)) continue;
+        if (verify) // verify classname
+        {
+            static char class[32];
+            GetEntityClassname(ladder,class,sizeof(class));
+            if (strncmp(class,"func_simpleladder",17,false)!=0) continue;
+        }
         int team_ladder = GetEntProp(ladder, Prop_Send, "m_iTeamNum");
         if (team_ladder!=0 && team_ladder!=team) continue;
         static float pos1[3],pos2[3];
@@ -2649,9 +2721,9 @@ stock int NavArea_GetLadders(Address navArea, ArrayList ladderList)
 stock int elevator_from_to(Address from, Address to)
 {
     if (!elevator_available || from == Address_Null || to == Address_Null) return -1;
-    int elevator = L4D_NavArea_GetElevator(from);
+    int elevator = NavArea_GetElevator(from);
     if (elevator<=0 || !IsValidEntity(elevator)) return -1;
-    if (elevator == L4D_NavArea_GetElevator(to)) return elevator;
+    if (elevator == NavArea_GetElevator(to)) return elevator;
     return -1;
 }
 
@@ -2659,7 +2731,7 @@ stock int elevator_from_to(Address from, Address to)
 stock Address navArea_elevator_navArea(Address from)
 {
     if (from==Address_Null || !elevator_available) return Address_Null;
-    int elevator = L4D_NavArea_GetElevator(from);
+    int elevator = NavArea_GetElevator(from);
     if (elevator<=0 || !IsValidEntity(elevator)) return Address_Null;
     static float start[3],pos[3],pos1[3],pos2[3];
     L4D_GetNavAreaCenter(from,start);
@@ -2671,6 +2743,19 @@ stock Address navArea_elevator_navArea(Address from)
     Address to = L4D_GetNearestNavArea(pos2,500.0,true,false,false,TEAM_SURVIVOR);
     if (to==Address_Null || to==from) return Address_Null;
     return to;
+}
+
+// Wrapper for L4D_NavArea_GetElevator with classname verification.
+// Fixes exception in custom campaign "Military Industrial Complex II"
+stock int NavArea_GetElevator(const Address from)
+{
+    if (from==Address_Null || !elevator_available) return -1;
+    int elevator = L4D_NavArea_GetElevator(from);
+    if (elevator<=0 || !IsValidEntity(elevator)) return -1;
+    static char class[16];
+    GetEntityClassname(elevator,class,sizeof(class));
+    if (strncmp(class,"func_elevator",13,false)==0) return elevator;
+    return -1;
 }
 
 // Check if nav area is relevant to survivor escape path.
