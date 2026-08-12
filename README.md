@@ -165,6 +165,8 @@ uv run 03_uninstall.py
 
 ### B. 공개 플러그인
 
+이름 뒤 괄호는 원본에서 커스텀한 내용을 표시합니다. 괄호가 없으면 원본 그대로 사용합니다.
+
 1. charging_takedamage_patch  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/charging_takedamage_patch>
 
