@@ -173,25 +173,25 @@ void Event_SurvivorRescued(Event event, const char[] name, bool dontBroadcast)
 
 void Event_IdleReturn(Event event, const char[] name, bool dontBroadcast)
 {
-    int client = GetClientOfUserId(event.GetInt("player"));
-    MarkCameraReset(client);
-
-    // 다음 폴링까지 기다리지 않고 즉시 1인칭으로 통보
-    if (IsValidClient(client) && !IsFakeClient(client) && g_bThirdPerson[client])
-    {
-        g_bThirdPerson[client] = false;
-        PushForward(client, false);
-    }
+    MarkCameraReset(GetClientOfUserId(event.GetInt("player")));
 }
 
-// 클라이언트 카메라가 1인칭으로 초기화되는 이벤트에서 호출
+// 클라이언트 카메라가 1인칭으로 초기화되는 이벤트에서 호출.
+// 초기화 상태를 기록하고, 다음 폴링까지 기다리지 않고 즉시 1인칭으로 통보한다.
 void MarkCameraReset(int client)
 {
     if (!IsValidClient(client) || IsFakeClient(client))
     {
         return;
     }
+
     g_bThirdPersonFix[client] = true;
+
+    if (g_bThirdPerson[client])
+    {
+        g_bThirdPerson[client] = false;
+        PushForward(client, false);
+    }
 }
 
 void PushForward(int client, bool bIsThirdPerson)
