@@ -57,7 +57,6 @@ public void OnPluginStart()
     HookEvent("player_team", Event_PlayerTeam);
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("survivor_rescued", Event_SurvivorRescued);
-    HookEvent("bot_player_replace", Event_IdleReturn);
 
     g_hCvarGameMode = FindConVar("mp_gamemode");
     g_hCvarGameMode.AddChangeHook(OnConVarChanged);
@@ -198,11 +197,6 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 void Event_SurvivorRescued(Event event, const char[] name, bool dontBroadcast)
 {
     MarkCameraReset(GetClientOfUserId(event.GetInt("victim")));
-}
-
-void Event_IdleReturn(Event event, const char[] name, bool dontBroadcast)
-{
-    MarkCameraReset(GetClientOfUserId(event.GetInt("player")));
 }
 
 // 클라이언트 카메라가 1인칭으로 초기화되는 이벤트에서 호출.
