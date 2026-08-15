@@ -40,6 +40,7 @@ public void OnPluginStart()
     HookEvent("player_team", Event_PlayerTeam);
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("survivor_rescued", Event_SurvivorRescued);
+    HookEvent("bot_player_replace", Event_IdleReturn);
 
     g_hCvarGameMode = FindConVar("mp_gamemode");
     g_hCvarGameMode.AddChangeHook(OnConVarChanged);
@@ -139,16 +140,19 @@ void QueryClientConVarCallback(QueryCookie cookie, int client, ConVarQueryResult
         g_bThirdPerson[client] = false;
     }
 
+    // 상태가 바뀌었을 때만 통보 (포워드는 변화 이벤트)
     if (bLastVal == g_bThirdPerson[client])
     {
         return;
     }
 
+    // 대전 모드에서는 실제 상태와 무관하게 항상 1인칭으로 통보
     if (g_bVersus)
     {
         PushForward(client, false);
         return;
     }
+
     PushForward(client, g_bThirdPerson[client]);
 }
 
@@ -165,6 +169,19 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 void Event_SurvivorRescued(Event event, const char[] name, bool dontBroadcast)
 {
     MarkCameraReset(GetClientOfUserId(event.GetInt("victim")));
+}
+
+void Event_IdleReturn(Event event, const char[] name, bool dontBroadcast)
+{
+    int client = GetClientOfUserId(event.GetInt("player"));
+    MarkCameraReset(client);
+
+    // 다음 폴링까지 기다리지 않고 즉시 1인칭으로 통보
+    if (IsValidClient(client) && !IsFakeClient(client) && g_bThirdPerson[client])
+    {
+        g_bThirdPerson[client] = false;
+        PushForward(client, false);
+    }
 }
 
 // 클라이언트 카메라가 1인칭으로 초기화되는 이벤트에서 호출
