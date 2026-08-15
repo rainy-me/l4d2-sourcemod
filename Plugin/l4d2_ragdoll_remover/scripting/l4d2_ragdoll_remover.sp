@@ -7,11 +7,11 @@
 
 public Plugin myinfo =
 {
-    name        = "L4D2 Ragdoll Vanish",
+    name        = "L4D2 Ragdoll Remover",
     author      = "Rainy",
     description = "CI/SI의 ragdoll을 즉시 제거합니다.",
     version     = "1.2.1",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_ragdoll_vanish"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_ragdoll_remover"
 };
 
 public void OnPluginStart()

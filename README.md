@@ -133,7 +133,7 @@ uv run 03_uninstall.py
 25. [l4d2_quick_healing](/Plugin/l4d2_quick_healing/)  
     시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.
 
-26. [l4d2_ragdoll_vanish](/Plugin/l4d2_ragdoll_vanish/)  
+26. [l4d2_ragdoll_remover](/Plugin/l4d2_ragdoll_remover/)  
     CI/SI의 ragdoll을 즉시 제거합니다.
 
 27. [l4d2_rainy_server_assistant](/Plugin/l4d2_rainy_server_assistant/)  
