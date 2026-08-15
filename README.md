@@ -325,7 +325,7 @@ uv run 03_uninstall.py
 8. Use Priority Patch  
    <https://forums.alliedmods.net/showthread.php?t=327511>
 
-9. ThirdPersonShoulder_Detect  
+9. ThirdPersonShoulder_Detect (유휴 복귀 후 3인칭 오감지 고침, TP_IsThirdPerson native 추가)  
    <https://forums.alliedmods.net/showthread.php?t=298649>
 
 10. Tickrate Enabler  
