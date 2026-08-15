@@ -19,6 +19,11 @@ bool          g_bThirdPerson[MAXPLAYERS + 1]    = { false, ... };
 // c_thirdpersonshoulder가 1이어도 실제로는 1인칭이므로, cvar가 0으로 돌아올 때까지 1인칭으로 취급한다.
 bool          g_bThirdPersonFix[MAXPLAYERS + 1] = { false, ... };
 
+// cvar 쿼리 응답 대기 중 여부와 쿼리를 보낸 시점의 userid.
+// 응답 전 중복 쿼리를 막고, 쿼리 도중 슬롯이 재사용된 경우 stale 응답을 무시한다.
+bool          g_bQueryPending[MAXPLAYERS + 1]   = { false, ... };
+int           g_iQueryUserId[MAXPLAYERS + 1]    = { 0, ... };
+
 public Plugin myinfo =
 {
     name        = "ThirdPersonShoulder_Detect",
@@ -30,9 +35,21 @@ public Plugin myinfo =
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+    CreateNative("TP_IsThirdPerson", Native_IsThirdPerson);
     g_hOnThirdPersonChanged = new GlobalForward("TP_OnThirdPersonChanged", ET_Event, Param_Cell, Param_Cell);
     RegPluginLibrary("ThirdPersonShoulder_Detect");
     return APLRes_Success;
+}
+
+// 포워드로 통보되는 값과 동일한 현재 상태를 반환 (늦게 로드된 플러그인용)
+int Native_IsThirdPerson(Handle plugin, int numParams)
+{
+    int client = GetNativeCell(1);
+    if (client < 1 || client > MaxClients)
+    {
+        return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d", client);
+    }
+    return g_bThirdPerson[client] && !g_bVersus;
 }
 
 public void OnPluginStart()
@@ -66,6 +83,8 @@ public void OnClientDisconnect(int client)
 {
     g_bThirdPerson[client]    = false;
     g_bThirdPersonFix[client] = false;
+    g_bQueryPending[client]   = false;
+    g_iQueryUserId[client]    = 0;
 }
 
 void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -112,10 +131,12 @@ Action Timer_ThirdPersonCheck(Handle timer)
 {
     for (int i = 1; i <= MaxClients; i++)
     {
-        if (!IsValidClient(i) || IsFakeClient(i))
+        if (!IsValidClient(i) || IsFakeClient(i) || g_bQueryPending[i])
         {
             continue;
         }
+        g_bQueryPending[i] = true;
+        g_iQueryUserId[i]  = GetClientUserId(i);
         QueryClientConVar(i, "c_thirdpersonshoulder", QueryClientConVarCallback);
     }
     return Plugin_Continue;
@@ -123,6 +144,14 @@ Action Timer_ThirdPersonCheck(Handle timer)
 
 void QueryClientConVarCallback(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue)
 {
+    g_bQueryPending[client] = false;
+
+    // 응답이 실패했거나, 쿼리 도중 슬롯이 다른 클라이언트로 재사용된 경우 무시
+    if (result != ConVarQuery_Okay || !IsClientInGame(client) || GetClientUserId(client) != g_iQueryUserId[client])
+    {
+        return;
+    }
+
     bool bLastVal = g_bThirdPerson[client];
 
     if (!StrEqual(cvarValue, "0"))
