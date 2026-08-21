@@ -257,12 +257,12 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
     bool whitelist = false; // L4D2 Zombie Master whitelist
     if (g_bL4D2 && g_hCvarZM!=null && g_hCvarZM.BoolValue && team!=TEAM_SURVIVOR)
     {
-        whitelist = team==TEAM_INFECTED;
-        if (!whitelist)
+        whitelist = team==TEAM_INFECTED; // guaranteed to be Zombie Master
+        if (!whitelist) // may also be in Spectator team
         {
             static char targetName[16];
             GetEntPropString(client, Prop_Data, "m_iName", targetName, sizeof(targetName));
-            whitelist = strncmp(targetName,"zm_client",9,false) == 0;
+            whitelist = strcmp(targetName,"zm_client",false) == 0;
         }
     }
 
@@ -1019,6 +1019,8 @@ bool frame_budget_exceeded()
 
 ArrayList explored_finale;
 
+#define VALIDATE 1
+
 void OnFramePrep(bool new_frame = true)
 {
     if (!enable || guide_ready || !gamemode_guidable || !map_started || !nav_started || g_iPrepStage<=STAGE_NONE || g_iPrepStage>=STAGE_END)
@@ -1384,10 +1386,11 @@ void OnFramePrep(bool new_frame = true)
                         L4D_GetNavAreaCenter(nav_connection.navArea,pos_temp);
                         pos_temp[2] += 16.0;
                         dz = pos_curr[2] - pos_temp[2];
-                        bool steep = nav_connection.connectiontype == CONNECTED_ADJACENT && nav_too_steep(navArea_curr,nav_connection.navArea);
+                        bool steep = dz>0.0 && nav_connection.connectiontype == CONNECTED_ADJACENT && nav_too_steep(nav_connection.navArea,navArea_curr);
                         if (found && steep)
                         {
                             if (!best_steep || dz>dz_best) continue; // prefer to go down than up
+                            //if (!best_steep) continue; // prefer to go down than up
                         }
                         if ( flow_better(flow_temp,flow_best,finale_backwards) || (best_steep && flow_better(flow_temp,flow_curr,finale_backwards)) )
                         {
@@ -1437,6 +1440,7 @@ void OnFramePrep(bool new_frame = true)
         }
         case STAGE_VALIDATE:
         {
+            #if VALIDATE>0
             if (g_GuideCells != null && g_GuideCells.Length>2)
             {
                 while (g_iLoop<(g_GuideCells.Length-1))
@@ -1457,9 +1461,13 @@ void OnFramePrep(bool new_frame = true)
                     //        continue;
                     //    }
                     //}
-                    if (triple_valid_ground(cell_before.center,cell_after.center) && twopos_traversable(cell_before.center,cell_after.center))
+
+                    if (triple_valid_ground(cell_before.center,cell_after.center) &&
+                        twopos_traversable(cell_before.center,cell.center,_,_,false) &&
+                        twopos_traversable(cell.center,cell_after.center,_,_,false) &&
+                        twopos_traversable(cell_before.center,cell_after.center) )
                     {
-                        g_GuideCells.Erase(g_iLoop); // Erase cells with mutual LOS
+                        g_GuideCells.Erase(g_iLoop); // Erase cells with guaranteed mutual LOS
                         #if DEBUG
                         g_iErased += 1;
                         #endif
@@ -1508,6 +1516,7 @@ void OnFramePrep(bool new_frame = true)
                     g_iLoop += 1;
                 }
             }
+            #endif
         }
         default:
         {
@@ -1743,7 +1752,6 @@ stock bool explore_stitch(ArrayList cells, int &i_start, int max_steps = 50)
     static Cell cell, cell2;
 
     int stitch_gap = STITCH_GAP_OK;
-    //if (strncmp(mapName,"c7m2",4,false)==0) stitch_gap = 20; // i just want to talk to the mapper
 
     // Determine i_min>=i_start, where i_min is the furthest away cell index where disconnection was detected
     int i_min = i_start;
@@ -1949,6 +1957,58 @@ void guide_add_cell(ArrayList cells, Cell cell, bool check_ladder = true)
     }
     static Cell cell_prev, cell_prev2;
     cells.GetArray(cells.Length-1,cell_prev,sizeof(Cell)); // last cell
+
+    if (check_ladder) // Add ladder attachment points
+    {
+        int ladder = ladder_from_to(cell_prev.navArea,cell.navArea);
+        if (ladder>0)
+        {
+            static float pos1[3],pos2[3];
+            GetEntPropVector(ladder, Prop_Send, "m_vecMaxs", pos1);
+            GetEntPropVector(ladder, Prop_Send, "m_vecMins", pos2);
+            SortTwoVectorsClosest(cell_prev.center,pos1,pos2);
+            if (!navmesh_xy_too_far(cell_prev.navArea,pos1) && !navmesh_xy_too_far(cell.navArea,pos2))
+            {
+                //pos1[2] = L4D_NavArea_GetZ(cell_prev.navArea,pos1); pos1[2] += 16.0;
+                //pos2[2] = L4D_NavArea_GetZ(cell.navArea,pos2); pos2[2] += 16.0;
+                navmesh_clip(cell_prev.navArea,pos1); pos1[2] += 16.0;
+                navmesh_clip(cell.navArea,pos2); pos2[2] += 16.0;
+
+                if (pos_underwater(pos1))
+                {
+                    pos1[2] += 16.0;
+                    if (pos_underwater(pos1)) pos1[2] += 16.0;
+                }
+                if (pos_underwater(pos2))
+                {
+                    pos2[2] += 16.0;
+                    if (pos_underwater(pos2)) pos2[2] += 16.0;
+                }
+
+                static Cell cell_ladder;
+                
+                cell_ladder = cell_prev;
+                cell_ladder.center = pos1;
+                guide_add_cell(cells,cell_ladder,false);
+                //cells.PushArray(cell_ladder);
+
+                if (!twopos_traversable(pos1,pos2))
+                {
+                    pos1[2] = pos2[2];
+                    cell_ladder = cell_prev;
+                    cell_ladder.center = pos1;
+                    cells.PushArray(cell_ladder);
+                }
+                
+                cell_ladder = cell;
+                cell_ladder.center = pos2;
+                guide_add_cell(cells,cell_ladder,false);
+                //cells.PushArray(cell_ladder);
+                cells.PushArray(cell);
+                return;
+            }
+        }
+    }
     
     bool prev2 = cells.Length>=2;
     if (prev2) cells.GetArray(cells.Length-2,cell_prev2,sizeof(Cell));
@@ -1979,39 +2039,9 @@ void guide_add_cell(ArrayList cells, Cell cell, bool check_ladder = true)
         else 
             cells.PushArray(cell);
     }
-    else if (!cell_rescue(cells,cell_prev,cell,cell_prev2,prev2))
+    else
     {
-        if (check_ladder) // Add ladder attachment points
-        {
-            int ladder = ladder_from_to(cell_prev.navArea,cell.navArea);
-            if (ladder>0 && !twopos_traversable(cell_prev.center,cell.center))
-            {
-                static float pos1[3],pos2[3];
-                GetEntPropVector(ladder, Prop_Send, "m_vecMaxs", pos1);
-                GetEntPropVector(ladder, Prop_Send, "m_vecMins", pos2);
-                SortTwoVectorsClosest(cell_prev.center,pos1,pos2);
-                if (!navmesh_xy_too_far(cell_prev.navArea,pos1) && !navmesh_xy_too_far(cell.navArea,pos2))
-                {
-                    pos1[2] = L4D_NavArea_GetZ(cell_prev.navArea,pos1); pos1[2] += 16.0;
-                    pos2[2] = L4D_NavArea_GetZ(cell.navArea,pos2); pos2[2] += 16.0;
-                    
-                    static Cell cell_ladder;
-                    
-                    cell_ladder = cell_prev;
-                    cell_ladder.center = pos1;
-                    // wiggle pos1 around so it has LOS with cell_prev
-                    //guide_add_cell(cells,cell_ladder,false);
-                    cells.PushArray(cell_ladder);
-                    
-                    cell_ladder = cell;
-                    cell_ladder.center = pos2;
-                    // wiggle pos2 around so it has LOS with cell
-                    //guide_add_cell(cells,cell_ladder,false);
-                    cells.PushArray(cell_ladder);
-                }
-            }
-        }
-        cells.PushArray(cell);
+        if (!cell_rescue(cells,cell_prev,cell,cell_prev2,prev2)) cells.PushArray(cell);
     }
 }
 
@@ -2106,6 +2136,8 @@ bool cell_rescue(ArrayList cells, Cell cell_old, Cell cell_new, Cell cell_prev2,
             AddVectors(pos_template,{0.0,16.0,0.0},pos_candidate); pos_candidates.PushArray(pos_candidate);
             AddVectors(pos_template,{0.0,-16.0,0.0},pos_candidate); pos_candidates.PushArray(pos_candidate);
             AddVectors(pos_template,{0.0,0.0,16.0},pos_candidate); pos_candidates.PushArray(pos_candidate);
+            AddVectors(pos_template,{0.0,0.0,-16.0},pos_candidate); pos_candidates.PushArray(pos_candidate);
+
         }
     }
 
@@ -2357,19 +2389,20 @@ bool TraceFilterStatic(int entity, int contentsMask)
         return true;
     }
     if (entity > 0 && entity <= MaxClients) return false;
-    static char class[16];
+    static char class[32];
     GetEntityClassname(entity,class,sizeof(class));
     //LogMessage("TraceFilterStatic hit %d %s", entity, class);
     switch (class[0])
     {
         case 'p':
         {
-            if (strncmp(class,"prop_static",11,false)==0) return true;
+            if (strcmp(class,"prop_static",false)==0) return true;
         }
         case 'f':
         {
-            if (strncmp(class,"func_brush",10,false)==0) return true;
-            if (strncmp(class,"func_simpleladder",17,false)==0) return false;
+            if (strcmp(class,"func_brush",false)==0) return true;
+            //if (strcmp(class,"func_lod",false)==0) return false;
+            //if (strcmp(class,"func_simpleladder",false)==0) return true;
             //g_bHitLadder = strncmp(class,"func_simpleladder",17,false)==0;
         }
     }
@@ -2662,7 +2695,7 @@ stock int ladder_from_to(Address from, Address to, int team = TEAM_SURVIVOR, boo
                 {
                     static char class[32];
                     GetEntityClassname(ladder,class,sizeof(class));
-                    if (strncmp(class,"func_simpleladder",17,false)!=0) continue;
+                    if (strcmp(class,"func_simpleladder",false)!=0) continue;
                 }
                 int team_ladder = GetEntProp(ladder, Prop_Send, "m_iTeamNum");
                 if (team_ladder==0 || team_ladder==team) return ladder;
@@ -2691,7 +2724,7 @@ stock int navArea_ladder_navAreas(Address from, ArrayList navList, int team = TE
         {
             static char class[32];
             GetEntityClassname(ladder,class,sizeof(class));
-            if (strncmp(class,"func_simpleladder",17,false)!=0) continue;
+            if (strcmp(class,"func_simpleladder",false)!=0) continue;
         }
         int team_ladder = GetEntProp(ladder, Prop_Send, "m_iTeamNum");
         if (team_ladder!=0 && team_ladder!=team) continue;
@@ -2754,7 +2787,7 @@ stock int NavArea_GetElevator(const Address from)
     if (elevator<=0 || !IsValidEntity(elevator)) return -1;
     static char class[16];
     GetEntityClassname(elevator,class,sizeof(class));
-    if (strncmp(class,"func_elevator",13,false)==0) return elevator;
+    if (strcmp(class,"func_elevator",false)==0) return elevator;
     return -1;
 }
 

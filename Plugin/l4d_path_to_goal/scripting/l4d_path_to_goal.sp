@@ -17,7 +17,7 @@
 #include <dhooks>
 #include <l4d_path_to_goal>
 
-#define PLUGIN_VERSION 			"1.58 2026-07-27"
+#define PLUGIN_VERSION 			"1.60 2026-08-18"
 
 public Plugin myinfo =
 {
@@ -53,37 +53,29 @@ public void OnPluginStart()
     RegAdminCmd("l4d_path_to_goal_recomputeflow", CmdRecomputeFlow, ADMFLAG_ROOT,"Force TerrorNavMesh::RecomputeFlowDistances to fire.");
 
     g_hCvarEnable = CreateConVar("l4d_path_to_goal_enable", "1",
-    "0=OFF, 1=ON.",
-    FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    "0=OFF, 1=ON.",FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hCvarEnable.AddChangeHook(ConVarChanged_Cvars);
   	
     g_hCvarMax = CreateConVar("l4d_path_to_goal_max", "32",
-    "Max beams per request. Increasing this can potentially cause crashes for clients.",
-    FCVAR_NOTIFY, true, 1.0, true, 1000.0);
+    "Max beams per request. Increasing this can potentially cause crashes for clients.",FCVAR_NOTIFY, true, 1.0, true, 1000.0);
 
     g_hCvarSurvivors = CreateConVar("l4d_path_to_goal_survivor", "1",
-    "Allow survivors to request.",
-    FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    "Allow survivors to request.",FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
     g_hCvarInfected = CreateConVar("l4d_path_to_goal_infected", "1",
-    "Allow infected to request.",
-    FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    "Allow infected to request.",FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
     g_hCvarSpec = CreateConVar("l4d_path_to_goal_spec", "1",
-    "Allow observers/spectators to request.",
-    FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    "Allow observers/spectators to request.",FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
     g_hCvarAlive = CreateConVar("l4d_path_to_goal_alive", "0",
-    "Allow request based on alive state: 0=all,1=alive only,2=dead only.",
-    FCVAR_NOTIFY, true, 0.0, true, 2.0);
+    "Allow request based on alive state: 0=all,1=alive only,2=dead only.",FCVAR_NOTIFY, true, 0.0, true, 2.0);
 
     g_hCvarBudget = CreateConVar("l4d_path_to_goal_budget", "0.5",
-    "Max CPU budget (ms per frame) for escape route calculation. Larger budget makes requests available faster at the expense of server lag. 0 for infinite budget.",
-    FCVAR_NOTIFY, true, 0.0, true, 1000.0);
+    "Max CPU budget (ms per frame) for escape route calculation. Larger budget makes requests available faster at the expense of server lag. 0 for infinite budget.",FCVAR_NOTIFY, true, 0.0, true, 1000.0);
 
     g_hCvarDetourBudget = CreateConVar("l4d_path_to_goal_detour_budget", "10.0",
-    "Max CPU budget (ms) for detour beams. 0 for infinite budget.",
-    FCVAR_NOTIFY, true, 0.0, true, 100.0);
+    "Max CPU budget (ms) for detour beams. 0 for infinite budget.",FCVAR_NOTIFY, true, 0.0, true, 100.0);
 
     #if DEBUG
     SetConVarFloat(g_hCvarDetourBudget,0.0);
@@ -116,6 +108,13 @@ public void OnPluginStart()
     HookEvent("finale_vehicle_incoming",  evtFinaleVehicle,  EventHookMode_PostNoCopy);
     }
 
+    finale = L4D_IsFinaleActive(); // Check if Finale is active
+    if (finale)
+    {
+        // ignore "fake" VScript finales
+        int entity = FindEntityByClassname(-1, "trigger_finale");
+        finale = entity>0 && IsValidEntity(entity);
+    }
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
