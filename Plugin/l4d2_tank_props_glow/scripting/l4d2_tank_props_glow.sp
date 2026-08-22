@@ -4,10 +4,8 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define Z_TANK        8
-#define TEAM_INFECTED 3
+#define TANK_CHECK_INTERVAL 1.0
 
-ConVar g_hEnabled;
 ConVar g_hGlowColor;
 ConVar g_hGlowRange;
 ConVar g_hFlashing;
@@ -17,37 +15,38 @@ public Plugin myinfo =
     name        = "L4D2 Tank Props Glow",
     author      = "Rainy",
     description = "탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.",
-    version     = "1.1.5",
+    version     = "1.2.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_props_glow"
 };
 
 public void OnPluginStart()
 {
-    g_hEnabled   = CreateConVar("l4d2_tank_props_glow_enabled", "1",
-                                "0 = Plugin Off, 1 = Plugin On",
-                                FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hGlowColor = CreateConVar("l4d2_tank_props_glow_color", "255 0 0",
                                 "Glow color (RGB) for props.",
                                 FCVAR_NOTIFY);
     g_hGlowRange = CreateConVar("l4d2_tank_props_glow_range", "700",
-                                "Glow range for props. (0 = unlimited)",
+                                "Glow range for props. (0=unlimited)",
                                 FCVAR_NOTIFY, true, 0.0);
     g_hFlashing  = CreateConVar("l4d2_tank_props_glow_flashing", "0",
-                                "Flashing glow effect for props. (0 = disabled, 1 = enabled)",
+                                "Flashing glow effect for props. (0=OFF, 1=ON)",
                                 FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_tank_props_glow");
 
-    if (g_hEnabled.BoolValue)
-    {
-        HookEvent("tank_spawn", Event_TankSpawn);
-        HookEvent("tank_killed", Event_TankKilled);
-        HookEvent("round_end", Event_RoundEnd);
-    }
+    HookEvent("tank_spawn", Event_TankSpawn);
+    HookEvent("tank_killed", Event_TankKilled);
+    HookEvent("round_end", Event_RoundEnd);
+}
+
+public void OnPluginEnd()
+{
+    ToggleTankPropsGlow(false);
 }
 
 void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
     ToggleTankPropsGlow(true);
+    // tank_killed 없이 탱크가 사라지는 경우 대비
+    CreateTimer(TANK_CHECK_INTERVAL, Timer_CheckTanks, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
 void Event_TankKilled(Event event, const char[] name, bool dontBroadcast)
@@ -62,22 +61,41 @@ void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 
 void CheckTanksAndRemoveGlow()
 {
-    if (!IsAnyTankAlive())
+    if (!L4D2_IsTankInPlay())
     {
         ToggleTankPropsGlow(false);
     }
 }
 
+Action Timer_CheckTanks(Handle timer)
+{
+    if (L4D2_IsTankInPlay())
+    {
+        return Plugin_Continue;
+    }
+    ToggleTankPropsGlow(false);
+    return Plugin_Stop;
+}
+
 void ToggleTankPropsGlow(bool enable)
 {
     int color[3];
-    GetColor(color);
-
-    int entity = -1;
-    while ((entity = FindEntityByClassname(entity, "prop_physics")) != -1)
+    if (enable)
     {
-        if (IsValidEntity(entity) && IsTankProp(entity))
+        GetColor(color);
+    }
+
+    static const char classnames[][] = { "prop_physics", "prop_car_alarm" };
+    for (int i = 0; i < sizeof(classnames); i++)
+    {
+        int entity = -1;
+        while ((entity = FindEntityByClassname(entity, classnames[i])) != -1)
         {
+            if (!L4D_IsTankProp(entity))
+            {
+                continue;
+            }
+
             if (enable)
             {
                 L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hGlowRange.IntValue,
@@ -89,47 +107,11 @@ void ToggleTankPropsGlow(bool enable)
             }
         }
     }
-
-    entity = -1;
-    while ((entity = FindEntityByClassname(entity, "prop_car_alarm")) != -1)
-    {
-        if (IsValidEntity(entity))
-        {
-            if (enable)
-            {
-                L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hGlowRange.IntValue,
-                                   0, color, g_hFlashing.BoolValue);
-            }
-            else
-            {
-                L4D2_RemoveEntityGlow(entity);
-            }
-        }
-    }
-}
-
-bool IsTankProp(int entity)
-{
-    char modelName[128];
-    GetEntPropString(entity, Prop_Data, "m_ModelName", modelName, sizeof(modelName));
-
-    if (StrContains(modelName, "forklift", false) != -1) return true;        // 지게차
-    if (StrContains(modelName, "dumpster", false) != -1) return true;        // 쓰레기통
-    if (StrContains(modelName, "atlas_ball", false) != -1) return true;      // 아틀라스 볼
-    if (StrContains(modelName, "brick_pallet", false) != -1) return true;    // 벽돌 팔레트
-    if (StrContains(modelName, "log", false) != -1) return true;             // 통나무
-    if (StrContains(modelName, "tree", false) != -1) return true;            // 나무
-    if (StrContains(modelName, "vehicle", false) != -1)                      // 자동차류
-    {
-        if (StrContains(modelName, "car", false) != -1) return true;
-    }
-
-    return false;
 }
 
 void GetColor(int color[3])
 {
-    char sColor[12];
+    char sColor[32];
     g_hGlowColor.GetString(sColor, sizeof(sColor));
     if (!StringToColor(sColor, color))
     {
@@ -139,7 +121,7 @@ void GetColor(int color[3])
 
 bool StringToColor(const char[] str, int color[3])
 {
-    char sColor[3][4];
+    char sColor[3][8];
     if (ExplodeString(str, " ", sColor, sizeof(sColor), sizeof(sColor[])) != 3)
     {
         return false;
@@ -147,35 +129,8 @@ bool StringToColor(const char[] str, int color[3])
 
     for (int i = 0; i < sizeof(sColor); i++)
     {
-        if (!StringToIntEx(sColor[i], color[i]))
+        if (!StringToIntEx(sColor[i], color[i]) || color[i] < 0 || color[i] > 255)
             return false;
     }
     return true;
-}
-
-bool IsAnyTankAlive()
-{
-    for (int i = 1; i <= MaxClients; i++)
-    {
-        if (IsAliveTank(i))
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool IsAliveTank(int client)
-{
-    return (IsClient(client) && IsClientInGame(client) && GetClientTeam(client) == TEAM_INFECTED && IsPlayerAlive(client) && IsTank(client));
-}
-
-bool IsTank(int client)
-{
-    return (GetEntProp(client, Prop_Send, "m_zombieClass") == Z_TANK);
-}
-
-bool IsClient(int index)
-{
-    return index > 0 && index <= MaxClients;
 }
