@@ -197,115 +197,109 @@ uv run 03_uninstall.py
 10. trigger_horde_notify  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
-11. l4d2_transition_info_fix  
-    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_transition_info_fix>
-
-12. physics_object_pushfix  
+11. physics_object_pushfix  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/physics_object_pushfix>
 
-13. firebulletsfix  
+12. firebulletsfix  
     <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
 
-14. l4d_death_item_glow (보조무기 glow 추가)  
+13. l4d_death_item_glow (보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-15. l4d_fix_common_shove  
+14. l4d_fix_common_shove  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_common_shove>
 
-16. l4d_fix_stagger_dir  
+15. l4d_fix_stagger_dir  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_stagger_dir>
 
-17. l4d_lagcomp_skeet  
+16. l4d_lagcomp_skeet  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_lagcomp_skeet>
 
-18. l4d_rock_invuln_duration (기본값 0 설정)  
+17. l4d_rock_invuln_duration (기본값 0 설정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_rock_invuln_duration>
 
-19. l4d_tank_damage_announce  
+18. l4d_tank_damage_announce  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/blob/master/The%20Last%20Stand/l4d_tank_damage_announce>
 
-20. l4d2_charge_target_fix  
+19. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-21. l4d2_fix_jockey_hitbox (버그 고침)  
+20. l4d2_fix_jockey_hitbox (버그 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-22. l4d2_fix_changelevel  
-    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_changelevel>
-
-23. l4d_witch_damage_announce  
+21. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-24. l4d_skip_intro  
+22. l4d_skip_intro  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_skip_intro.sp>
 
-25. l4d2_jockey_jumpcap_patch (봇 제한 제거, 밀치기 후 즉시 잡기 고침)  
+23. l4d2_jockey_jumpcap_patch (봇 제한 제거, 밀치기 후 즉시 잡기 고침)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-26. l4d2_sg552_zoom_fix  
+24. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-27. survivor_mvp (convar 기본값 수정)  
+25. survivor_mvp (convar 기본값 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/survivor_mvp.sp>
 
-28. hunter_audio_feedback  
+26. hunter_audio_feedback  
     <https://github.com/neburaii/l4d2-plugins/tree/main/hunter_audio_feedback>
 
-29. insta_smoke_fix  
+27. insta_smoke_fix  
     <https://github.com/neburaii/l4d2-plugins/tree/main/insta_smoke_fix>
 
-30. motd_title (커스텀)  
+28. motd_title (커스텀)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/motd_title>
 
-31. priority_sounds (탱크 data 제거)  
+29. priority_sounds (탱크 data 제거)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds>
 
-32. round_restart_delay (convar 기본값 수정)  
+30. round_restart_delay (convar 기본값 수정)  
     <https://github.com/neburaii/l4d2-plugins/tree/main/round_restart_delay>
 
-33. spit_fizzle  
+31. spit_fizzle  
     <https://github.com/neburaii/l4d2-plugins/tree/main/spit_fizzle>
 
-34. strict_despawn  
+32. strict_despawn  
     <https://github.com/neburaii/l4d2-plugins/tree/main/strict_despawn>
 
-35. Hunter_pounce_alignment_fix  
+33. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-36. l4d2_kill_sound  
+34. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-37. Explosion Announcer  
+35. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-38. Gear Transfer  
+36. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-39. l4d_path_to_goal  
+37. l4d_path_to_goal  
     <https://forums.alliedmods.net/showthread.php?t=352685>
 
-40. l4d2_bugfix_deathspit  
+38. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-41. l4d2_pistol_reload_empty_fix  
+39. l4d2_pistol_reload_empty_fix  
     <https://forums.alliedmods.net/showthread.php?t=320496>
 
-42. lagpreventor  
+40. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-43. noteam_nudging  
+41. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-44. Shove Direction Fix  
+42. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-45. Throwable Announcer  
+43. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-46. Upgrade Ammo Pack Deploy Announce  
+44. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-47. weapon_give_no_auto_switch  
+45. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### C. 종속 플러그인
