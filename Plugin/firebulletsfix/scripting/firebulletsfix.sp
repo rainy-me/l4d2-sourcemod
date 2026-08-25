@@ -3,17 +3,16 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-bool             g_bL4DGame;
-
+bool g_bL4DGame;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
     EngineVersion test = GetEngineVersion();
 
-    if (test == Engine_Left4Dead)
+    if( test == Engine_Left4Dead )
     {
         g_bL4DGame = true;
     }
-    else if (test == Engine_Left4Dead2)
+    else if( test == Engine_Left4Dead2 )
     {
         g_bL4DGame = true;
     }
@@ -23,17 +22,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public Plugin myinfo =
 {
-    name        = "Bullet position fix",
-    author      = "xutaxkamay", /* With some slight changes based on reports/suggestions by Krevik/HarryPotter from the same Alliedmodders thread */
+    name = "Bullet position fix",
+    author = "xutaxkamay", /* With some slight changes based on reports/suggestions by Krevik/HarryPotter from the same Alliedmodders thread */
     description = "Fixes shoot position",
-    version     = "1.1h-2024/8/26",
-    url         = "https://forums.alliedmods.net/showthread.php?p=2646571"
+    version = "1.1h-2024/8/26",
+    url = "https://forums.alliedmods.net/showthread.php?p=2646571"
 };
 
 DynamicHook g_hWeapon_ShootPosition;
-Handle      g_hWeapon_ShootPosition_SDKCall;
-float       g_vecOldWeaponShootPos[MAXPLAYERS + 1][3];
-bool        g_bCallingWeapon_ShootPosition;
+Handle g_hWeapon_ShootPosition_SDKCall;
+float g_vecOldWeaponShootPos[MAXPLAYERS + 1][3];
+bool g_bCallingWeapon_ShootPosition;
 
 public void OnPluginStart()
 {
@@ -47,7 +46,7 @@ public void OnPluginStart()
     if (offset == -1)
         SetFailState("[FireBullets Fix] failed to find offset");
 
-    // LogMessage("Found offset for Weapon_ShootPosition %d", offset);
+    //LogMessage("Found offset for Weapon_ShootPosition %d", offset);
 
     StartPrepSDKCall(SDKCall_Player);
 
@@ -95,23 +94,23 @@ MRESReturn Weapon_ShootPosition_Post(int client, DHookReturn hReturn)
 {
     if (!g_bCallingWeapon_ShootPosition)
     {
-        if (g_bL4DGame)
+        if(g_bL4DGame)
         {
             // Only care about Survivors in Left 4 Dead series due to issues with props hit by Tanks.
             if (GetClientTeam(client) != 2)
-                return MRES_Ignored;
+                    return MRES_Ignored;
         }
-        else
-        {
-            // Nothing
-        }
+		else
+		{ 
+			// Nothing
+		}
 
-#if defined DEBUG
-        float g_vecWeaponShootPos[3];
-        hReturn.GetVector(g_vecWeaponShootPos);
-        PrintToConsoleAll("[FireBullets Fix] Old Weapon_ShootPosition: %.2f, %.2f, %.2f", g_vecOldWeaponShootPos[client][0], g_vecOldWeaponShootPos[client][1], g_vecOldWeaponShootPos[client][2]);
-        PrintToConsoleAll("[FireBullets Fix] New Weapon_ShootPosition: %.2f, %.2f, %.2f", g_vecWeaponShootPos[0], g_vecWeaponShootPos[1], g_vecWeaponShootPos[2]);
-#endif
+        #if defined DEBUG
+			float g_vecWeaponShootPos[3];
+			hReturn.GetVector(g_vecWeaponShootPos);
+			PrintToConsoleAll("[FireBullets Fix] Old Weapon_ShootPosition: %.2f, %.2f, %.2f", g_vecOldWeaponShootPos[client][0], g_vecOldWeaponShootPos[client][1], g_vecOldWeaponShootPos[client][2]);
+			PrintToConsoleAll("[FireBullets Fix] New Weapon_ShootPosition: %.2f, %.2f, %.2f", g_vecWeaponShootPos[0], g_vecWeaponShootPos[1], g_vecWeaponShootPos[2]);
+        #endif
 
         hReturn.SetVector(g_vecOldWeaponShootPos[client]);
         return MRES_Supercede;
