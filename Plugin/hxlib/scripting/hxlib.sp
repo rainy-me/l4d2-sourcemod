@@ -19,10 +19,10 @@
 public Plugin myinfo =
 {
 	name = "hxlib",
-	author = "Neburai",
+	author = "",
 	description = "library providing natives, forwards, and stocks to be used by other plugins",
 	version = "1.18.2",
-	url = "https://github.com/neburaii/l4d2-plugins/tree/main/hxlib"
+	url = ""
 };
 
 #define MAX_FWD_LEN	64

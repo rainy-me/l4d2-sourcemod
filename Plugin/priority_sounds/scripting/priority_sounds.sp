@@ -10,10 +10,10 @@
 public Plugin myinfo =
 {
 	name = "Priority Sounds",
-	author = "Neburai",
+	author = "",
 	description = "Configures priority sounds that cannot be interrupted",
 	version = "2.0",
-	url = "https://github.com/neburaii/l4d2-plugins/tree/main/priority_sounds"
+	url = ""
 };
 
 #define MIN_SUPPORTED_SNDCHAN	SNDCHAN_WEAPON // 1

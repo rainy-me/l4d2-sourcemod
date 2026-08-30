@@ -10,10 +10,10 @@
 public Plugin myinfo =
 {
 	name = "Hunter Audio Feedback",
-	author = "Neburai",
+	author = "",
 	description = "hunter will always shriek when he lunges",
 	version = "1.1",
-	url = "https://github.com/neburaii/l4d2-plugins/tree/main/hunter_audio_feedback"
+	url = ""
 };
 
 ConVar	g_hConVar_AlwaysShriek;
