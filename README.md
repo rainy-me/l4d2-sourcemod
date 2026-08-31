@@ -160,9 +160,6 @@ uv run 03_uninstall.py
 34. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-35. [l4d2_welcome](/Plugin/l4d2_welcome/)  
-    환영 인사와 서버 안내를 합니다.
-
 ### B. 공개 플러그인
 
 이름 뒤 괄호는 원본에서 커스텀한 내용을 표시합니다. 괄호가 없으면 원본 그대로 사용합니다.
