@@ -5,6 +5,8 @@
 #include <left4dhooks>
 
 #define TANK_CHECK_INTERVAL 1.0
+#define TEAM_INFECTED       3
+#define Z_TANK              8
 
 ConVar g_hGlowColor;
 ConVar g_hGlowRange;
@@ -15,7 +17,7 @@ public Plugin myinfo =
     name        = "L4D2 Tank Props Glow",
     author      = "Rainy",
     description = "탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.",
-    version     = "1.2.0",
+    version     = "1.2.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_props_glow"
 };
 
@@ -61,7 +63,7 @@ void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 
 void CheckTanksAndRemoveGlow()
 {
-    if (!L4D2_IsTankInPlay())
+    if (!IsAnyTankAlive())
     {
         ToggleTankPropsGlow(false);
     }
@@ -69,7 +71,7 @@ void CheckTanksAndRemoveGlow()
 
 Action Timer_CheckTanks(Handle timer)
 {
-    if (L4D2_IsTankInPlay())
+    if (IsAnyTankAlive())
     {
         return Plugin_Continue;
     }
@@ -107,6 +109,33 @@ void ToggleTankPropsGlow(bool enable)
             }
         }
     }
+}
+
+bool IsAnyTankAlive()
+{
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (IsAliveTank(i))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool IsAliveTank(int client)
+{
+    return (IsClient(client) && IsClientInGame(client) && GetClientTeam(client) == TEAM_INFECTED && IsPlayerAlive(client) && IsTank(client));
+}
+
+bool IsTank(int client)
+{
+    return (GetEntProp(client, Prop_Send, "m_zombieClass") == Z_TANK);
+}
+
+bool IsClient(int index)
+{
+    return index > 0 && index <= MaxClients;
 }
 
 void GetColor(int color[3])
