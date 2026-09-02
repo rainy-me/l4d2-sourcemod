@@ -10,42 +10,6 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 - 다운로드: [`rainy_plugins_sm1.12.zip`](https://github.com/rainy-me/l4d2-sourcemod/releases/download/latest/rainy_plugins_sm1.12.zip)
 - 설치 방법: [`Youtube`](https://youtu.be/vSR5Lb6wTy8)
 
-## 설치
-
-> 주의: 아래 방법은 저의 게임 환경과 똑같이 설정할 사람만 사용하세요.
-
-1. 컴퓨터에 Python이 설치되어 있어야 합니다.  
-   없다면 [uv](https://docs.astral.sh/uv/getting-started/installation/)를 설치하세요.
-
-2. `L4D2_설치경로.ini` 파일에 레포데2 설치 경로를 입력합니다.  
-   설치 경로는 아래 과정으로 얻을 수 있습니다.  
-   참고: 설치 경로에는 `left4dead2.exe`가 존재합니다.
-
-   ```text
-   Steam 라이브러리에서 Left 4 Dead 2를 우클릭 → 속성 → 설치된 파일 → 로컬 파일 탐색 클릭
-   ```
-
-3. API와 스크립트를 레포데2 설치 경로에 복사합니다.
-
-   ```powershell
-   uv run 01_copy.py
-   ```
-
-4. 스크립트를 컴파일합니다.  
-   컴파일된 결과물(.smx)은 자동으로 `sourcemod/plugins` 폴더로 이동됩니다.
-
-   ```powershell
-   uv run 02_compile.py
-   ```
-
-## 삭제
-
-API, 플러그인을 모두 삭제합니다.
-
-```powershell
-uv run 03_uninstall.py
-```
-
 ## API
 
 1. SourceMod  
