@@ -82,7 +82,7 @@ def compile_plugins(game_dir: Path) -> None:
     plugins_dir = game_dir / "addons/sourcemod/plugins"
 
     queue = sorted(i.name for i in (REPO / "Plugin").rglob("scripting/*.sp"))
-    subprocess.run(["compile.exe", *queue], cwd=scripting_dir, check=True)
+    subprocess.run([scripting_dir / "compile.exe", *queue], cwd=scripting_dir, check=True)
 
     shutil.copytree(compiled_dir, plugins_dir, dirs_exist_ok=True)
     shutil.rmtree(compiled_dir)
