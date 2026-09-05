@@ -5,8 +5,6 @@
 #include <left4dhooks>
 #include <hxlib>
 
-#define SPIT_MIN_FLAMES 2
-
 bool   g_bLateLoaded;
 
 ConVar g_hConVarFizzleOnStagger;
@@ -16,13 +14,12 @@ bool   g_bConVarFizzleOnStagger;
 bool   g_bConVarFizzleOnDeath;
 
 int    g_iSpittersProjectile[MAXPLAYERS_L4D2 + 1] = { INVALID_ENT_REFERENCE, ... };
-int    g_iSpittersPuddle[MAXPLAYERS_L4D2 + 1]     = { INVALID_ENT_REFERENCE, ... };
 
 public Plugin myinfo =
 {
     name        = "L4D2 Spit Fizzle",
     author      = "Rainy",
-    description = "스피터가 죽거나 비틀거리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.",
+    description = "스피터가 죽거나 비틀거리면 스핏 투사체가 사라집니다.",
     version     = "1.0.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_spit_fizzle"
 };
@@ -37,20 +34,19 @@ public void OnPluginStart()
 {
     g_hConVarFizzleOnStagger = CreateConVar(
         "spit_fizzle_on_stagger", "1",
-        "When a spitter staggers, should their spit projectile be deleted and their spit puddle's growth be stopped?",
+        "When a spitter staggers, should their spit projectile be deleted?",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hConVarFizzleOnStagger.AddChangeHook(ConVarChanged_Update);
 
     g_hConVarFizzleOnDeath = CreateConVar(
         "spit_fizzle_on_death", "1",
-        "When a spitter dies, should their spit projectile be deleted and their spit puddle's growth be stopped?",
+        "When a spitter dies, should their spit projectile be deleted?",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hConVarFizzleOnDeath.AddChangeHook(ConVarChanged_Update);
 
     ReadConVars();
 
     HookEvent("player_death", Event_PlayerDeath);
-    HookEvent("spit_burst", Event_SpitBurst);
 
     if (g_bLateLoaded) HXLibRescanForwards();
 }
@@ -69,27 +65,15 @@ void ReadConVars()
 public void OnClientPutInServer(int iClient)
 {
     g_iSpittersProjectile[iClient] = INVALID_ENT_REFERENCE;
-    g_iSpittersPuddle[iClient]     = INVALID_ENT_REFERENCE;
 }
 
 /*********************************************
- * associate puddles/projectiles with spitters
+ * associate projectiles with spitters
  *********************************************/
 public void OnCreateSpitterProjectile_Post(int iSpitter, int iProjectile, const float vOrigin[3], const float vAngles[3], const float vVelocity[3], const float vRotation[3], bool bHandled)
 {
     if (bHandled || !IsValidClient(iSpitter)) return;
     g_iSpittersProjectile[iSpitter] = EntIndexToEntRef(iProjectile);
-}
-
-void Event_SpitBurst(Event hEvent, const char[] sName, bool bDontBroadcast)
-{
-    int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
-    if (!IsValidClient(iClient)) return;
-
-    int iPuddle = hEvent.GetInt("subject", INVALID_ENT_REFERENCE);
-    if (!IsValidEdict(iPuddle)) return;
-
-    g_iSpittersPuddle[iClient] = EntIndexToEntRef(iPuddle);
 }
 
 /******************
@@ -136,10 +120,6 @@ void Fizzle(int iClient)
     int iEntity = EntRefToEntIndex(g_iSpittersProjectile[iClient]);
     if (iEntity != INVALID_ENT_REFERENCE)
         RemoveEntity(iEntity);
-
-    iEntity = EntRefToEntIndex(g_iSpittersPuddle[iClient]);
-    if (iEntity != INVALID_ENT_REFERENCE)
-        GetInferno(iEntity).maxFlames = SPIT_MIN_FLAMES;
 }
 
 /*******
