@@ -50,7 +50,7 @@ public void OnClientDisconnect(int client)
     SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
     if (victim == attacker || !IsValidSurvivor(victim) || !IsValidSurvivor(attacker))
         return Plugin_Continue;
