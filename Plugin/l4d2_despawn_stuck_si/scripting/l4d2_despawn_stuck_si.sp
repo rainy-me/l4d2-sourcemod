@@ -158,7 +158,6 @@ public void OnPluginStart()
     g_hMap_TargetBehaviors.SetValue("ChargerBehavior", 0);
     g_hMap_TargetBehaviors.SetValue("TankBehavior", 0);
     g_hMap_TargetBehaviors.SetValue("WitchBehavior", 0);
-    g_hMap_TargetBehaviors.SetValue("InfectedBehavior", 0);
 
     g_despawner.Init();
 }
