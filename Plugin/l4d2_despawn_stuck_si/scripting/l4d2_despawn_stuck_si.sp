@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <sdktools>
 #include <actions>
 #include <hxlib>
 
@@ -93,7 +94,10 @@ void Update()
 
             if (!IsVisibleToTeam(Team_Survivor, vPos, fDespawnRange, _, 0, false, true))
             {
-                RemoveEntity(iEntIndex);
+                if (iEntIndex <= MaxClients)
+                    ForcePlayerSuicide(iEntIndex);
+                else
+                    RemoveEntity(iEntIndex);
                 this.candidates.Erase(i);
                 continue;
             }

@@ -10,7 +10,7 @@ public Plugin myinfo =
     name        = "L4D2 No CI Melee Kill Collision",
     author      = "Rainy",
     description = "근접무기로 죽인 일반좀비와의 충돌을 제거합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_no_ci_melee_kill_collision"
 };
 
@@ -27,7 +27,7 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
         return;
     }
     int entity = event.GetInt("entityid");
-    if (entity < MaxClients || !IsValidEntity(entity))
+    if (entity <= MaxClients || !IsValidEntity(entity))
     {
         return;
     }

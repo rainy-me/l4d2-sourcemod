@@ -14,7 +14,7 @@ public Plugin myinfo =
     name        = "L4D2 Quick Healing",
     author      = "Rainy",
     description = "시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.",
-    version     = "1.2.0",
+    version     = "1.2.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_quick_healing"
 };
 
@@ -24,6 +24,11 @@ public void OnPluginStart()
 
     HookEvent("round_start", Event_RoundStart);
     HookEvent("heal_begin", Event_HealBegin);
+}
+
+public void OnMapStart()
+{
+    PrecacheSound("ui/littlereward.wav");
 }
 
 public void OnClientPutInServer(int client)
