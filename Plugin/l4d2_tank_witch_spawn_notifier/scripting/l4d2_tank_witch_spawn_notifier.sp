@@ -23,12 +23,14 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hSoundCooldownTime = CreateConVar("l4d2_tank_witch_spawn_notifier_sound_cooldown_time", "1.0",
-                                        "Cooldown time between sound notifications. (in seconds)",
-                                        FCVAR_NOTIFY, true, 0.0);
-    g_hSoundVolume       = CreateConVar("l4d2_tank_witch_spawn_notifier_sound_volume", "1.0",
-                                        "Sound notification volume.",
-                                        FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hSoundCooldownTime = CreateConVar(
+        "l4d2_tank_witch_spawn_notifier_sound_cooldown_time", "1.0",
+        "Cooldown time between sound notifications. (in seconds)",
+        FCVAR_NOTIFY, true, 0.0);
+    g_hSoundVolume = CreateConVar(
+        "l4d2_tank_witch_spawn_notifier_sound_volume", "1.0",
+        "Sound notification volume.",
+        FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_tank_witch_spawn_notifier");
 
     HookEvent("round_start", Event_RoundStart);

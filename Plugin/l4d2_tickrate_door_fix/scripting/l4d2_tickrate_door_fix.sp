@@ -42,9 +42,10 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hCvarDoorSpeed = CreateConVar("door_speed_multiplier", "1.6",
-                                    "Sets the speed of all prop_door entities on a map. 1.05 = 105% speed",
-                                    FCVAR_NONE, true, 0.0);
+    g_hCvarDoorSpeed = CreateConVar(
+        "door_speed_multiplier", "1.6",
+        "Sets the speed of all prop_door entities on a map. 1.05 = 105% speed",
+        FCVAR_NONE, true, 0.0);
     g_hCvarDoorSpeed.AddChangeHook(Cvar_Changed);
     AutoExecConfig(true, "l4d2_tickrate_door_fix");
 

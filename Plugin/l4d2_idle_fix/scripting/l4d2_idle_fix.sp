@@ -23,18 +23,22 @@ public void OnPluginStart()
 {
     LoadTranslations("l4d2_idle_fix.phrases");
 
-    g_hIdleSolo        = CreateConVar("l4d2_idle_fix_idle_solo", "1",
-                                      "ON/OFF idle command in solo. (1=ON, 0=OFF)",
-                                      FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hIdleMessage     = CreateConVar("l4d2_idle_fix_idle_message", "0",
-                                      "ON/OFF idle message. (1=ON, 0=OFF)",
-                                      FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hCooldownTime    = CreateConVar("l4d2_idle_fix_cooldown_time", "0.0",
-                                      "Cooldown time in seconds a player can use the idle command again.",
-                                      FCVAR_NOTIFY, true, 0.0);
-    g_hCooldownMessage = CreateConVar("l4d2_idle_fix_cooldown_message", "0",
-                                      "ON/OFF cooldown message. (1=ON, 0=OFF)",
-                                      FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hIdleSolo = CreateConVar(
+        "l4d2_idle_fix_idle_solo", "1",
+        "ON/OFF idle command in solo. (1=ON, 0=OFF)",
+        FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hIdleMessage = CreateConVar(
+        "l4d2_idle_fix_idle_message", "0",
+        "ON/OFF idle message. (1=ON, 0=OFF)",
+        FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hCooldownTime = CreateConVar(
+        "l4d2_idle_fix_cooldown_time", "0.0",
+        "Cooldown time in seconds a player can use the idle command again.",
+        FCVAR_NOTIFY, true, 0.0);
+    g_hCooldownMessage = CreateConVar(
+        "l4d2_idle_fix_cooldown_message", "0",
+        "ON/OFF cooldown message. (1=ON, 0=OFF)",
+        FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_idle_fix");
 
     RegConsoleCmd("go_away_from_keyboard", Cmd_ForceIdle, "Override with forced idle mode.");

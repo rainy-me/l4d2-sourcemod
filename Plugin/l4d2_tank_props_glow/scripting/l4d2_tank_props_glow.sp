@@ -23,15 +23,18 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hGlowColor = CreateConVar("l4d2_tank_props_glow_color", "255 0 0",
-                                "Glow color (RGB) for props.",
-                                FCVAR_NOTIFY);
-    g_hGlowRange = CreateConVar("l4d2_tank_props_glow_range", "700",
-                                "Glow range for props. (0=unlimited)",
-                                FCVAR_NOTIFY, true, 0.0);
-    g_hFlashing  = CreateConVar("l4d2_tank_props_glow_flashing", "0",
-                                "Flashing glow effect for props. (0=OFF, 1=ON)",
-                                FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hGlowColor = CreateConVar(
+        "l4d2_tank_props_glow_color", "255 0 0",
+        "Glow color (RGB) for props.",
+        FCVAR_NOTIFY);
+    g_hGlowRange = CreateConVar(
+        "l4d2_tank_props_glow_range", "700",
+        "Glow range for props. (0=unlimited)",
+        FCVAR_NOTIFY, true, 0.0);
+    g_hFlashing = CreateConVar(
+        "l4d2_tank_props_glow_flashing", "0",
+        "Flashing glow effect for props. (0=OFF, 1=ON)",
+        FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_tank_props_glow");
 
     HookEvent("tank_spawn", Event_TankSpawn);

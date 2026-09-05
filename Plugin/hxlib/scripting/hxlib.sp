@@ -18,11 +18,11 @@
 
 public Plugin myinfo =
 {
-	name = "hxlib",
-	author = "",
-	description = "library providing natives, forwards, and stocks to be used by other plugins",
-	version = "1.18.2",
-	url = ""
+    name        = "hxlib",
+    author      = "Rainy",
+    description = "다른 플러그인에서 사용하는 네이티브, 포워드, 스톡을 제공하는 라이브러리입니다.",
+    version     = "1.0.0",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/hxlib"
 };
 
 #define MAX_FWD_LEN	64

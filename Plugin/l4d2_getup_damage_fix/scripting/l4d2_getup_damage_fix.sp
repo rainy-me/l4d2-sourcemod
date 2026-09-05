@@ -10,12 +10,6 @@
 bool g_bDamageBlocked[MAXPLAYERS + 1] = { false, ... };
 bool g_bLateLoad;
 
-public APLRes AskPluginLoad2(Handle plugin, bool late, char[] error, int errMax)
-{
-    g_bLateLoad = late;
-    return APLRes_Success;
-}
-
 public Plugin myinfo =
 {
     name        = "L4D2 Get-Up Damage Fix",
@@ -24,6 +18,12 @@ public Plugin myinfo =
     version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_getup_damage_fix"
 };
+
+public APLRes AskPluginLoad2(Handle plugin, bool late, char[] error, int errMax)
+{
+    g_bLateLoad = late;
+    return APLRes_Success;
+}
 
 public void OnPluginStart()
 {

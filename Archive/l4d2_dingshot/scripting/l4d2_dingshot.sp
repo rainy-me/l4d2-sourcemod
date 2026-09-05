@@ -12,18 +12,19 @@ ConVar g_hEnabled;
 
 public Plugin myinfo =
 {
-    name        = "Dingshot",
+    name        = "L4D2 Dingshot",
     author      = "Rainy",
     description = "헤드샷 시 띵 소리를 출력합니다.",
     version     = "1.1.1",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Archive/dingshot"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Archive/l4d2_dingshot"
 };
 
 public void OnPluginStart()
 {
-    g_hEnabled = CreateConVar("dingshot_enabled", "1",
-                              "0=OFF, 1=ON",
-                              FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hEnabled = CreateConVar(
+        "dingshot_enabled", "1",
+        "0=OFF, 1=ON",
+        FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hEnabled.AddChangeHook(OnConVarChanged);
     AutoExecConfig(true, "dingshot");
 

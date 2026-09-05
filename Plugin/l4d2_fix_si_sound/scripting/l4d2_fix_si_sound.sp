@@ -83,9 +83,10 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hAutoConvars = CreateConVar("l4d2_fix_si_sound_auto_convars", "1",
-                                  "ON/OFF auto convars updater. (1=ON, 0=OFF)",
-                                  FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hAutoConvars = CreateConVar(
+        "l4d2_fix_si_sound_auto_convars", "1",
+        "ON/OFF auto convars updater. (1=ON, 0=OFF)",
+        FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_fix_si_sound");
 
     AutoConvars(g_hAutoConvars.BoolValue);
