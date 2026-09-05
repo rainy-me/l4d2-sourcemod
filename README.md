@@ -122,7 +122,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
     특정 물체 위에 서 있을 때 스모커에게 잡히면 즉시 조작이 불가능한 버그를 고칩니다.
 
 32. [l4d2_spit_fizzle](/Plugin/l4d2_spit_fizzle/)  
-    스피터가 죽거나 비틀거리면 스핏 투사체가 사라집니다.
+    스피터가 죽거나 비틀거리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.
 
 33. [l4d2_suicide](/Plugin/l4d2_suicide/)  
     어드민 권한 없이 !kill 또는 /kill 명령을 사용할 수 있도록 합니다.
