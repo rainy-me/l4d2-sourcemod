@@ -17,7 +17,7 @@ public Plugin myinfo =
     name        = "L4D2 Tank Props Glow",
     author      = "Rainy",
     description = "탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.",
-    version     = "1.2.1",
+    version     = "1.2.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_props_glow"
 };
 
@@ -96,7 +96,7 @@ void ToggleTankPropsGlow(bool enable)
         int entity = -1;
         while ((entity = FindEntityByClassname(entity, classnames[i])) != -1)
         {
-            if (!L4D_IsTankProp(entity))
+            if (!IsTankProp(entity))
             {
                 continue;
             }
@@ -112,6 +112,25 @@ void ToggleTankPropsGlow(bool enable)
             }
         }
     }
+}
+
+bool IsTankProp(int entity)
+{
+    char modelName[128];
+    GetEntPropString(entity, Prop_Data, "m_ModelName", modelName, sizeof(modelName));
+
+    if (StrContains(modelName, "forklift", false) != -1) return true;        // 지게차
+    if (StrContains(modelName, "dumpster", false) != -1) return true;        // 쓰레기통
+    if (StrContains(modelName, "atlas_ball", false) != -1) return true;      // 아틀라스 볼
+    if (StrContains(modelName, "brick_pallet", false) != -1) return true;    // 벽돌 팔레트
+    if (StrContains(modelName, "log", false) != -1) return true;             // 통나무
+    if (StrContains(modelName, "tree", false) != -1) return true;            // 나무
+    if (StrContains(modelName, "vehicle", false) != -1)                      // 자동차류
+    {
+        if (StrContains(modelName, "car", false) != -1) return true;
+    }
+
+    return false;
 }
 
 bool IsAnyTankAlive()
