@@ -284,7 +284,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 
 1. [hxlib](/Plugin/hxlib/)
 
-2. Actions  
+2. Actions (최신버전은 SourceMod 1.13 전용이라 구버전 유지)  
    <https://forums.alliedmods.net/showthread.php?p=2771520>
 
 3. l4d_heartbeat  
