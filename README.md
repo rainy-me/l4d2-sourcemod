@@ -118,22 +118,25 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 30. [l4d2_skip_outtro](/Plugin/l4d2_skip_outtro/)  
     맵 클리어 시 아웃트로를 빠르게 건너뜁니다.
 
-31. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
+31. [l4d2_smoker_antic_fix](/Plugin/l4d2_smoker_antic_fix/)  
+    스모커가 혀를 발사할 때 예비 동작 애니메이션이 재생되지 않는 버그를 고칩니다.
+
+32. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
     특정 물체 위에 서 있을 때 스모커에게 잡히면 즉시 조작이 불가능한 버그를 고칩니다.
 
-32. [l4d2_spit_fizzle](/Plugin/l4d2_spit_fizzle/)  
+33. [l4d2_spit_fizzle](/Plugin/l4d2_spit_fizzle/)  
     스피터가 죽거나 비틀거리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.
 
-33. [l4d2_suicide](/Plugin/l4d2_suicide/)  
+34. [l4d2_suicide](/Plugin/l4d2_suicide/)  
     어드민 권한 없이 !kill 또는 /kill 명령을 사용할 수 있도록 합니다.
 
-34. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+35. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-35. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+36. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-36. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+37. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
 ### B. 자작 플러그인 (미사용)
