@@ -12,7 +12,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Smoker Antic Fix",
     author      = "Rainy",
-    description = "스모커가 혀를 발사할 때 예비 동작 애니메이션이 재생되지 않는 버그를 고칩니다.",
+    description = "스모커가 혀를 쏠 때 예비 동작 애니메이션이 재생되지 않는 버그를 고칩니다.",
     version     = "1.0.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_smoker_antic_fix"
 };

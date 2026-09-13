@@ -119,7 +119,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
     맵 클리어 시 아웃트로를 빠르게 건너뜁니다.
 
 31. [l4d2_smoker_antic_fix](/Plugin/l4d2_smoker_antic_fix/)  
-    스모커가 혀를 발사할 때 예비 동작 애니메이션이 재생되지 않는 버그를 고칩니다.
+    스모커가 혀를 쏠 때 예비 동작 애니메이션이 재생되지 않는 버그를 고칩니다.
 
 32. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
     특정 물체 위에 서 있을 때 스모커에게 잡히면 즉시 조작이 불가능한 버그를 고칩니다.
