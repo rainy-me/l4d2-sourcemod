@@ -61,7 +61,10 @@ void Timer_RespawnNewPlayer(Handle timer, int userid)
 
 void Timer_KillBots(Handle timer)
 {
-    KillBots();
+    if (L4D_HasAnySurvivorLeftSafeArea())
+    {
+        KillBots();
+    }
 }
 
 // Methods
