@@ -8,17 +8,25 @@
 #define RESPAWN_DELAY 3.0
 #define KILL_DELAY    0.5
 
+ConVar g_hEnable;
+
 public Plugin myinfo =
 {
     name        = "L4D2 Rainy Server Assistant",
     author      = "Rainy",
     description = "Rainy 서버 자동화 플러그인",
-    version     = "1.0.0",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_rainy_server_assistant"
 };
 
 public void OnPluginStart()
 {
+    g_hEnable = CreateConVar(
+        "l4d2_rainy_server_assistant_enable", "1",
+        "1=ON, 0=OFF",
+        FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    AutoExecConfig(true, "l4d2_rainy_server_assistant");
+
     RegAdminCmd("sm_killbots", Cmd_Killbots, ADMFLAG_ROOT, "Kill bot survivors");
 }
 
@@ -30,7 +38,7 @@ Action Cmd_Killbots(int client, int args)
 
 public void OnClientPutInServer(int client)
 {
-    if (!IsClientInGame(client) || IsFakeClient(client))
+    if (!g_hEnable.BoolValue || !IsClientInGame(client) || IsFakeClient(client))
     {
         return;
     }
@@ -40,7 +48,7 @@ public void OnClientPutInServer(int client)
 
 public void OnClientDisconnect(int client)
 {
-    if (IsFakeClient(client))
+    if (!g_hEnable.BoolValue || IsFakeClient(client))
     {
         return;
     }
@@ -50,7 +58,10 @@ public void OnClientDisconnect(int client)
 
 public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
 {
-    KillBots();
+    if (g_hEnable.BoolValue)
+    {
+        KillBots();
+    }
 }
 
 void Timer_RespawnNewPlayer(Handle timer, int userid)
