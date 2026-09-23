@@ -20,14 +20,14 @@
         "en"        "Current reserve ammo multiplier: {lightgreen}%.2f{default}"
         "ko"        "현재 예비 탄약 배수: {lightgreen}%.2f{default}"
     }
-    "Invalid Value"
+    "No Access"
     {
-        "en"        "Please enter a valid value."
-        "ko"        "올바른 값을 입력해 주세요."
+        "en"        "You do not have permission."
+        "ko"        "권한이 없습니다."
     }
     "Help"
     {
-        "en"        "Usage: !amm <1.0~5.0>, Enter the reserve ammo multiplier."
-        "ko"        "사용법: !amm <1.0~5.0>, 예비 탄약 배수 입력."
+        "en"        "Usage: !amm <1.0~5.0> to set, !amm to show current."
+        "ko"        "사용법: !amm <1.0~5.0> 설정, !amm 현재 값 확인."
     }
 }

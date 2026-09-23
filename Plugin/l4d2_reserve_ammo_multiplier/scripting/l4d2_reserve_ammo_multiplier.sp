@@ -40,7 +40,7 @@ public Plugin myinfo =
     name        = "L4D2 Reserve Ammo Multiplier",
     author      = "Rainy",
     description = "예비 탄약 소지량을 배율로 조정합니다.",
-    version     = "1.2.0",
+    version     = "1.3.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_reserve_ammo_multiplier"
 };
 
@@ -58,8 +58,7 @@ public void OnPluginStart()
 
     HookEvent("round_freeze_end", Event_RoundFreezeEnd);
 
-    RegAdminCmd("sm_amm", Cmd_AmmoMultiplier, ADMFLAG_ROOT);
-    RegConsoleCmd("sm_ammi", Cmd_PrintInfo);
+    RegConsoleCmd("sm_amm", Cmd_AmmoMultiplier, "Show reserve ammo multiplier, or set it (admin): !amm <1.0~5.0>");
 }
 
 void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
@@ -85,33 +84,32 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
     }
 }
 
-Action Cmd_PrintInfo(int client, int args)
-{
-    float multiplier = DEFAULT_MULTIPLIER;
-    if (ReadMultiplierFromFile(multiplier))
-    {
-        CPrintToChatAll("%t", "Current Multiplier", multiplier);
-    }
-    return Plugin_Handled;
-}
-
 Action Cmd_AmmoMultiplier(int client, int args)
 {
-    if (args != 1)
+    float multiplier = DEFAULT_MULTIPLIER;
+
+    if (args == 0)
     {
-        CReplyToCommand(client, "%t", "Help");
+        ReadMultiplierFromFile(multiplier);
+        CPrintToChatAll("%t", "Current Multiplier", multiplier);
+        return Plugin_Handled;
+    }
+
+    if (!CheckCommandAccess(client, "sm_amm_set", ADMFLAG_ROOT))
+    {
+        CReplyToCommand(client, "%t", "No Access");
         return Plugin_Handled;
     }
 
     char sArg[8];
     GetCmdArg(1, sArg, sizeof(sArg));
-    if (!IsCharNumeric(sArg[0]))
+    if (args != 1 || !IsCharNumeric(sArg[0]))
     {
-        CReplyToCommand(client, "%t", "Invalid Value");
+        CReplyToCommand(client, "%t", "Help");
         return Plugin_Handled;
     }
 
-    float multiplier = ClampFloat(StringToFloat(sArg), MIN_MULTIPLIER, MAX_MULTIPLIER);
+    multiplier = ClampFloat(StringToFloat(sArg), MIN_MULTIPLIER, MAX_MULTIPLIER);
 
     for (int i = 0; i < AMMO_COUNT; i++)
     {
