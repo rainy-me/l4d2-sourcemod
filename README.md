@@ -85,20 +85,20 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 19. [l4d2_no_close_ff](/Plugin/l4d2_no_close_ff/)  
     팀원이 너무 가까이 있을 때 팀킬을 차단합니다.
 
-20. [l4d2_no_ledge_hang](/Plugin/l4d2_no_ledge_hang/)  
+20. [l4d2_no_deathfall_cam](/Plugin/l4d2_no_deathfall_cam/)  
+    추락 시 카메라 시점 전환을 차단합니다.
+
+21. [l4d2_no_ledge_hang](/Plugin/l4d2_no_ledge_hang/)  
     생존자가 난간에 매달리는 기능을 제거합니다.
 
-21. [l4d2_no_melee_ff](/Plugin/l4d2_no_melee_ff/)  
+22. [l4d2_no_melee_ff](/Plugin/l4d2_no_melee_ff/)  
     근접무기 팀킬을 차단합니다.
 
-22. [l4d2_no_saferoom_ff](/Plugin/l4d2_no_saferoom_ff/)  
+23. [l4d2_no_saferoom_ff](/Plugin/l4d2_no_saferoom_ff/)  
     은신처 안에 있는 생존자에 대한 팀킬을 차단합니다.
 
-23. [l4d2_no_si_fall_stagger_cancel](/Plugin/l4d2_no_si_fall_stagger_cancel/)  
+24. [l4d2_no_si_fall_stagger_cancel](/Plugin/l4d2_no_si_fall_stagger_cancel/)  
     특수좀비가 낙하로 스태거를 취소하지 못하도록 착지 시 다시 스태거를 겁니다.
-
-24. [l4d2_no_deathfall_cam](/Plugin/l4d2_no_deathfall_cam/)  
-    추락 시 카메라 시점 전환을 차단합니다.
 
 25. [l4d2_player_connect_notifier](/Plugin/l4d2_player_connect_notifier/)  
     플레이어가 서버에 접속하면 채팅창에 알립니다.
@@ -217,78 +217,84 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 16. l4d_lagcomp_skeet  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_lagcomp_skeet>
 
-17. l4d_rock_invuln_duration (기본값 0 설정)  
+17. l4d_pellet_spread_customizer  
+    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
+
+18. l4d_rock_invuln_duration (기본값 0 설정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_rock_invuln_duration>
 
-18. l4d_tank_damage_announce  
+19. l4d_tank_damage_announce  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/blob/master/The%20Last%20Stand/l4d_tank_damage_announce>
 
-19. l4d2_charge_target_fix  
+20. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-20. l4d2_fix_jockey_hitbox (버그 고침)  
+21. l4d2_fix_jockey_hitbox (버그 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-21. l4d_witch_damage_announce  
+22. l4d2_static_shotgun_spread  
+    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
+
+23. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-22. l4d_skip_intro  
+24. l4d_skip_intro  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_skip_intro.sp>
 
-23. l4d2_jockey_jumpcap_patch (봇 제한 제거, 밀치기 후 즉시 잡기 고침)  
+25. l4d2_jockey_jumpcap_patch (봇 제한 제거, 밀치기 후 즉시 잡기 고침)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-24. l4d2_sg552_zoom_fix  
+26. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-25. survivor_mvp (convar 기본값 수정)  
+27. survivor_mvp (convar 기본값 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/survivor_mvp.sp>
 
-26. Hunter_pounce_alignment_fix  
+28. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-27. l4d2_kill_sound  
+29. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-28. Explosion Announcer  
+30. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-29. Gear Transfer  
+31. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-30. l4d_path_to_goal  
+32. l4d_path_to_goal  
     <https://forums.alliedmods.net/showthread.php?t=352685>
 
-31. l4d2_bugfix_deathspit  
+33. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-32. l4d2_pistol_reload_empty_fix  
+34. l4d2_pistol_reload_empty_fix  
     <https://forums.alliedmods.net/showthread.php?t=320496>
 
-33. lagpreventor  
+35. lagpreventor  
     <https://forums.alliedmods.net/showthread.php?p=2758895>
 
-34. noteam_nudging  
+36. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-35. Shove Direction Fix  
+37. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-36. Throwable Announcer  
+38. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-37. Upgrade Ammo Pack Deploy Announce  
+39. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-38. weapon_give_no_auto_switch  
+40. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### D. 종속 플러그인
 
-1. [hxlib](/Plugin/hxlib/)
-
-2. Actions (최신버전은 SourceMod 1.13 전용이라 구버전 유지)  
+1. Actions (최신버전은 SourceMod 1.13 전용이라 구버전 유지)  
    <https://forums.alliedmods.net/showthread.php?p=2771520>
+
+2. [hxlib](/Plugin/hxlib/)
 
 3. l4d_heartbeat  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
@@ -305,14 +311,14 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 7. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-8. Use Priority Patch  
-   <https://forums.alliedmods.net/showthread.php?t=327511>
-
-9. ThirdPersonShoulder_Detect (유휴 복귀 후 3인칭 오감지 고침, TP_IsThirdPerson native 추가)  
+8. ThirdPersonShoulder_Detect (유휴 복귀 후 3인칭 오감지 고침, TP_IsThirdPerson native 추가)  
    <https://forums.alliedmods.net/showthread.php?t=298649>
 
-10. Tickrate Enabler  
-    <https://github.com/accelerator74/Tickrate-Enabler/releases>
+9. Tickrate Enabler  
+   <https://github.com/accelerator74/Tickrate-Enabler/releases>
+
+10. Use Priority Patch  
+    <https://forums.alliedmods.net/showthread.php?t=327511>
 
 ## Rainy's 리포지토리
 
