@@ -3,7 +3,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <colors>
+#include <multicolors>
 
 #define WARN_SOUND "ui/pickup_secret01.wav"
 

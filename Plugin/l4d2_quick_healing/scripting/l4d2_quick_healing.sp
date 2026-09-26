@@ -3,7 +3,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <colors>
+#include <multicolors>
 #include <left4dhooks>
 
 ConVar g_hHealPercent;

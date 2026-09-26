@@ -3,7 +3,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <colors>
+#include <multicolors>
 
 #define STORED_FILE        "l4d2_reserve_ammo_multiplier.txt"
 #define AMMO_COUNT         6

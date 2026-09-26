@@ -2,7 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <colors>
+#include <multicolors>
 #include <left4dhooks>
 
 ConVar g_hSoundEnabled;
