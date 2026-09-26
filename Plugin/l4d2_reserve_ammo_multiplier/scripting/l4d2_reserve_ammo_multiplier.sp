@@ -40,7 +40,7 @@ public Plugin myinfo =
     name        = "L4D2 Reserve Ammo Multiplier",
     author      = "Rainy",
     description = "예비 탄약 소지량을 배율로 조정합니다.",
-    version     = "1.3.0",
+    version     = "1.3.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_reserve_ammo_multiplier"
 };
 

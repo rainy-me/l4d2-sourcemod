@@ -17,7 +17,7 @@ public Plugin myinfo =
     name        = "L4D2 Tank Witch Spawn Notifier",
     author      = "Rainy",
     description = "탱크 및 윗치의 스폰을 알립니다.",
-    version     = "1.1.0",
+    version     = "1.1.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_witch_spawn_notifier"
 };
 
