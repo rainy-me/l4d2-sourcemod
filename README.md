@@ -302,7 +302,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 4. l4dtoolz  
    <https://github.com/accelerator74/l4dtoolz/releases>
 
-5. Left4DHooks  
+5. left4dhooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
 
 6. Multi Colors  
