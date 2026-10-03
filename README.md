@@ -291,8 +291,8 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 
 ### D. 종속 플러그인
 
-1. Actions (최신버전은 SourceMod 1.13 전용이라 구버전 유지)  
-   <https://forums.alliedmods.net/showthread.php?p=2771520>
+1. Actions  
+   <https://github.com/Vinillia/actions.ext>
 
 2. [hxlib](/Plugin/hxlib/)
 
