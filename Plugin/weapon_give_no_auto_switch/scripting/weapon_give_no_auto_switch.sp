@@ -48,7 +48,10 @@ Action OnWeaponSwitch(int client, int weapon)
 	if(Given[client])
 	{
 		reset_player(client);
-		return Plugin_Handled;
+		if(GetClientTeam(client) == 2 && IsPlayerAlive(client))
+		{
+			return Plugin_Handled;
+		}
 	}
 	return Plugin_Continue;
 }
@@ -59,7 +62,7 @@ void remove_given_mark(int client, int item)
 	{
 		return;
 	}
-	char class_name[64];
+	char class_name[32];
 	GetEntityClassname(item, class_name, sizeof(class_name));
 	if(strcmp(class_name, "weapon_pain_pills") == 0 || strcmp(class_name, "weapon_adrenaline") == 0)
 	{
