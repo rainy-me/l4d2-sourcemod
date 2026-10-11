@@ -175,118 +175,121 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 1. charging_takedamage_patch  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/charging_takedamage_patch>
 
-2. drop_secondary (forward 추가)  
+2. l4d_ai_hunter_skeet_dmg_fix  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
+
+3. drop_secondary (forward 추가)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/drop_secondary>
 
-3. l4d_cutscene_nodamage  
+4. l4d_cutscene_nodamage  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_cutscene_nodamage>
 
-4. l4d_shotgun_sound_fix  
+5. l4d_shotgun_sound_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_shotgun_sound_fix>
 
-5. l4d_witch_retreat_panic_fix  
+6. l4d_witch_retreat_panic_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_witch_retreat_panic_fix>
 
-6. l4d2_item_hint  
+7. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-7. l4d2_skill_detect (full/chip level 수정)  
+8. l4d2_skill_detect (full/chip level 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
 
-8. l4dffannounce (알림 문구 수정)  
+9. l4dffannounce (알림 문구 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-9. LMC_Black_and_White_Notifier (알림 문구 수정)  
-   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/LMC_Black_and_White_Notifier>
+10. LMC_Black_and_White_Notifier (알림 문구 수정)  
+    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/LMC_Black_and_White_Notifier>
 
-10. trigger_horde_notify  
+11. trigger_horde_notify  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
-11. physics_object_pushfix  
+12. physics_object_pushfix  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/physics_object_pushfix>
 
-12. firebulletsfix  
+13. firebulletsfix  
     <https://github.com/fbef0102/Sourcemod-Plugins/tree/main/firebulletsfix>
 
-13. l4d_death_item_glow (보조무기 glow 추가)  
+14. l4d_death_item_glow (보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-14. l4d_fix_common_shove  
+15. l4d_fix_common_shove  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_common_shove>
 
-15. l4d_fix_stagger_dir  
+16. l4d_fix_stagger_dir  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_stagger_dir>
 
-16. l4d_lagcomp_skeet  
+17. l4d_lagcomp_skeet  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_lagcomp_skeet>
 
-17. l4d_pellet_spread_customizer  
+18. l4d_pellet_spread_customizer  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
 
-18. l4d_rock_invuln_duration (기본값 0 설정)  
+19. l4d_rock_invuln_duration (기본값 0 설정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_rock_invuln_duration>
 
-19. l4d_tank_damage_announce  
+20. l4d_tank_damage_announce  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/blob/master/The%20Last%20Stand/l4d_tank_damage_announce>
 
-20. l4d2_charge_target_fix  
+21. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-21. l4d2_fix_jockey_hitbox (버그 고침)  
+22. l4d2_fix_jockey_hitbox (버그 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-22. l4d2_static_shotgun_spread  
+23. l4d2_static_shotgun_spread  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
 
-23. l4d_witch_damage_announce  
+24. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-24. l4d_skip_intro  
+25. l4d_skip_intro  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_skip_intro.sp>
 
-25. l4d2_jockey_jumpcap_patch (봇 제한 제거, 밀치기 후 즉시 잡기 고침)  
+26. l4d2_jockey_jumpcap_patch (봇 제한 제거, 밀치기 후 즉시 잡기 고침)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_jockey_jumpcap_patch.sp>
 
-26. l4d2_sg552_zoom_fix  
+27. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-27. survivor_mvp (convar 기본값 수정)  
+28. survivor_mvp (convar 기본값 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/survivor_mvp.sp>
 
-28. Hunter_pounce_alignment_fix  
+29. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-29. l4d2_kill_sound  
+30. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-30. Explosion Announcer  
+31. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-31. Gear Transfer  
+32. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-32. l4d_path_to_goal  
+33. l4d_path_to_goal  
     <https://forums.alliedmods.net/showthread.php?t=352685>
 
-33. l4d2_bugfix_deathspit  
+34. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-34. l4d2_pistol_reload_empty_fix  
+35. l4d2_pistol_reload_empty_fix  
     <https://forums.alliedmods.net/showthread.php?t=320496>
 
-35. noteam_nudging  
+36. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-36. Shove Direction Fix  
+37. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-37. Throwable Announcer  
+38. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-38. Upgrade Ammo Pack Deploy Announce  
+39. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-39. weapon_give_no_auto_switch  
+40. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### D. 종속 플러그인
