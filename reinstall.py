@@ -78,14 +78,14 @@ def install(game_dir: Path) -> None:
 def compile_plugins(game_dir: Path) -> None:
     """리포지토리의 Plugin 디렉토리에 있는 .sp 파일을 컴파일해 plugins 폴더로 이동."""
     scripting_dir = game_dir / "addons/sourcemod/scripting"
-    compiled_dir = scripting_dir / "compiled"
-    plugins_dir = game_dir / "addons/sourcemod/plugins"
 
-    queue = sorted(i.name for i in (REPO / "Plugin").rglob("scripting/*.sp"))
-    subprocess.run([scripting_dir / "compile.exe", *queue], cwd=scripting_dir, check=True)
-
-    shutil.copytree(compiled_dir, plugins_dir, dirs_exist_ok=True)
-    shutil.rmtree(compiled_dir)
+    for sp in sorted(i.name for i in (REPO / "Plugin").rglob("scripting/*.sp")):
+        print(f"\n컴파일: {sp}", flush=True)  # flush so it lands before spcomp's own output
+        subprocess.run(
+            [scripting_dir / "spcomp.exe", sp, "-iinclude", f"-o../plugins/{Path(sp).stem}.smx"],
+            cwd=scripting_dir,
+            check=True,
+        )
     print("컴파일 및 적용 완료.")
 
 
