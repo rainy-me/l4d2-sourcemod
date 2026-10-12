@@ -77,7 +77,7 @@ public Plugin myinfo =
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
     description = "특수좀비의 무음 문제를 개선합니다.",
-    version     = "1.3.1",
+    version     = "1.3.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_fix_si_sound"
 };
 
@@ -147,10 +147,13 @@ void AutoConvars(bool enable)
 {
     if (enable)
     {
-        ConVar snd_max_same_sounds     = FindConVar("snd_max_same_sounds");
-        ConVar sv_multiplayer_sounds   = FindConVar("sv_multiplayer_sounds");
-        snd_max_same_sounds.IntValue   = 8;
-        sv_multiplayer_sounds.IntValue = 40;
+        // 리눅스 전용 서버에는 두 cvar가 없음
+        ConVar snd_max_same_sounds   = FindConVar("snd_max_same_sounds");
+        ConVar sv_multiplayer_sounds = FindConVar("sv_multiplayer_sounds");
+        if (snd_max_same_sounds != null)
+            snd_max_same_sounds.IntValue = 8;
+        if (sv_multiplayer_sounds != null)
+            sv_multiplayer_sounds.IntValue = 40;
     }
 }
 
