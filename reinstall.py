@@ -70,7 +70,7 @@ def install(game_dir: Path) -> None:
         (REPO / "Plugin", game_dir / "addons/sourcemod"),
         (REPO / "Plugin_metamod", game_dir),
     ):
-        for item in sorted(i for i in src.iterdir() if i.is_dir()):
+        for item in sorted(i for i in src.iterdir() if i.is_dir() and not i.name.endswith("-linux")):
             shutil.copytree(item, dst, dirs_exist_ok=True)
     print("설치 완료.")
 
