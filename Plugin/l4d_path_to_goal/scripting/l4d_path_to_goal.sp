@@ -15,9 +15,11 @@
 #include <sourcemod>
 #include <left4dhooks>
 #include <dhooks>
+
+#undef _NATIVE_ONLY
 #include <l4d_path_to_goal>
 
-#define PLUGIN_VERSION 			"1.60 2026-08-18"
+#define PLUGIN_VERSION 			"1.62 2026-10-09"
 
 public Plugin myinfo =
 {
@@ -25,7 +27,7 @@ public Plugin myinfo =
 	author = "gvazdas, zyiks",
 	description = "Automatic path to goal indicator for Survivor team.",
 	version = PLUGIN_VERSION,
-	url = "https://forums.alliedmods.net/showthread.php?t=352685, https://github.com/gvazdas/l4d2_zombie_master"
+	url = "https://forums.alliedmods.net/showthread.php?t=352685, https://codeberg.org/gvazdas/l4d2_zombie_master"
 }
 
 public void OnPluginStart()
@@ -40,7 +42,6 @@ public void OnPluginStart()
     RegConsoleCmd("guide",              CmdRequestGuide, "Point where to go to progress in the map.");
     RegConsoleCmd("ptg",                CmdRequestGuide, "Point where to go to progress in the map.");
 
-    g_bL4D2 = GetEngineVersion()==Engine_Left4Dead2;
     LoadSDK();
     
     RegAdminCmd("l4d_path_to_goal_recalculate", CmdRecalculate, ADMFLAG_ROOT,"Recalculate guide points.");
@@ -87,6 +88,9 @@ public void OnPluginStart()
     g_hCvarFinaleAuto = CreateConVar("l4d_path_to_goal_finale_auto", "0",
     "Automatically draw beams to rescue vehicle for all clients. l4d_path_to_goal_finale must be less than 3.",FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
+    g_hCvarCooldown = CreateConVar("l4d_path_to_goal_cooldown", "2.0",
+    "Cooldown in seconds between ptg calls. 0 to disable. Zombie Master ignores these.",FCVAR_NOTIFY, true, 0.0, true, 10000.0);
+
   	g_hCvarMPGameMode = FindConVar("mp_gamemode");
   	g_hCvarMPGameMode.AddChangeHook(ConVarGameMode);
     
@@ -108,7 +112,7 @@ public void OnPluginStart()
     HookEvent("finale_vehicle_incoming",  evtFinaleVehicle,  EventHookMode_PostNoCopy);
     }
 
-    finale = L4D_IsFinaleActive(); // Check if Finale is active
+    finale = L4D_HasMapStarted() && L4D_IsFinaleActive(); // Check if Finale is active
     if (finale)
     {
         // ignore "fake" VScript finales
@@ -119,11 +123,16 @@ public void OnPluginStart()
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-    if(GetEngineVersion()!=Engine_Left4Dead2 && GetEngineVersion()!=Engine_Left4Dead)
-	{
-		strcopy(error,err_max,"Plugin only supports L4D1/L4D2.");
-		return APLRes_SilentFailure;
-	}
+    switch (GetEngineVersion())
+    {
+        case Engine_Left4Dead2: g_bL4D2 = true;
+        case Engine_Left4Dead:  g_bL4D2 = false;
+        default:
+        {
+            strcopy(error,err_max,"Plugin only supports L4D1 and L4D2.");
+		    return APLRes_SilentFailure;
+        }
+    }
     MarkNativeAsOptional("L4D_NavArea_GetZ");
     MarkNativeAsOptional("L4D_NavArea_GetElevator");
     MarkNativeAsOptional("L4D_NavArea_IsBlocked");
@@ -138,7 +147,7 @@ public void OnAllPluginsLoaded()
     elevator_available = GetFeatureStatus(FeatureType_Native,"L4D_NavArea_GetElevator")==FeatureStatus_Available;
     blocked_available = GetFeatureStatus(FeatureType_Native,"L4D_NavArea_IsBlocked")==FeatureStatus_Available;
     if (!elevator_available || !blocked_available) LogMessage("Please update l4dhooks for better performance.");
-    if (g_bL4D2) g_hCvarZM = FindConVar("zm_enable"); // check if zombie master is active
+    g_hCvarZM = FindConVar("zm_enable"); // check if zombie master is active
 }
 
 void evtFinaleVehicle(Event event, const char[] name, bool dontBroadcast)
@@ -490,7 +499,18 @@ Action CmdRecomputeFlow(int client, int args)
 
 public void OnMapStart()
 {
-	g_iLaser = PrecacheModel(VMT_LASERBEAM, true);
+	// Randomize colors
+    color_forward = {0,231,0,249};
+    color_forward[0] = GetRandomInt(0,40);
+    color_forward[1] += GetRandomInt(-20,20);
+    color_forward[2] = GetRandomInt(0,40);
+
+    color_backward = {128,0,0,128};
+    color_backward[0] += GetRandomInt(-10,10);
+    color_backward[1] = GetRandomInt(0,20);
+    color_backward[2] = GetRandomInt(0,20);
+    
+    g_iLaser = PrecacheModel(VMT_LASERBEAM, true);
     g_iLaserWhite = PrecacheModel(VMT_LASERBEAM_WHITE, true);
     g_iLaserCustom = PrecacheModel(VMT_LASERBEAM_CUSTOM, true);
     RequestFrame(MapStarted);

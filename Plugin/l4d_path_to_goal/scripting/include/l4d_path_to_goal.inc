@@ -99,7 +99,8 @@ enum struct NavConnection
 #define CON_KEEP_BACKWARD 2 // keep only backwards-going adjacent connections
 
 ArrayList g_GuideCells;
-ConVar g_hCvarMPGameMode, g_hCvarEnable, g_hCvarMax, g_hCvarSurvivors, g_hCvarInfected, g_hCvarSpec, g_hCvarBudget, g_hCvarDetourBudget, g_hCvarFinaleAuto, g_hCvarZM;
+ConVar g_hCvarMPGameMode, g_hCvarEnable, g_hCvarMax, g_hCvarSurvivors, g_hCvarInfected, g_hCvarSpec,
+       g_hCvarBudget, g_hCvarDetourBudget, g_hCvarFinaleAuto, g_hCvarZM, g_hCvarCooldown;
 bool gamemode_guidable, guide_ready, guide_prep, map_started, nav_started, enable, g_bL4D2, finale, finale_rescue, finale_gauntlet;
 int g_iLaser, g_iLaserCustom, g_iLaserWhite;
 float t_nav = -1.0; // nav event gametime
@@ -125,8 +126,7 @@ ConVar g_hCvarFinale;
 bool g_bFoundRescueVehicle;
 float g_fMaxFlow, g_fFlowRescueVehicle;
 
-int color_forward[4] = {25,255,25,255};
-int color_backward[4] = {128,10,10,128};
+int color_forward[4], color_backward[4]; // randomized every OnMapStart()
 
 //bool g_bHitLadder = false; // kill me
 #if DEBUG
@@ -154,7 +154,6 @@ void GetCvars()
 // Player cooldown
 enum struct PlayerTime
 {
-	float t_engine;
     float t_game;
     float t_cooldown;
 }
@@ -254,8 +253,8 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
     int team = GetClientTeam(client);
     bool alive = IsPlayerAlive(client);
 
-    bool whitelist = false; // L4D2 Zombie Master whitelist
-    if (g_bL4D2 && g_hCvarZM!=null && g_hCvarZM.BoolValue && team!=TEAM_SURVIVOR)
+    bool whitelist = false; // Zombie Master whitelist
+    if (g_hCvarZM && g_hCvarZM.BoolValue && team!=TEAM_SURVIVOR)
     {
         whitelist = team==TEAM_INFECTED; // guaranteed to be Zombie Master
         if (!whitelist) // may also be in Spectator team
@@ -302,7 +301,7 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
 
     if (beams_cooldown(client)) return false;
     if (duration < 0.1) duration = 0.1; // prevent beams with infinite lifetime
-    beams_cooldown_update(client,duration);
+    beams_cooldown_update(client,duration,whitelist);
 
     // Store info of latest request from client
     g_CellRequests[client].join_client = join_client;
@@ -1037,11 +1036,11 @@ void OnFramePrep(bool new_frame = true)
     bool budget_spent = false; // same variable for all stages
     if (new_frame)
     {
-        #if DEBUG
-        g_iPrepFrames += 1;
-        #if DEBUG>2
-        LogMessage("OnFramePrep %d %d", g_iPrepFrames, g_iPrepStage);
+        #if DEBUG>0
+            g_iPrepFrames += 1;
         #endif
+        #if DEBUG>2
+            LogMessage("OnFramePrep %d %d", g_iPrepFrames, g_iPrepStage);
         #endif
         g_tFrameStart = GetEngineTime();
     }
@@ -2281,53 +2280,45 @@ bool LOS_rescue_cheap(float pos1[3], float pos2[3], float pos_mid[3] = {0.0,0.0,
 // Check if client is on cooldown for drawing beams
 bool beams_cooldown(int client)
 {
-    //return false;
-    //if (playertime.t_engine<0.0 && playertime.t_game<0.0) return false;
     if (g_PlayerTime[client].t_game<=0.0) return false;
-    //if ( (playertime.t_engine+playertime.t_cooldown/2.0)>=GetEngineTime() ) return true;
     if ( (g_PlayerTime[client].t_game+g_PlayerTime[client].t_cooldown)>GetGameTime() ) return true;
     return false;
 }
 
 // Client just rendered beams for given duration. Set cooldown to half the duration.
-void beams_cooldown_update(int client, float duration = -1.0)
+// Apply long cooldown if client is not whitelisted.
+void beams_cooldown_update(const int client, float duration = -1.0, const bool whitelist = false)
 {
-    static PlayerTime playertime;
-    playertime = g_PlayerTime[client];
-    if (duration < 0.0)
+    g_PlayerTime[client].t_game = GetGameTime();
+    g_CellRequests[client].duration = -1.0;
+    if (duration<0.0)
     {
-        duration = playertime.t_cooldown;
-        if (duration < 0.0) return;
+        duration = g_PlayerTime[client].t_cooldown;
+        if (duration<0.0) return;
     }
     else duration /= 2.0;
+    if (!whitelist && g_hCvarCooldown.FloatValue>0.0)
+    {
+        if (duration<g_hCvarCooldown.FloatValue)
+            duration = g_hCvarCooldown.FloatValue;
+    }
     if (duration<0.1) duration = 0.1; // reduce server load
-    //playertime.t_engine = GetEngineTime();
-    playertime.t_game = GetGameTime();
-    playertime.t_cooldown = duration;
-    g_PlayerTime[client] = playertime;
-    g_CellRequests[client].duration = -1.0;
+    g_PlayerTime[client].t_cooldown = duration;
 }
 
 // Reset all beam cooldowns. If client is specified, reset only for that client
 // If request, reset beam requests too
-void beams_cooldown_reset(int client = -1, bool request = false)
+void beams_cooldown_reset(const int client = -1, bool request = false)
 {
     if (!enable) return;
-    static PlayerTime playertime;
-    if (client>0)
+    int i = client>0 ? client : 1;
+    while (i<=MaxClients)
     {
-        playertime = g_PlayerTime[client];
-        playertime.t_game = -1.0; playertime.t_engine = -1.0; playertime.t_cooldown = -1.0;
-        g_PlayerTime[client] = playertime;
-        if (request) g_CellRequests[client].duration = -1.0;
-        return;
-    }
-    for (int i = 1; i <= MaxClients; i++)
-    {
-        playertime = g_PlayerTime[i];
-        playertime.t_game = -1.0; playertime.t_engine = -1.0; playertime.t_cooldown = -1.0;
-        g_PlayerTime[i] = playertime;
+        g_PlayerTime[i].t_game = -1.0;
+        g_PlayerTime[i].t_cooldown = -1.0;
         if (request) g_CellRequests[i].duration = -1.0;
+        if (i==client && client>0) break;
+        i += 1;
     }
 }
 
@@ -2394,15 +2385,12 @@ bool TraceFilterStatic(int entity, int contentsMask)
     //LogMessage("TraceFilterStatic hit %d %s", entity, class);
     switch (class[0])
     {
-        case 'p':
-        {
-            if (strcmp(class,"prop_static",false)==0) return true;
-        }
         case 'f':
         {
             if (strcmp(class,"func_brush",false)==0) return true;
             //if (strcmp(class,"func_lod",false)==0) return false;
             //if (strcmp(class,"func_simpleladder",false)==0) return true;
+            if (strcmp(class,"func_elevator",false)==0) return true;
             //g_bHitLadder = strncmp(class,"func_simpleladder",17,false)==0;
         }
     }
@@ -2418,11 +2406,16 @@ bool TraceFilterNoClients(int entity, int contentsMask)
 stock bool pos_underwater(const float pos[3])
 {
 	static float top[3], bottom[3];
-    bottom = pos;
-    top = pos; top[2] += 64.0;
-	TR_TraceRay(top,bottom,MASK_WATER,RayType_EndPoint);
-	if (TR_DidHit(INVALID_HANDLE)) return true;
-    return false;
+    bottom = pos; bottom[2] -= 1.0;
+    top = pos; top[2] += 16.0;
+	TR_TraceRayFilter(top,bottom,MASK_WATER,RayType_EndPoint,TraceFilterWater);
+	if (TR_AllSolid(INVALID_HANDLE) || TR_StartSolid(INVALID_HANDLE)) return true;
+    return TR_DidHit(INVALID_HANDLE);
+}
+
+bool TraceFilterWater(int entity, int contentsMask)
+{
+	return entity == 0;
 }
 
 // Get midpoint between pos1 and pos2.
