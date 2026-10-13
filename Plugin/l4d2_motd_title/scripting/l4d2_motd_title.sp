@@ -155,7 +155,7 @@ public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErr
 public void OnPluginStart()
 {
     g_hConVarMOTDTitleType = CreateConVar(
-        "motd_title_type", "1",
+        "motd_title_type", "2",
         "source of the title string. 0 = vanilla | 1 = convar | 2 = SM translation (sourcemod/translations/l4d2_motd_title.phrases.txt)",
         FCVAR_NOTIFY);
 
