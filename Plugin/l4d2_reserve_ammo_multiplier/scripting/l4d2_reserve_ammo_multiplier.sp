@@ -40,7 +40,7 @@ public Plugin myinfo =
     name        = "L4D2 Reserve Ammo Multiplier",
     author      = "Rainy",
     description = "예비 탄약 소지량을 배율로 조정합니다.",
-    version     = "1.3.1",
+    version     = "1.3.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_reserve_ammo_multiplier"
 };
 
@@ -95,17 +95,17 @@ Action Cmd_AmmoMultiplier(int client, int args)
         return Plugin_Handled;
     }
 
-    if (!CheckCommandAccess(client, "sm_amm_set", ADMFLAG_ROOT))
-    {
-        CReplyToCommand(client, "%t", "No Access");
-        return Plugin_Handled;
-    }
-
     char sArg[8];
     GetCmdArg(1, sArg, sizeof(sArg));
     if (args != 1 || !IsCharNumeric(sArg[0]))
     {
         CReplyToCommand(client, "%t", "Help");
+        return Plugin_Handled;
+    }
+
+    if (!CheckCommandAccess(client, "sm_amm_set", ADMFLAG_ROOT))
+    {
+        CReplyToCommand(client, "%t", "No Access");
         return Plugin_Handled;
     }
 
