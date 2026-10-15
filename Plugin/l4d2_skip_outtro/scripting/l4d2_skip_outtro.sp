@@ -2,13 +2,14 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <hxlib>
 
 public Plugin myinfo =
 {
     name        = "L4D2 Skip Outtro",
     author      = "Rainy",
     description = "맵 클리어 시 아웃트로를 빠르게 건너뜁니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_skip_outtro"
 };
 
@@ -20,7 +21,7 @@ public void OnPluginStart()
 
 void Event_FinaleVehicleLeaving(Event event, const char[] name, bool dontBroadcast)
 {
-    ServerCommand("scripted_user_func timescale,10");
+    SetTimescale(10.0);
 }
 
 void Event_FinaleWin(Event event, const char[] name, bool dontBroadcast)
@@ -30,6 +31,11 @@ void Event_FinaleWin(Event event, const char[] name, bool dontBroadcast)
 
 Action Timer_OuttroStatsDone(Handle timer)
 {
-    ServerCommand("outtro_stats_done");
+    // 서버는 플레이어별로 통계 확인 완료를 받으므로 사람 클라이언트마다 보냄
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (IsClientInGame(i) && !IsFakeClient(i))
+            FakeClientCommand(i, "outtro_stats_done");
+    }
     return Plugin_Continue;
 }
