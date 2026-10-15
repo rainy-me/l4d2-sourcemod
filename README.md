@@ -303,7 +303,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
 
 4. l4dtoolz  
-   <https://github.com/accelerator74/l4dtoolz/releases>
+   <https://github.com/lakwsh/l4dtoolz/releases>
 
 5. left4dhooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
@@ -317,11 +317,8 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 8. ThirdPersonShoulder_Detect (유휴 복귀 후 3인칭 오감지 고침, TP_IsThirdPerson native 추가)  
    <https://forums.alliedmods.net/showthread.php?t=298649>
 
-9. Tickrate Enabler  
-   <https://github.com/accelerator74/Tickrate-Enabler/releases>
-
-10. Use Priority Patch  
-    <https://forums.alliedmods.net/showthread.php?t=327511>
+9. Use Priority Patch  
+   <https://forums.alliedmods.net/showthread.php?t=327511>
 
 ## Rainy's 리포지토리
 
