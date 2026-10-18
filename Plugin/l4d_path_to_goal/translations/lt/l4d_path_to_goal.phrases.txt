@@ -46,6 +46,16 @@
 	{
 		"lt"			"žemyn"
 	}
+
+	"ptg_blocked"
+	{
+		"lt"			"Užblokuota."
+	}
+
+	"ptg_disabled"
+	{
+		"lt"			"Išjungta."
+	}
 	
 	
 }

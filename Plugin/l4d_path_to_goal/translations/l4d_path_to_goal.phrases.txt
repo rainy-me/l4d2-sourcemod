@@ -45,5 +45,15 @@
 	{
 		"en"			"down"
 	}
+
+	"ptg_blocked"
+	{
+		"en"			"Request blocked."
+	}
+
+	"ptg_disabled"
+	{
+		"en"			"Disabled."
+	}
 	
 }

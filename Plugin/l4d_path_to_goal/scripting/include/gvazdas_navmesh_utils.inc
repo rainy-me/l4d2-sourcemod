@@ -11,6 +11,7 @@
 
 // v1.01 -- improved constrained logic
 // v1.02 -- added navmesh_clip
+// v1.03 -- added mechanism for clearing L4D_FindRandomSpot_Constrained cache
 
 #if defined _gvazdas_navmesh_utils_inc_included
  #endinput
@@ -173,8 +174,15 @@ stock bool navmesh_xy_too_far(Address from, const float pos[3])
 }
 
 // Find random pos on large navArea, preferably centered around spawner_pos, for given count of common zombies
-stock void L4D_FindRandomSpot_Constrained(const Address navArea, float spawner_pos[3], const int count, float pos[3])
+stock void L4D_FindRandomSpot_Constrained(const Address navArea = Address_Null, float spawner_pos[3], const int count, float pos[3])
 {
+    static Address navArea_cached;
+    if (navArea==Address_Null) // Clear cache
+    {
+        pos = spawner_pos;
+        navArea_cached = Address_Null;
+        return;
+    }
     if (count<=1)
     {
         if (navmesh_OOB(navArea,spawner_pos))
@@ -186,7 +194,6 @@ stock void L4D_FindRandomSpot_Constrained(const Address navArea, float spawner_p
         return;
     }
     static float mins_cached[3], maxs_cached[3], spawner_pos_cached[3];
-    static Address navArea_cached;
     static int count_cached;
     static bool constrained_too_small, constrained_fail;
     static float center[3], size[3], size_spawn[3], mins[3], maxs[3], diff[3];
@@ -214,7 +221,9 @@ stock void L4D_FindRandomSpot_Constrained(const Address navArea, float spawner_p
         half_size[1] = desired_side / 2.0;
         build_clipped_box(spawner_pos,half_size,mins,maxs,mins_cached,maxs_cached);
         float size_x = maxs_cached[0]-mins_cached[0]; // actual size after clip
+        if (size_x<=0.0) size_x = 1.0;
         float size_y = maxs_cached[1]-mins_cached[1]; // actual size after clip
+        if (size_y<=0.0) size_y = 1.0;
         float length_missing;
         if (size_x<desired_side && size[0]>size_x) // Space available along x
         {
@@ -232,7 +241,7 @@ stock void L4D_FindRandomSpot_Constrained(const Address navArea, float spawner_p
         }
         float final_area = clipped_box_xy_Spawnarea(mins_cached,maxs_cached) + 1.0;
         constrained_fail = final_area<desired_area;
-        while (constrained_fail)
+        if (constrained_fail)
         {
             if (maxs_cached[0]<maxs[0] || mins_cached[0]>mins[0]) // Space available along x
             {
@@ -248,7 +257,6 @@ stock void L4D_FindRandomSpot_Constrained(const Address navArea, float spawner_p
             }
             final_area = clipped_box_xy_Spawnarea(mins_cached,maxs_cached) + 1.0;
             constrained_fail = final_area<desired_area;
-            break;
         }
         spawner_pos_cached = spawner_pos;
     }
