@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Rainy Server Assistant",
     author      = "Rainy",
     description = "Rainy 서버 자동화 플러그인",
-    version     = "1.1.0",
+    version     = "1.2.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_rainy_server_assistant"
 };
 
@@ -28,6 +28,7 @@ public void OnPluginStart()
     AutoExecConfig(true, "l4d2_rainy_server_assistant");
 
     RegAdminCmd("sm_killbots", Cmd_Killbots, ADMFLAG_ROOT, "Kill bot survivors");
+    RegAdminCmd("sm_kb", Cmd_Killbots, ADMFLAG_ROOT, "Kill bot survivors");
 }
 
 Action Cmd_Killbots(int client, int args)
