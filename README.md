@@ -144,28 +144,25 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 
 ### B. 자작 플러그인 (미사용)
 
-1. [l4d2_accuracy_stat_fix](/Archive/l4d2_accuracy_stat_fix/)  
-   근접무기와 전기톱을 명중률 통계에서 제외합니다.
-
-2. [l4d2_block_idle](/Archive/l4d2_block_idle/)  
+1. [l4d2_block_idle](/Archive/l4d2_block_idle/)  
    유휴 모드를 차단합니다.
 
-3. [l4d2_block_idle_reload](/Archive/l4d2_block_idle_reload/)  
+2. [l4d2_block_idle_reload](/Archive/l4d2_block_idle_reload/)  
    유휴 장전을 차단합니다.
 
-4. [l4d2_block_thirdperson](/Archive/l4d2_block_thirdperson/)  
+3. [l4d2_block_thirdperson](/Archive/l4d2_block_thirdperson/)  
    3인칭 모드를 차단합니다.
 
-5. [l4d2_dingshot](/Archive/l4d2_dingshot/)  
+4. [l4d2_dingshot](/Archive/l4d2_dingshot/)  
    헤드샷 시 띵 소리를 출력합니다.
 
-6. [l4d2_no_ledge_hang](/Archive/l4d2_no_ledge_hang/)  
+5. [l4d2_no_ledge_hang](/Archive/l4d2_no_ledge_hang/)  
    생존자가 난간에 매달리는 기능을 제거합니다.
 
-7. [l4d2_one_punch_shove](/Archive/l4d2_one_punch_shove/)  
+6. [l4d2_one_punch_shove](/Archive/l4d2_one_punch_shove/)  
    CI, SI를 밀치기 한 번으로 죽일 수 있습니다.
 
-8. [l4d2_print_entity_info](/Archive/l4d2_print_entity_info/)  
+7. [l4d2_print_entity_info](/Archive/l4d2_print_entity_info/)  
    크로스헤어가 가리키는 엔티티의 상세 정보를 출력합니다.
 
 ### C. 공개 플러그인
