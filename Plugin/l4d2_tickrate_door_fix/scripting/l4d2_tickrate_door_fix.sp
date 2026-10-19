@@ -27,7 +27,7 @@ public Plugin myinfo =
     name        = "L4D2 Tickrate Door Fix",
     author      = "Rainy",
     description = "틱레이트 변경에 따른 문 속도 문제를 고칩니다.",
-    version     = "1.0.2",
+    version     = "1.0.3",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tickrate_door_fix"
 };
 
@@ -36,13 +36,12 @@ public void OnPluginStart()
     g_hCvarDoorSpeed = CreateConVar(
         "door_speed_multiplier", "1.6",
         "Sets the speed of all prop_door entities on a map. 1.05 = 105% speed",
-        FCVAR_NONE, true, 0.0);
+        FCVAR_NONE, true, 0.1);
     g_hCvarDoorSpeed.AddChangeHook(Cvar_Changed);
     AutoExecConfig(true, "l4d2_tickrate_door_fix");
 
     g_fDoorSpeed = g_hCvarDoorSpeed.FloatValue;
 
-    Door_ClearSettingsAll();
     Door_GetSettingsAll();
     Door_SetSettingsAll();
 }
@@ -66,6 +65,7 @@ public void OnEntityCreated(int iEntity, const char[] sClassName)
             continue;
         }
         SDKHook(iEntity, SDKHook_SpawnPost, Hook_DoorSpawnPost);
+        break;
     }
 }
 
@@ -149,12 +149,4 @@ void Door_GetSettingsAll()
 void Door_GetSettings(int iEntity)
 {
     g_ddDoors[iEntity].DoorsData_Speed = GetEntPropFloat(iEntity, Prop_Data, "m_flSpeed");
-}
-
-void Door_ClearSettingsAll()
-{
-    for (int i = 0; i < MAX_EDICTS; i++)
-    {
-        g_ddDoors[i].DoorsData_Speed = 0.0;
-    }
 }
