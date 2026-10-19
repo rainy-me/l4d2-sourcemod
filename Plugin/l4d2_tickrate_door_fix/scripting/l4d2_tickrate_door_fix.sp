@@ -8,13 +8,6 @@
 #define MAX_EDICTS             2048    //(1 << 11)
 #define ENTITY_MAX_NAME_LENGTH 64
 
-enum
-{
-    DoorsTypeTracked_None                         = -1,
-    DoorsTypeTracked_Prop_Door_Rotating           = 0,
-    DoorTypeTracked_Prop_Door_Rotating_Checkpoint = 1
-};
-
 static const char g_szDoors_Type_Tracked[][ENTITY_MAX_NAME_LENGTH] = {
     "prop_door_rotating",
     "prop_door_rotating_checkpoint"
@@ -22,9 +15,7 @@ static const char g_szDoors_Type_Tracked[][ENTITY_MAX_NAME_LENGTH] = {
 
 enum struct DoorsData
 {
-    int   DoorsData_Type;
     float DoorsData_Speed;
-    bool  DoorsData_ForceClose;
 }
 
 DoorsData g_ddDoors[MAX_EDICTS];
@@ -36,7 +27,7 @@ public Plugin myinfo =
     name        = "L4D2 Tickrate Door Fix",
     author      = "Rainy",
     description = "틱레이트 변경에 따른 문 속도 문제를 고칩니다.",
-    version     = "1.0.1",
+    version     = "1.0.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tickrate_door_fix"
 };
 
@@ -85,18 +76,8 @@ void Hook_DoorSpawnPost(int iEntity)
         return;
     }
 
-    char sClassName[ENTITY_MAX_NAME_LENGTH];
-    GetEntityClassname(iEntity, sClassName, sizeof(sClassName));
-
     // Save Original Settings.
-    for (int i = 0; i < sizeof(g_szDoors_Type_Tracked); i++)
-    {
-        if (strcmp(sClassName, g_szDoors_Type_Tracked[i], false) != 0)
-        {
-            continue;
-        }
-        Door_GetSettings(iEntity, i);
-    }
+    Door_GetSettings(iEntity);
 
     // Set Settings.
     Door_SetSettings(iEntity);
@@ -158,26 +139,22 @@ void Door_GetSettingsAll()
     {
         while ((iEntity = FindEntityByClassname(iEntity, g_szDoors_Type_Tracked[i])) != INVALID_ENT_REFERENCE)
         {
-            Door_GetSettings(iEntity, i);
+            Door_GetSettings(iEntity);
         }
 
         iEntity = -1;
     }
 }
 
-void Door_GetSettings(int iEntity, int iDoorType)
+void Door_GetSettings(int iEntity)
 {
-    g_ddDoors[iEntity].DoorsData_Type       = iDoorType;
-    g_ddDoors[iEntity].DoorsData_Speed      = GetEntPropFloat(iEntity, Prop_Data, "m_flSpeed");
-    g_ddDoors[iEntity].DoorsData_ForceClose = view_as<bool>(GetEntProp(iEntity, Prop_Data, "m_bForceClosed"));
+    g_ddDoors[iEntity].DoorsData_Speed = GetEntPropFloat(iEntity, Prop_Data, "m_flSpeed");
 }
 
 void Door_ClearSettingsAll()
 {
     for (int i = 0; i < MAX_EDICTS; i++)
     {
-        g_ddDoors[i].DoorsData_Type       = DoorsTypeTracked_None;
-        g_ddDoors[i].DoorsData_Speed      = 0.0;
-        g_ddDoors[i].DoorsData_ForceClose = false;
+        g_ddDoors[i].DoorsData_Speed = 0.0;
     }
 }
