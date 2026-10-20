@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Rainy Server Assistant",
     author      = "Rainy",
     description = "Rainy 서버 자동화 플러그인",
-    version     = "1.2.0",
+    version     = "1.2.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_rainy_server_assistant"
 };
 
@@ -107,7 +107,7 @@ void RespawnNewPlayer(int client)
     }
 
     L4D_RespawnPlayer(client);
-    GivePlayerItem(client, "weapon_shotgun_chrome");
+    GivePlayerItem(client, "weapon_smg_silenced");
     GivePlayerItem(client, "weapon_first_aid_kit");
 
     int target = GetLowestFlowSurvivor(client);
