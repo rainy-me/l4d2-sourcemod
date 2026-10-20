@@ -24,7 +24,7 @@ public void OnPluginStart()
     LoadTranslations("l4d2_campaign_progress_notifier.phrases");
 
     g_hSoundEnabled = CreateConVar(
-        "l4d2_campaign_progress_notifier_sound_enabled", "1",
+        "l4d2_campaign_progress_notifier_sound_enabled", "0",
         "ON/OFF progress notification sound. (1=ON, 0=OFF)",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hSoundVolume = CreateConVar(
