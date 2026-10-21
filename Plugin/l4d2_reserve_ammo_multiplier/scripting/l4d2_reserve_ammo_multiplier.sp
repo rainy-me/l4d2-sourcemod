@@ -6,6 +6,7 @@
 #include <multicolors>
 
 #define STORED_FILE        "l4d2_reserve_ammo_multiplier.txt"
+#define ADMINS_FILE        "ems/admin system/admins.txt"
 #define AMMO_COUNT         6
 #define DEFAULT_MULTIPLIER 1.0
 #define MIN_MULTIPLIER     1.0
@@ -40,7 +41,7 @@ public Plugin myinfo =
     name        = "L4D2 Reserve Ammo Multiplier",
     author      = "Rainy",
     description = "예비 탄약 소지량을 배율로 조정합니다.",
-    version     = "1.3.2",
+    version     = "1.4.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_reserve_ammo_multiplier"
 };
 
@@ -103,7 +104,7 @@ Action Cmd_AmmoMultiplier(int client, int args)
         return Plugin_Handled;
     }
 
-    if (!CheckCommandAccess(client, "sm_amm_set", ADMFLAG_ROOT))
+    if (!CheckCommandAccess(client, "sm_amm_set", ADMFLAG_ROOT) && !IsListedInAdminsTxt(client))
     {
         CReplyToCommand(client, "%t", "No Access");
         return Plugin_Handled;
@@ -265,6 +266,38 @@ bool ReadMultiplierFromFile(float &multiplier)
 // ==========================================================================
 // HELPERS
 // ==========================================================================
+
+bool IsListedInAdminsTxt(int client)
+{
+    char auth[32];
+    if (client == 0 || !GetClientAuthId(client, AuthId_Steam2, auth, sizeof(auth)))
+    {
+        return false;
+    }
+
+    File file = OpenFile(ADMINS_FILE, "r");
+    if (file == null)
+    {
+        return false;
+    }
+
+    char line[256];
+    bool found;
+    while (!found && file.ReadLine(line, sizeof(line)))
+    {
+        int comment = StrContains(line, "//");
+        if (comment != -1)
+        {
+            line[comment] = '\0';
+        }
+        TrimString(line);
+        // GetClientAuthId는 STEAM_1 형식을 반환하므로 STEAM_0 표기를 맞춰줌
+        ReplaceString(line, sizeof(line), "STEAM_0", "STEAM_1");
+        found = line[0] != '\0' && StrEqual(line, auth);
+    }
+    delete file;
+    return found;
+}
 
 float ClampFloat(float input, float min, float max)
 {
