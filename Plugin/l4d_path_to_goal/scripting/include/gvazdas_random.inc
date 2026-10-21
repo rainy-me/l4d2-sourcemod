@@ -41,8 +41,8 @@ stock float GetRandomFloatV2(float min = 0.0, float max = 1.0, bool verify = fal
         LogMessage("GetRandomFloatV2 [%f %f] bad result %f, using HL2 stream", min, max, result);
         return GetRandomFloat(min,max);
     }
-    if (result>max) return max; // catching floating point errors
-    if (result<min) return min;
+    if (result>=max) return max; // catching floating point errors
+    if (result<=min) return min;
     return result;
 }
 

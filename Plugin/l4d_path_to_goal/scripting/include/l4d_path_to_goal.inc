@@ -112,17 +112,12 @@ enum struct NavConnection
 ArrayList g_GuideCells;
 ConVar g_hCvarMPGameMode, g_hCvarEnable, g_hCvarMax, g_hCvarSurvivors, g_hCvarInfected, g_hCvarSpec,
        g_hCvarBudget, g_hCvarDetourBudget, g_hCvarFinaleAuto, g_hCvarZM, g_hCvarCooldown;
-bool gamemode_guidable, guide_ready, map_started, nav_started, enable, g_bL4D2, finale, finale_rescue, finale_gauntlet;
+bool gamemode_guidable, guide_ready, map_started, round_started, nav_started, enable, g_bL4D2, finale, finale_rescue, finale_gauntlet;
 int g_iLaser, g_iLaserCustom, g_iLaserWhite;
 float t_nav = -1.0; // nav event gametime
 Handle timer_nav;
-float g_BeamDelay[MAXPLAYERS+1];
 bool g_bSound; // beam sound precache state
 int g_iPrepID; // track prep frames to prevent duplication
-
-#define MAXCUSTOMKEYS 7
-char g_sCustomKeys[MAXPLAYERS+1][MAXCUSTOMKEYS]; // customization keys -> modify DrawBeam
-char g_sCustomKeysPref[MAXPLAYERS+1][MAXCUSTOMKEYS]; // keep client preferences
 
 DynamicDetour g_hRecomputeFlowDetour;
 Handle g_hRecomputeFlow;
@@ -176,6 +171,12 @@ enum struct PlayerTime
 }
 PlayerTime g_PlayerTime[MAXPLAYERS+1];
 
+#define MAXCUSTOMKEYS 7
+char g_sCustomKeys[MAXPLAYERS+1][MAXCUSTOMKEYS]; // customization keys -> modify DrawBeam
+char TempKeys[MAXCUSTOMKEYS]; // temporary buffer, for optimization
+char TempKeysEmpty[MAXCUSTOMKEYS]; // empty
+char TempKeysDefault[MAXCUSTOMKEYS]; // default
+
 // Data structure for requests to draw beams
 enum struct CellRequest
 {
@@ -187,8 +188,31 @@ enum struct CellRequest
     bool whitelist;
     bool chat; // true for hints in chat, false for console
 }
-CellRequest g_CellRequests[MAXPLAYERS+1]; // actual parameters that will fire
-CellRequest g_CellRequestsPref[MAXPLAYERS+1]; // preferences
+CellRequest g_CellRequests[MAXPLAYERS+1]; // latest parameters used in RequestGuide
+
+#define DURATION_DEFAULT 5.0
+#define BACKWARD_DEFAULT 0
+#define JOIN_CLIENT_DEFAULT 1
+#define HINT_DEFAULT 1
+#define CHAT_DEFAULT 1
+
+// clientprefs
+Cookie g_cCustomKeys;
+Cookie g_cDuration;
+Cookie g_cBackward;
+Cookie g_cHint;
+Cookie g_cChat;
+
+// Check if PTG can be used. Automatically fires Guide_Cleanup() if appropriate.
+stock bool PTG_Allowed()
+{
+    bool allowed = enable && map_started && round_started && nav_started && gamemode_guidable && g_iLaser>0 && !g_bMapFail;
+    if (!allowed)
+    {
+        if (guide_ready || PrepBusy()) Guide_Cleanup();
+    }
+    return allowed;
+}
 
 // Check if any client has a request queued after nav cooldown has expired or guide is ready to draw beams.
 Action Timer_CheckRequests(Handle timer = null)
@@ -206,9 +230,11 @@ Action Timer_CheckRequests(Handle timer = null)
     #if DEBUG>1
     LogMessage("Timer_CheckRequests");
     #endif
-    if (!enable || !map_started || !nav_started || !gamemode_guidable || g_iLaser<=0 || PrepBusy()) return Plugin_Stop;
+    if (!PTG_Allowed() || PrepBusy()) return Plugin_Stop;
 
     float t_delay = 0.0; // spread clients in time to reduce server strain
+
+    //LogMessage("Timer_CheckRequests");
 
     for (int i = 1; i <= MaxClients; i++) // Draw beams immediately for pending clients
     {
@@ -229,6 +255,7 @@ Action Timer_CheckRequests(Handle timer = null)
             break;
         }
     }
+
     return Plugin_Stop;
 }
 
@@ -244,17 +271,28 @@ Action RequestGuideDelay(Handle timer, const int entref)
 }
 
 // Draw beams for all clients. Use client's last duration for RequestGuide if available, or override=true to force duration.
-void Guide_All_Clients(float duration = 5.0, bool override = false)
+void Guide_All_Clients(float duration = 5.0)
 {
+    #if DEBUG
+        LogMessage("Guide_All_Clients %f", duration);
+    #endif
     float t_now = GetGameTime();
-    if (FloatAbs(t_finale_auto-t_now)<5.0) return;
-    t_finale_auto = t_now;
     beams_cooldown_reset(); // reset cooldowns but not requests to draw
-    for (int i = 1; i <= MaxClients; i++)
+    if (FloatAbs(t_finale_auto-t_now)>=5.0) // If not spamming, make all clients ask for beams
     {
-        if (g_CellRequests[i].duration>=0.1) continue; // already requested
-        if (!override && g_CellRequestsPref[i].duration>0.1) g_CellRequests[i].duration = g_CellRequestsPref[i].duration;
-        else g_CellRequests[i].duration = duration;
+        for (int i = 1; i <= MaxClients; i++)
+        {
+            if (!IsValidClient(i) || IsFakeClient(i))
+            {
+                g_CellRequests[i].duration = -1.0;
+                continue;
+            }
+            if (g_CellRequests[i].duration>=0.1) continue; // already requested
+            float duration_pref = g_cDuration.GetFloat(i,DURATION_DEFAULT);
+            if (duration_pref>0.1) g_CellRequests[i].duration = duration_pref;
+            else g_CellRequests[i].duration = duration;
+        }
+        t_finale_auto = t_now;
     }
     Timer_CheckRequests(null);
 }
@@ -275,34 +313,35 @@ int g_iClosestFlow, g_iClosestDist, g_iStart; // closest cell by flow, by distan
 float g_RequestFirstPos[3]; // for hint system
 float g_fRequestFlow; // for hint system
 int g_iForward, g_iBackward; // temporary cell position for green and red beams
-bool g_bFirstBeam; // for selecting RequestFirstPos
 bool g_bStartPoleDrawn;
 bool g_bEndPoleDrawn;
 
-// Client just updated their beam preferences, push them to beam orchestrator.
+// Push beam preferences onto RequestGuide orchestrator
 stock void RegisterClientPrefs(const int client)
 {
-    g_CellRequests[client] = g_CellRequestsPref[client];
-    g_sCustomKeys[client] =  g_sCustomKeysPref[client];
-}
-
-// Fired client command from console or chat.
-stock void UpdateClientPreferredChannel(int client, ReplySource source)
-{
-    switch (source)
+    if (g_CellRequests[client].duration>0.0) // change only if client has already requested PTG
     {
-        case SM_REPLY_TO_CHAT: g_CellRequestsPref[client].chat = true;
-        default:               g_CellRequestsPref[client].chat = false;
+        g_CellRequests[client].duration =   g_cDuration.GetFloat(client,DURATION_DEFAULT);
     }
+        g_CellRequests[client].backward =   g_cBackward.GetInt(client,BACKWARD_DEFAULT) >= 1;
+        g_CellRequests[client].hint =       g_cHint.GetInt(client,HINT_DEFAULT) >= 1;
+        g_CellRequests[client].chat =       g_cChat.GetInt(client,CHAT_DEFAULT) >= 1;
+        if (AreClientCookiesCached(client)) g_cCustomKeys.Get(client,g_sCustomKeys[client],MAXCUSTOMKEYS);
+        else                                g_sCustomKeys[client] = TempKeysDefault;
 }
 
 stock void RespondClientPreferredChannel(int client, const char[] format, any ...)
 {
     static char buffer[PLATFORM_MAX_PATH];
     VFormat(buffer, sizeof(buffer), format, 3);
-    if (g_CellRequestsPref[client].chat) PrintToChat(client,"%s",buffer);
-    else                                 PrintToConsole(client,"%s",buffer);
+    if (g_cChat.GetInt(client,1)) PrintToChat(client,"%s",buffer);
+    else                          PrintToConsole(client,"%s",buffer);
 }
+
+float g_fDelayBackward;
+float g_fDelayForward;
+int g_iBeamsForward;
+int g_iBeamsBackward;
 
 // Draw survivor path for client, for duration in seconds
 // backward: include backwards-going path.
@@ -319,13 +358,14 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
         return false;
     }
 
-    if (!enable || !map_started || !nav_started || !gamemode_guidable || g_iLaser<=0 || g_bMapFail)
+    if (!PTG_Allowed())
     {
         if (hint && fail_hint)
         {
             RespondClientPreferredChannel(client, "[PTG] %t", "ptg_disabled");
             EmitSoundToClient(client,SOUND_DENY);
         }
+        //LogMessage("ptg_disabled");
         g_CellRequests[client].duration = -1.0; // kill request
         return false;
     }
@@ -334,7 +374,6 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
     else if (duration > 60.0) duration = 60.0; // prevent beams with infinite lifetime
 
     RegisterClientPrefs(client);
-
     int team = GetClientTeam(client);
     bool alive = IsPlayerAlive(client);
 
@@ -352,7 +391,7 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
         {
             hint = false; // no hints
             g_CellRequests[client].whitelist = true;
-            g_sCustomKeys[client][5] = 0; // disable sounds
+            g_sCustomKeys[client][5] = ' '; // disable sounds
         }
     }
 
@@ -401,6 +440,7 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
                 RespondClientPreferredChannel(client, "[PTG] %t", "ptg_blocked");
                 EmitSoundToClient(client,SOUND_DENY);
             }
+            //LogMessage("ptg_blocked");
             g_CellRequests[client].duration = -1.0; // kill request
             return false;
         }
@@ -415,6 +455,7 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
             RespondClientPreferredChannel(client, "[PTG] %t %.2f s", "ptg_wait", t_cooldown);
             EmitSoundToClient(client,SOUND_DENY);
         }
+        //LogMessage("ptg_wait cooldown");
         return false;
     }
 
@@ -434,18 +475,21 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
             RespondClientPreferredChannel(client, "[PTG] %t", "ptg_disabled");
             EmitSoundToClient(client,SOUND_DENY);
         }
+        //LogMessage("ptg_disabled catastrophic failure");
         g_CellRequests[client].duration = -1.0; // kill request
         return false;
     }
     
     static float last_pos[3], origin[3];
-    g_BeamDelay[client] = 0.0;
-    g_bFirstBeam = true;
     g_bStartPoleDrawn = false;
     g_bEndPoleDrawn = false;
     bool self_origin = true;
     int target = client;
     beams_cooldown_update(client,duration);
+    g_fDelayBackward = 0.0;
+    g_fDelayForward = 0.0;
+    g_iBeamsForward = 0;
+    g_iBeamsBackward = 0;
 
     if (!alive) // Check who their chase camera is set to. Take that origin instead.
     {
@@ -461,6 +505,11 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
             else target = client;
         }
     }
+    else if (team==TEAM_SURVIVOR && L4D_SurvivorNearDeath(client))
+    {
+        g_sCustomKeys[client][1] = 's'; // force shake
+    }
+
     GetEntPropVector(target, Prop_Send, "m_vecOrigin", origin);
     float flow = L4D_GetFlowFromPoint(origin);
 
@@ -553,10 +602,10 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
     if (found_split)
     {
         g_iBackward = g_iForward>0 ? g_iForward-1 : 0;
-        if (join_client) i_draw += DrawBeam(client,last_pos,pos_split,duration,color_forward,256.0);
-        i_draw += DrawBeamToCell(client,pos_split,g_iForward,duration,color_forward);
+        if (join_client) i_draw += DrawBeam(client,last_pos,pos_split,duration,_,256.0);
+        i_draw += DrawBeamToCell(client,pos_split,g_iForward,duration,_);
         if (backward && g_iBackward>=0)
-            i_draw += DrawBeamToCell(client,pos_split,g_iBackward,duration,color_backward);
+            i_draw += DrawBeamToCell(client,pos_split,g_iBackward,duration,true);
         last_pos = pos_split;
         LOS = true;
         g_iStart = g_iForward;
@@ -590,7 +639,7 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
         {
             if (!found_split && GetVectorDistance(last_pos,cell.center,true)>=256.0)
             {
-                i_draw += DrawBeamToCell(client,last_pos,g_iForward,duration,color_forward);
+                i_draw += DrawBeamToCell(client,last_pos,g_iForward,duration);
             }
         }
         else
@@ -614,20 +663,22 @@ bool RequestGuide(int client, float duration = 5.0, bool backward = false, bool 
             if ((g_iForward+1)<g_GuideCells.Length)
             {
                 g_iForward += 1;
-                i_draw += DrawBeamToCell(client,pos_forward,g_iForward,duration,color_forward,5.0,pos_forward);
+                i_draw += DrawBeamToCell(client,pos_forward,g_iForward,duration,_,5.0,pos_forward);
                 end = false;
                 if (i_draw>=g_hCvarMax.IntValue) break;
             }
             if (backward && g_iBackward>0)
             {
                 g_iBackward -= 1;
-                i_draw += DrawBeamToCell(client,pos_backward,g_iBackward,duration,color_backward,5.0,pos_backward);
+                i_draw += DrawBeamToCell(client,pos_backward,g_iBackward,duration,true,5.0,pos_backward);
                 end = false;
             }
         }
 
     }
+
     g_CellRequests[client].duration = -1.0; // request satisfied, delete from queue
+
     if (i_draw>0)
     {
         #if DEBUG
@@ -1014,20 +1065,20 @@ int detour_join(int client, Address navArea, float pos[3], float flow, float dur
         for (i = 1; i < queue.Length; i++)
 		{
 			queue.GetArray(i,pos_temp,3);
-            beams += DrawBeam(client,pos_curr,pos_temp,duration,color_forward);
+            beams += DrawBeam(client,pos_curr,pos_temp,duration);
             pos_curr = pos_temp;
             if (beams>=g_hCvarMax.IntValue) break;
         }
         if (beams<g_hCvarMax.IntValue)
         {
-            if (g_iForward==g_iBackward) beams += DrawBeamToCell(client,pos_curr,g_iForward,duration,color_forward);
+            if (g_iForward==g_iBackward) beams += DrawBeamToCell(client,pos_curr,g_iForward,duration);
             else
             {
-                beams += DrawBeam(client,pos_curr,pos_split,duration,color_forward);
-                beams += DrawBeamToCell(client,pos_split,g_iForward,duration,color_forward);
+                beams += DrawBeam(client,pos_curr,pos_split,duration);
+                beams += DrawBeamToCell(client,pos_split,g_iForward,duration);
                 if (g_CellRequests[client].backward && g_iBackward>=0)
                 {
-                    beams += DrawBeamToCell(client,pos_split,g_iBackward,duration,color_backward);
+                    beams += DrawBeamToCell(client,pos_split,g_iBackward,duration,true);
                 }
             }
         }
@@ -1066,93 +1117,23 @@ int detour_join(int client, Address navArea, float pos[3], float flow, float dur
 
 //GuidePref g_GuidePrefs[MAXPLAYERS+1];
 
-// Reset client customization
-stock void ResetClientSettings(const int client)
+// Reset client customization to default or empty
+stock void ResetClientPrefs(const int client, const bool empty = false)
 {
-    if (!IsValidClient(client) || IsFakeClient(client)) return;
-    g_sCustomKeysPref[client][0] = 0;
-    g_sCustomKeysPref[client][1] = 0;
-    g_sCustomKeysPref[client][2] = 0;
-    g_sCustomKeysPref[client][3] = 0;
-    g_sCustomKeysPref[client][4] = 'd';
-    g_sCustomKeysPref[client][5] = 's';
-    g_CellRequestsPref[client].duration = 5.0;
-    g_CellRequestsPref[client].backward = GetClientTeam(client)!=TEAM_SURVIVOR;
-    g_CellRequestsPref[client].join_client = true;
-    g_CellRequestsPref[client].menu_opened = false;
-    g_CellRequestsPref[client].hint = true;
-    g_CellRequestsPref[client].whitelist = false;
-    g_CellRequests[client] = g_CellRequestsPref[client];
-    g_CellRequests[client].duration = -1.0; // cancel pending beams
-    g_sCustomKeys[client] = g_sCustomKeysPref[client];
-}
-
-// Draw beam with given color for client from pos_start to pos_end for duration. Don't draw if distance squared is below min_dist_sq.
-// Return number of drawn beams.
-int DrawBeam(int client, float pos_start[3], float pos_end[3], float duration = 5.0, int color[4] = {25,255,25,255}, float min_dist_sq = -1.0)
-{
-    if (g_iLaser<=0) return 0;
-    if (min_dist_sq>0.0 && GetVectorDistance(pos_start,pos_end,true)<min_dist_sq) return 0;
-    if (duration<0.1) duration = 0.1;
-    float start_width = 1.5;
-    int fade_length = 10;
-    float amp = 0.0;
-    
-    // Set .vmt to draw
-    int laser = g_iLaser;
-    switch (g_sCustomKeys[client][0])
-    {
-        case 'c': laser = g_iLaserCustom;
-        case 'w': laser = g_iLaserWhite;
-    }
-    
-    // Set "shake"
-    if (g_sCustomKeys[client][1]=='s') amp = 1.0;
-    
-    // Set thickness
-    switch (g_sCustomKeys[client][2])
-    {
-        case 'l': start_width *= 2.0; // large
-        case 's': start_width /= 2.0; // small
-    }
-
-
-    // Set "arrow"
-    float end_width = start_width*1.05;
-    if (g_sCustomKeys[client][3]=='a')
-    {
-        start_width /= 1.25;
-        end_width = 1.5*start_width;
-    }
-
-    #if DEBUG>2
-    LogMessage("client %d duration %f laser %d custom %s", client, duration, laser, g_sCustomKeys[client]);
-    #endif
-    TE_SetupBeamPoints(pos_start,pos_end,laser,0,0,0,duration,start_width,end_width,fade_length,amp,color,0);
-    TE_SendToClient(client,g_BeamDelay[client]);
-    if (g_sCustomKeys[client][5]=='s')
-    {
-        static float pos_sound[3];
-        AddVectors(pos_start,pos_end,pos_sound);
-        ScaleVector(pos_sound,0.5);
-        ApplyBeamSound(client,g_BeamDelay[client],pos_sound,duration);
-    }
-    if (g_sCustomKeys[client][4]=='d') g_BeamDelay[client] += 0.05;
-    if (g_bFirstBeam && color[0]==color_forward[0] && color[1]==color_forward[1] && color[2]==color_forward[2])
-    {
-        g_RequestFirstPos = pos_end;
-        g_bFirstBeam = false;
-    }
-    return 1;
+    g_cCustomKeys.Set(client,empty ? TempKeysEmpty : TempKeysDefault);
+    g_cDuration.SetFloat(client,DURATION_DEFAULT);
+    g_cBackward.SetInt(client,BACKWARD_DEFAULT);
+    g_cHint.SetInt(client,HINT_DEFAULT);
+    g_cChat.SetInt(client,CHAT_DEFAULT);
 }
 
 // Draw beam from pos to known cell index. Knows when to draw vertical stripes for "Guide Start" and "Guide End". Updated vOut with i_end vector position.
-int DrawBeamToCell(int client, float pos_start[3], int i_end, float duration = 5.0, int color[4] = {25,255,25,255}, float min_dist_sq = -1.0, float vOut[3] = {0.0,0.0,0.0})
+int DrawBeamToCell(int client, float pos_start[3], int i_end, float duration = 5.0, bool backward = false, float min_dist_sq = -1.0, float vOut[3] = {0.0,0.0,0.0})
 {
     int i = 0;
     static Cell cell;
     g_GuideCells.GetArray(i_end,cell,sizeof(Cell));
-    i += DrawBeam(client,pos_start,cell.center,duration,color,min_dist_sq);
+    i += DrawBeam(client,pos_start,cell.center,duration,backward,min_dist_sq);
     vOut = cell.center;
     i += DrawEnd(client,i_end,duration);
     return i;
@@ -1177,9 +1158,124 @@ int DrawEnd(int client, int i, float duration = 5.0)
     static float pos_bot[3], pos_top[3];
     pos_bot = cell.center; pos_bot[2] -= 16.0;
     pos_top = cell.center; pos_top[2] += 16.0;
-    return DrawBeam(client,pos_bot,pos_top,duration,i==0 ? color_backward : color_forward);
+    return DrawBeam(client,pos_bot,pos_top,duration,i==0);
 }
 
+#define BEAM_SPEED 7000.0 // units per second
+
+stock float GetTravelTime(const float distance, const float speed = BEAM_SPEED)
+{
+    return distance/speed;
+}
+
+// Draw beam with given color for client from pos_start to pos_end for duration. Don't draw if distance squared is below min_dist_sq.
+// Return number of drawn beams.
+int DrawBeam(int client, float pos_start[3], float pos_end[3], float duration = 5.0, bool backward = false, float min_dist_sq = -1.0)
+{
+    if (g_iLaser<=0) return 0;
+    if (min_dist_sq>0.0 && GetVectorDistance(pos_start,pos_end,true)<min_dist_sq) return 0;
+    if (duration<0.1) duration = 0.1;
+    bool use_delay = g_sCustomKeys[client][4]=='d';
+    float travel_time = use_delay ? GetTravelTime(GetVectorDistance(pos_start,pos_end)) : 0.0;
+    if (backward)
+    {
+        if (use_delay)
+        {
+            if (g_iBeamsBackward<=0) g_fDelayBackward = g_fDelayForward; // detour_join -> red beams cannot start drawing earlier than green
+            g_fDelayBackward += travel_time;
+        }
+        g_iBeamsBackward += 1;
+    }
+    else
+    {
+        if (use_delay)
+        {
+            g_fDelayForward += travel_time;
+        }
+        if (g_iBeamsForward==0)
+        {
+            g_RequestFirstPos = pos_end;
+            if (g_sCustomKeys[client][5]=='s' && g_bSound) ApplyBeamSound(client,0.0,pos_start,duration);
+        }
+        g_iBeamsForward += 1;
+    }
+    ApplyBeam(client,pos_start,pos_end,duration,backward,backward ? g_fDelayBackward : g_fDelayForward);
+    return 1;
+}
+
+stock void ApplyBeam(int client, float pos_start[3], float pos_end[3], float duration, bool backward, float delay, float microDelay = 0.0)
+{
+    if (delay<=0.0)
+    {
+        if (g_sCustomKeys[client][5]=='s' && g_bSound)
+        {
+            static float pos_sound[3];
+            AddVectors(pos_start,pos_end,pos_sound);
+            ScaleVector(pos_sound,0.5);
+            ApplyBeamSound(client,0.0,pos_sound,duration);
+        }
+
+        float start_width = 1.5;
+        float amp = 0.0;
+        
+        int laser = g_iLaser;
+        switch (g_sCustomKeys[client][0])
+        {
+            case 'c': laser = g_iLaserCustom;
+            case 'w': laser = g_iLaserWhite;
+        }
+        
+        if (g_sCustomKeys[client][1]=='s') amp = 1.0;
+        
+        switch (g_sCustomKeys[client][2])
+        {
+            case 'l': start_width *= 2.0; // large
+            case 's': start_width /= 2.0; // small
+        }
+
+        float end_width = start_width*1.05;
+        if (g_sCustomKeys[client][3]=='a')
+        {
+            start_width /= 1.25;
+            end_width = 1.5*start_width;
+        }
+
+        TE_SetupBeamPoints(pos_start,pos_end,laser,0,0,0,duration,start_width,end_width,10,amp,backward ? color_backward : color_forward,0);
+        TE_SendToClient(client,microDelay);
+    }
+    else
+    {
+        DataPack pack;
+        CreateDataTimer(delay,ApplyBeamTimer,pack,TIMER_FLAG_NO_MAPCHANGE);
+        pack.WriteCell(EntIndexToEntRef(client));
+        pack.WriteFloatArray(pos_start,3);
+        pack.WriteFloatArray(pos_end,3);
+        pack.WriteFloat(duration);
+        pack.WriteCell(backward);
+        pack.WriteFloat(GetGameTime()+delay); // precise GameTime beam should draw
+    }
+}
+
+Action ApplyBeamTimer(Handle timer, DataPack pack)
+{
+    if (!PTG_Allowed()) return Plugin_Stop;
+    pack.Reset();
+    int entref = pack.ReadCell();
+    if (!IsValidEntRef(entref)) return Plugin_Stop;
+    int client = EntRefToEntIndex(entref);
+    if (!IsValidClient(client) || IsFakeClient(client)) return Plugin_Stop;
+    static float pos_start[3], pos_end[3];
+    pack.ReadFloatArray(pos_start,3);
+    pack.ReadFloatArray(pos_end,3);
+    float duration = pack.ReadFloat();
+    bool backward = pack.ReadCell();
+    float microDelay = pack.ReadFloat() - GetGameTime(); // how much we are off precise time
+    if (microDelay<0.0) microDelay = 0.0;
+    ApplyBeam(client,pos_start,pos_end,duration,backward,0.0,microDelay);
+    return Plugin_Stop;
+}
+
+// Apply ON sound after delay for duration, and OFF sound after delay+duration.
 stock void ApplyBeamSound(const int client, const float delay, float pos[3], float duration = -1.0, bool on = true)
 {
     if (!g_bSound) return; // sound failed to precache
@@ -1197,10 +1293,11 @@ stock void ApplyBeamSound(const int client, const float delay, float pos[3], flo
         pack.WriteFloat(duration);
         pack.WriteCell(on);
     }
-}
+} 
 
 Action ApplySoundTimer(Handle timer, DataPack pack)
 {
+    if (!PTG_Allowed()) return Plugin_Stop;
     pack.Reset();
     int entref = pack.ReadCell();
     if (!IsValidEntRef(entref)) return Plugin_Stop;
@@ -1218,7 +1315,7 @@ void Check_Guidable()
 {
     gamemode_guidable = !L4D_IsSurvivalMode();
     if (gamemode_guidable && g_bL4D2) gamemode_guidable = !L4D2_IsScavengeMode();
-    if (enable && !gamemode_guidable) Guide_Cleanup();
+    PTG_Allowed();
 }
 
 #define STAGE_NONE 0 // Prep not running
@@ -1265,7 +1362,7 @@ void Guide_Cleanup()
 // Cleanup, and perform cell precalculation spanning many frames.
 void Guide_Prep(bool force = false)
 {
-    if (!enable || g_bMapFail || !gamemode_guidable || !map_started || !nav_started || is_prep_cooldown()) return;
+    if (!PTG_Allowed() || is_prep_cooldown()) return;
     if (!force && PrepBusy()) return;
     Guide_Cleanup();
     PrepBegin();
@@ -1292,11 +1389,11 @@ stock void PrepBegin()
 Action PrepWatchdog(Handle timer)
 {
     if (guide_ready || !PrepBusy() || timer!=timer_watchdog) return Plugin_Stop;
-    if (g_iWatchDog==g_iPrepFrames)
+    if (g_iWatchDog==g_iPrepFrames || g_iPrepFrames>=1000)
     {
         static char mapName[PLATFORM_MAX_PATH];
         GetCurrentMap(mapName,PLATFORM_MAX_PATH);
-        LogMessage("map %s stage %d crashed. Please report exceptions above to plugin authors.", mapName, g_iPrepStage);
+        LogMessage("map %s stage %d failed after %d frames. Please report exceptions above to plugin authors.", mapName, g_iPrepStage, g_iPrepFrames);
         Guide_Cleanup();
         g_bMapFail = true;
         return Plugin_Stop;
@@ -1323,10 +1420,7 @@ ArrayList explored_finale;
 
 void OnFramePrep(int id)
 {
-    if (!enable || guide_ready || !gamemode_guidable || !map_started || !nav_started || !PrepBusy() || id!=g_iPrepID)
-    {
-        return;
-    }
+    if (!PTG_Allowed() || !PrepBusy() || id!=g_iPrepID) return;
     static float pos[3];
     float flow;
     static Cell cell, cell_before, cell_after;
@@ -1832,9 +1926,6 @@ void OnFramePrep(int id)
     KillCurrentPrep();
     if (finale && finale_stitched && finale_rescue && g_hCvarFinaleAuto.BoolValue) Guide_All_Clients();
     else Timer_CheckRequests(null); // Draw beams immediately for pending clients
-
-    
-
 }
 
 // Look for closest survivor ladder manually, very expensive. Output cell_ladder
@@ -1905,7 +1996,7 @@ stock bool try_ladder(float flow_curr,float pos_curr[3],Cell cell_ladder,bool fl
 // Check if escape vehicle should be connected to RequestGuide
 bool should_stitch_finale()
 {
-    if (!enable || !map_started || !nav_started || !g_bFoundRescueVehicle) return false;
+    if (!PTG_Allowed() || !g_bFoundRescueVehicle) return false;
     switch (g_hCvarFinale.IntValue)
     {
         case FINALE_ALWAYS: return true;
@@ -3094,7 +3185,7 @@ stock void NavChanged(bool recompute = false)
     Guide_Cleanup();
     t_nav = GetGameTime();
     if (recompute) t_nav = t_nav - NAV_COOLDOWN + 0.1;
-    if (!enable || !gamemode_guidable || !map_started || !nav_started || timer_nav != null) return;
+    if (!PTG_Allowed() || timer_nav != null) return;
     if (finale && finale_rescue && stitched && g_hCvarFinaleAuto.BoolValue) Guide_All_Clients();
     else timer_nav = CreateTimer( recompute ? 0.1 : NAV_COOLDOWN , Timer_CheckRequests, _, TIMER_FLAG_NO_MAPCHANGE );
 }
@@ -3225,6 +3316,13 @@ stock float AngleNormalized(float angle)
     while (angle > 180.0)  angle -= 360.0;
     while (angle < -180.0) angle += 360.0;
     return angle;
+}
+
+// Check if survivor is gray
+stock bool L4D_SurvivorNearDeath(const int client)
+{
+    if (g_bL4D2) return L4D_IsPlayerOnThirdStrike(client);
+    return GetEntProp(client, Prop_Send, "m_isGoingToDie")>0;
 }
 
 stock bool IsValidEntRef(const int ref)
