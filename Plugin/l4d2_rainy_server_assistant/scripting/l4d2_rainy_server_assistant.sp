@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Rainy Server Assistant",
     author      = "Rainy",
     description = "Rainy 서버 자동화 플러그인",
-    version     = "1.2.1",
+    version     = "1.2.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_rainy_server_assistant"
 };
 
@@ -94,7 +94,6 @@ void KillBots()
             continue;
         }
 
-        RemovePistol(i);
         ForcePlayerSuicide(i);
     }
 }
@@ -118,22 +117,6 @@ void RespawnNewPlayer(int client)
         GetClientAbsAngles(target, ang);
         TeleportEntity(client, pos, ang);
         L4D_WarpToValidPositionIfStuck(client);
-    }
-}
-
-void RemovePistol(int client)
-{
-    int weapon = GetPlayerWeaponSlot(client, 1);
-    if (weapon == -1)
-    {
-        return;
-    }
-
-    char classname[32];
-    GetEntityClassname(weapon, classname, sizeof(classname));
-    if (StrEqual(classname, "weapon_pistol"))
-    {
-        RemovePlayerItem(client, weapon);
     }
 }
 
