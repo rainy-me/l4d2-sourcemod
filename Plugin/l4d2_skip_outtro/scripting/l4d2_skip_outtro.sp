@@ -30,13 +30,17 @@ public void OnPluginStart()
 void Event_FinaleVehicleLeaving(Event event, const char[] name, bool dontBroadcast)
 {
     if (g_hEnable.BoolValue)
+    {
         SetTimescale(10.0);
+    }
 }
 
 void Event_FinaleWin(Event event, const char[] name, bool dontBroadcast)
 {
     if (g_hEnable.BoolValue)
+    {
         CreateTimer(0.1, Timer_OuttroStatsDone, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+    }
 }
 
 Action Timer_OuttroStatsDone(Handle timer)
@@ -45,7 +49,9 @@ Action Timer_OuttroStatsDone(Handle timer)
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i) && !IsFakeClient(i))
+        {
             FakeClientCommand(i, "outtro_stats_done");
+        }
     }
     return Plugin_Continue;
 }
