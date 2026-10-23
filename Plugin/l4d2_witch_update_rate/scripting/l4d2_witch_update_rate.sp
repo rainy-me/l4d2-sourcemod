@@ -16,7 +16,7 @@ public Plugin myinfo =
     name        = "L4D2 Witch Update Rate",
     author      = "Rainy",
     description = "nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_witch_update_rate"
 };
 
@@ -46,7 +46,7 @@ public void OnPluginStart()
     g_hUpdateRate = CreateConVar(
         "l4d2_witch_update_rate", "30",
         "Witch NextBot updates per second (capped at server tickrate)",
-        _, true, 10.0, true, 100.0);
+        _, true, 10.0);
     AutoExecConfig(true, "l4d2_witch_update_rate");
 
     g_hWitches = new ArrayList();
