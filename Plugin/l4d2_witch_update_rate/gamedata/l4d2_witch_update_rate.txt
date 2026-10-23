@@ -1,0 +1,26 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CBaseEntity::MyNextBotPointer"
+			{
+				"linux"			"82"
+				"windows"		"81"
+			}
+
+			/* NextBotManager::ShouldUpdate (the function that references nb_update_framelimit)
+			 *   cmp byte ptr [esi + 0Ch], 0
+			 *   ...
+			 *   mov byte ptr [esi + 0Ch], 0
+			 * linux: _ZN14NextBotManager12ShouldUpdateEP8INextBot, cmp/mov byte ptr [ebx + 0Ch]
+			 */
+			"INextBot::m_isFlaggedForUpdate"
+			{
+				"linux"			"12"
+				"windows"		"12"
+			}
+		}
+	}
+}
