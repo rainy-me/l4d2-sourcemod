@@ -6,11 +6,10 @@
 
 #define GAMEDATA "l4d2_witch_update_rate"
 
-ConVar    g_hUpdateRate;
 Handle    g_hMyNextBotPointer;
 int       g_iFlaggedForUpdate;
+ConVar    g_hUpdateRate;
 ArrayList g_hWitches;
-float     g_fUpdateDebt;
 
 public Plugin myinfo =
 {
@@ -45,7 +44,7 @@ public void OnPluginStart()
     }
 
     g_hUpdateRate = CreateConVar(
-        "l4d2_witch_update_rate", "30.0",
+        "l4d2_witch_update_rate", "30",
         "Witch NextBot updates per second (capped at server tickrate)",
         _, true, 10.0, true, 100.0);
     AutoExecConfig(true, "l4d2_witch_update_rate");
@@ -79,13 +78,15 @@ public void OnEntityDestroyed(int entity)
 
 public void OnGameFrame()
 {
-    // 틱레이트가 설정값의 배수가 아니어도(100/30 등) 초당 횟수가 맞도록 누적해서 센다.
-    g_fUpdateDebt += g_hUpdateRate.FloatValue * GetTickInterval();
-    if (g_fUpdateDebt < 1.0)
+    // 1초(tickrate틱)를 l4d2_witch_update_rate 값만큼의 구간으로 나누고, 새 구간이 시작되는 틱에만 플래그를 세운다.
+    // tickcount 기준이라 설정값이 10의 배수면 NextBotManager의 0.1초 주기 틱과 항상 겹쳐 초당 횟수가 설정값과 정확히 같다.
+    int tickrate = RoundToNearest(1.0 / GetTickInterval());
+    int rate     = g_hUpdateRate.IntValue;
+    int tick     = GetGameTickCount();
+    if ((tick % tickrate) * rate / tickrate == ((tick - 1) % tickrate) * rate / tickrate)
     {
         return;
     }
-    g_fUpdateDebt = g_fUpdateDebt >= 2.0 ? 0.0 : g_fUpdateDebt - 1.0;
 
     // NextBotManager가 nb_update_frequency 주기에만 세우는 플래그를 윗치에게 직접 세운다.
     for (int i = 0; i < g_hWitches.Length; i++)
