@@ -2,17 +2,6 @@
 {
     "left4dead2"
     {
-        "Functions"
-        {
-            "CBaseCombatWeapon::FinishReload"
-            {
-                "offset"    "CBaseCombatWeapon::FinishReload"
-                "callconv"  "thiscall"
-                "return"    "void"
-                "this"      "entity"
-            }
-        }
-
         "Offsets"
         {
             "CBaseCombatWeapon::FinishReload"
