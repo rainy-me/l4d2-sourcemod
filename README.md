@@ -262,34 +262,37 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 29. l4d2_a2s_fix  
     <https://github.com/lakwsh/l4d2_vomit_fix/blob/master/l4d2_a2s_fix.sp>
 
-30. Explosion Announcer  
+30. l4d2_parseline_fix  
+    <https://github.com/xiaolinRM/L4D2Plugins/tree/main/l4d2_parseline_fix>
+
+31. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-31. Gear Transfer  
+32. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-32. l4d_path_to_goal  
+33. l4d_path_to_goal  
     <https://forums.alliedmods.net/showthread.php?t=352685>
 
-33. l4d2_bugfix_deathspit  
+34. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-34. l4d2_pistol_reload_empty_fix  
+35. l4d2_pistol_reload_empty_fix  
     <https://forums.alliedmods.net/showthread.php?t=320496>
 
-35. noteam_nudging  
+36. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-36. Shove Direction Fix  
+37. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-37. Throwable Announcer  
+38. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-38. Upgrade Ammo Pack Deploy Announce  
+39. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-39. weapon_give_no_auto_switch  
+40. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### D. 종속 플러그인
