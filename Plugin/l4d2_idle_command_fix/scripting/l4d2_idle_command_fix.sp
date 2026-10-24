@@ -93,7 +93,10 @@ Action Cmd_ForceIdle(int client, int args)
         return Plugin_Handled;
     }
 
-    L4D_GoAwayFromKeyboard(client);
+    if (!L4D_GoAwayFromKeyboard(client))
+    {
+        return Plugin_Handled;
+    }
     if (g_hIdleMessage.BoolValue)
     {
         PrintToChatAll("%t", "Idle Message", client);

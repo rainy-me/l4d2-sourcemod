@@ -12,6 +12,7 @@
 ConVar g_hAdrenalineDuration;
 float  g_fIdleAngles[MAXPLAYERS + 1][3];
 bool   g_bHasIdleState[MAXPLAYERS + 1]      = { false, ... };
+int    g_iIdleBotUserId[MAXPLAYERS + 1]     = { 0, ... };
 bool   g_bIdleMagnumReload[MAXPLAYERS + 1]  = { false, ... };
 bool   g_bIdleFlashlight[MAXPLAYERS + 1]    = { false, ... };
 float  g_fAdrenalineEndTime[MAXPLAYERS + 1] = { 0.0, ... };
@@ -33,8 +34,8 @@ public void OnPluginStart()
     HookEvent("player_bot_replace", Event_GoIdle);
     HookEvent("bot_player_replace", Event_ReturnFromIdle);
     HookEvent("adrenaline_used", Event_AdrenalineUsed);
-    HookEvent("player_incapacitated", Event_ResetAdrenalineEndTime);
-    HookEvent("player_death", Event_ResetAdrenalineEndTime);
+    HookEvent("player_incapacitated", Event_ResetState);
+    HookEvent("player_death", Event_ResetState);
 }
 
 public void OnClientPutInServer(int client)
@@ -62,13 +63,23 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 void Event_AdrenalineUsed(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
-    if (IsValidAliveClient(client))
+    if (!IsValidAliveClient(client))
     {
-        g_fAdrenalineEndTime[client] = GetGameTime() + g_hAdrenalineDuration.FloatValue;
+        return;
+    }
+
+    float fEndTime = GetGameTime() + g_hAdrenalineDuration.FloatValue;
+    g_fAdrenalineEndTime[client] = fEndTime;
+
+    // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어에게도 기록
+    int idlePlayer = GetIdlePlayer(client);
+    if (idlePlayer != 0)
+    {
+        g_fAdrenalineEndTime[idlePlayer] = fEndTime;
     }
 }
 
-void Event_ResetAdrenalineEndTime(Event event, const char[] name, bool dontBroadcast)
+void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (!IsClient(client))
@@ -79,13 +90,19 @@ void Event_ResetAdrenalineEndTime(Event event, const char[] name, bool dontBroad
     g_fAdrenalineEndTime[client] = 0.0;
 
     // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어 기록도 지움
-    if (IsFakeClient(client))
+    int idlePlayer = GetIdlePlayer(client);
+    if (idlePlayer == 0)
     {
-        int idlePlayer = L4D_GetIdlePlayerOfBot(client);
-        if (IsClient(idlePlayer))
-        {
-            g_fAdrenalineEndTime[idlePlayer] = 0.0;
-        }
+        return;
+    }
+
+    g_fAdrenalineEndTime[idlePlayer] = 0.0;
+
+    // 유휴 중 봇이 죽으면 나중에 다른 봇을 넘겨받을 때 예전 시야/손전등을 되돌리지 않도록 유휴 기록도 지움
+    if (StrEqual(name, "player_death"))
+    {
+        g_bHasIdleState[idlePlayer]     = false;
+        g_bIdleMagnumReload[idlePlayer] = false;
     }
 }
 
@@ -96,6 +113,7 @@ void Event_GoIdle(Event event, const char[] name, bool dontBroadcast)
     {
         GetClientEyeAngles(client, g_fIdleAngles[client]);
         g_bHasIdleState[client]     = true;
+        g_iIdleBotUserId[client]    = event.GetInt("bot");
         g_bIdleMagnumReload[client] = IsReloadingMagnum(GetClientOfUserId(event.GetInt("bot")));
         g_bIdleFlashlight[client]   = (GetEntProp(client, Prop_Send, "m_fEffects") & EF_DIMLIGHT) != 0;
     }
@@ -116,6 +134,12 @@ void Event_ReturnFromIdle(Event event, const char[] name, bool dontBroadcast)
     }
 
     g_bHasIdleState[client] = false;
+
+    // 관전/팀 이동 후 다른 봇을 넘겨받은 경우에는 예전 상태를 되돌리지 않음
+    if (event.GetInt("bot") != g_iIdleBotUserId[client])
+    {
+        return;
+    }
 
     float fRemaining = g_fAdrenalineEndTime[client] - GetGameTime();
     if (fRemaining > 0.0)
@@ -222,6 +246,17 @@ bool IsMagnum(int weapon)
 {
     char cls[32];
     return weapon > 0 && IsValidEntity(weapon) && GetEntityClassname(weapon, cls, sizeof(cls)) && StrEqual(cls, "weapon_pistol_magnum");
+}
+
+// 유휴 플레이어가 있는 봇이면 그 플레이어를, 아니면 0을 반환
+int GetIdlePlayer(int client)
+{
+    if (!IsFakeClient(client))
+    {
+        return 0;
+    }
+    int idlePlayer = L4D_GetIdlePlayerOfBot(client);
+    return IsClient(idlePlayer) ? idlePlayer : 0;
 }
 
 bool IsValidAliveClient(int client)
