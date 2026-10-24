@@ -12,34 +12,34 @@ float  g_fUseAllowTime[MAXPLAYERS + 1] = { 0.0, ... };
 
 public Plugin myinfo =
 {
-    name        = "L4D2 Idle Fix",
+    name        = "L4D2 Idle Command Fix",
     author      = "Rainy",
     description = "유휴 명령 미인식 문제를 해결합니다.",
-    version     = "1.6.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_fix"
+    version     = "1.0.0",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_command_fix"
 };
 
 public void OnPluginStart()
 {
-    LoadTranslations("l4d2_idle_fix.phrases");
+    LoadTranslations("l4d2_idle_command_fix.phrases");
 
     g_hIdleSolo = CreateConVar(
-        "l4d2_idle_fix_idle_solo", "1",
+        "l4d2_idle_command_fix_idle_solo", "1",
         "ON/OFF idle command in solo. (1=ON, 0=OFF)",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hIdleMessage = CreateConVar(
-        "l4d2_idle_fix_idle_message", "0",
+        "l4d2_idle_command_fix_idle_message", "0",
         "ON/OFF idle message. (1=ON, 0=OFF)",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hCooldownTime = CreateConVar(
-        "l4d2_idle_fix_cooldown_time", "0.0",
+        "l4d2_idle_command_fix_cooldown_time", "0.0",
         "Cooldown time in seconds a player can use the idle command again.",
         FCVAR_NOTIFY, true, 0.0);
     g_hCooldownMessage = CreateConVar(
-        "l4d2_idle_fix_cooldown_message", "0",
+        "l4d2_idle_command_fix_cooldown_message", "0",
         "ON/OFF cooldown message. (1=ON, 0=OFF)",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    AutoExecConfig(true, "l4d2_idle_fix");
+    AutoExecConfig(true, "l4d2_idle_command_fix");
 
     RegConsoleCmd("go_away_from_keyboard", Cmd_ForceIdle, "Override with forced idle mode.");
     HookEvent("round_start", Event_RoundStart);

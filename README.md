@@ -64,7 +64,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 12. [l4d2_hunter_audio_feedback](/Plugin/l4d2_hunter_audio_feedback/)  
     헌터가 도약할 때 항상 소리를 내도록 합니다.
 
-13. [l4d2_idle_fix](/Plugin/l4d2_idle_fix)  
+13. [l4d2_idle_command_fix](/Plugin/l4d2_idle_command_fix/)  
     유휴 명령 미인식 문제를 해결합니다.
 
 14. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
