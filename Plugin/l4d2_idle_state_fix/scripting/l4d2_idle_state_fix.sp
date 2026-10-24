@@ -71,9 +71,21 @@ void Event_AdrenalineUsed(Event event, const char[] name, bool dontBroadcast)
 void Event_ResetAdrenalineEndTime(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
-    if (IsClient(client))
+    if (!IsClient(client))
     {
-        g_fAdrenalineEndTime[client] = 0.0;
+        return;
+    }
+
+    g_fAdrenalineEndTime[client] = 0.0;
+
+    // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어 기록도 지움
+    if (IsFakeClient(client))
+    {
+        int idlePlayer = L4D_GetIdlePlayerOfBot(client);
+        if (IsClient(idlePlayer))
+        {
+            g_fAdrenalineEndTime[idlePlayer] = 0.0;
+        }
     }
 }
 
@@ -97,12 +109,6 @@ void Event_ReturnFromIdle(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
-    float fRemaining = g_fAdrenalineEndTime[client] - GetGameTime();
-    if (fRemaining > 0.0)
-    {
-        L4D2_UseAdrenaline(client, fRemaining, false, false);
-    }
-
     // 유휴 기록이 없는 봇 인수(라운드 시작 시 합류 등)는 건드리지 않음
     if (!g_bHasIdleState[client])
     {
@@ -110,6 +116,13 @@ void Event_ReturnFromIdle(Event event, const char[] name, bool dontBroadcast)
     }
 
     g_bHasIdleState[client] = false;
+
+    float fRemaining = g_fAdrenalineEndTime[client] - GetGameTime();
+    if (fRemaining > 0.0)
+    {
+        L4D2_UseAdrenaline(client, fRemaining, false, false);
+    }
+
     RequestFrame(RestoreViewAngles, GetClientUserId(client));
 
     if (g_bIdleMagnumReload[client])
