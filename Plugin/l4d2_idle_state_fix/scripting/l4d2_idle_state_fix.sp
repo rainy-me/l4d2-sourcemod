@@ -41,12 +41,6 @@ public void OnPluginStart()
 public void OnClientPutInServer(int client)
 {
     g_bHasIdleState[client]      = false;
-    g_bIdleMagnumReload[client]  = false;
-    g_fAdrenalineEndTime[client] = 0.0;
-}
-
-public void OnClientDisconnect(int client)
-{
     g_fAdrenalineEndTime[client] = 0.0;
 }
 
@@ -55,7 +49,6 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
     for (int i = 0; i <= MAXPLAYERS; i++)
     {
         g_bHasIdleState[i]      = false;
-        g_bIdleMagnumReload[i]  = false;
         g_fAdrenalineEndTime[i] = 0.0;
     }
 }
@@ -68,11 +61,11 @@ void Event_AdrenalineUsed(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
-    float fEndTime = GetGameTime() + g_hAdrenalineDuration.FloatValue;
+    float fEndTime               = GetGameTime() + g_hAdrenalineDuration.FloatValue;
     g_fAdrenalineEndTime[client] = fEndTime;
 
     // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어에게도 기록
-    int idlePlayer = GetIdlePlayer(client);
+    int idlePlayer               = GetIdlePlayer(client);
     if (idlePlayer != 0)
     {
         g_fAdrenalineEndTime[idlePlayer] = fEndTime;
@@ -90,7 +83,7 @@ void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
     g_fAdrenalineEndTime[client] = 0.0;
 
     // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어 기록도 지움
-    int idlePlayer = GetIdlePlayer(client);
+    int idlePlayer               = GetIdlePlayer(client);
     if (idlePlayer == 0)
     {
         return;
@@ -101,8 +94,7 @@ void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
     // 유휴 중 봇이 죽으면 나중에 다른 봇을 넘겨받을 때 예전 시야/손전등을 되돌리지 않도록 유휴 기록도 지움
     if (StrEqual(name, "player_death"))
     {
-        g_bHasIdleState[idlePlayer]     = false;
-        g_bIdleMagnumReload[idlePlayer] = false;
+        g_bHasIdleState[idlePlayer] = false;
     }
 }
 
@@ -147,16 +139,15 @@ void Event_ReturnFromIdle(Event event, const char[] name, bool dontBroadcast)
         L4D2_UseAdrenaline(client, fRemaining, false, false);
     }
 
-    RequestFrame(RestoreViewAngles, GetClientUserId(client));
+    RequestFrame(Frame_RestoreIdleState, GetClientUserId(client));
 
     if (g_bIdleMagnumReload[client])
     {
-        g_bIdleMagnumReload[client] = false;
         RedeployMagnum(client);
     }
 }
 
-void RestoreViewAngles(int userid)
+void Frame_RestoreIdleState(int userid)
 {
     int client = GetClientOfUserId(userid);
     if (IsValidAliveClient(client))
