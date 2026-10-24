@@ -3,73 +3,120 @@
 
 #include <sourcemod>
 #include <sdktools>
+#include <left4dhooks>
 
-#define MAX_WEAPON_SLOTS    5
-#define SWITCH_WAIT_FRAMES  50
+#define MAX_WEAPON_SLOTS   5
+#define SWITCH_WAIT_FRAMES 50
+#define EF_DIMLIGHT        4
 
-float g_fIdleAngles[MAXPLAYERS + 1][3];
-bool  g_bHasIdleAngles[MAXPLAYERS + 1]    = { false, ... };
-bool  g_bIdleMagnumReload[MAXPLAYERS + 1] = { false, ... };
+ConVar g_hAdrenalineDuration;
+float  g_fIdleAngles[MAXPLAYERS + 1][3];
+bool   g_bHasIdleState[MAXPLAYERS + 1]      = { false, ... };
+bool   g_bIdleMagnumReload[MAXPLAYERS + 1]  = { false, ... };
+bool   g_bIdleFlashlight[MAXPLAYERS + 1]    = { false, ... };
+float  g_fAdrenalineEndTime[MAXPLAYERS + 1] = { 0.0, ... };
 
 public Plugin myinfo =
 {
-    name        = "L4D2 Idle View Fix",
+    name        = "L4D2 Idle State Fix",
     author      = "Rainy",
-    description = "유휴 전 시야각을 유휴 복귀 후에도 유지하고, 매그넘 재장전 중 유휴 복귀 시 시야 흔들림을 없앱니다.",
-    version     = "1.1.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_view_fix"
+    description = "유휴 복귀 시 시야, 손전등, 아드레날린 상태를 유휴 전과 같게 유지합니다.",
+    version     = "1.0.0",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_state_fix"
 };
 
 public void OnPluginStart()
 {
+    g_hAdrenalineDuration = FindConVar("adrenaline_duration");
+
     HookEvent("round_start", Event_RoundStart);
     HookEvent("player_bot_replace", Event_GoIdle);
     HookEvent("bot_player_replace", Event_ReturnFromIdle);
+    HookEvent("adrenaline_used", Event_AdrenalineUsed);
+    HookEvent("player_incapacitated", Event_ResetAdrenalineEndTime);
+    HookEvent("player_death", Event_ResetAdrenalineEndTime);
 }
 
 public void OnClientPutInServer(int client)
 {
-    g_bHasIdleAngles[client]    = false;
-    g_bIdleMagnumReload[client] = false;
+    g_bHasIdleState[client]      = false;
+    g_bIdleMagnumReload[client]  = false;
+    g_fAdrenalineEndTime[client] = 0.0;
+}
+
+public void OnClientDisconnect(int client)
+{
+    g_fAdrenalineEndTime[client] = 0.0;
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     for (int i = 0; i <= MAXPLAYERS; i++)
     {
-        g_bHasIdleAngles[i]    = false;
-        g_bIdleMagnumReload[i] = false;
+        g_bHasIdleState[i]      = false;
+        g_bIdleMagnumReload[i]  = false;
+        g_fAdrenalineEndTime[i] = 0.0;
     }
 }
 
-Action Event_GoIdle(Event event, const char[] name, bool dontBroadcast)
+void Event_AdrenalineUsed(Event event, const char[] name, bool dontBroadcast)
+{
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (IsValidAliveClient(client))
+    {
+        g_fAdrenalineEndTime[client] = GetGameTime() + g_hAdrenalineDuration.FloatValue;
+    }
+}
+
+void Event_ResetAdrenalineEndTime(Event event, const char[] name, bool dontBroadcast)
+{
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (IsClient(client))
+    {
+        g_fAdrenalineEndTime[client] = 0.0;
+    }
+}
+
+void Event_GoIdle(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("player"));
     if (IsClient(client) && IsClientInGame(client))
     {
         GetClientEyeAngles(client, g_fIdleAngles[client]);
-        g_bHasIdleAngles[client]    = true;
+        g_bHasIdleState[client]     = true;
         g_bIdleMagnumReload[client] = IsReloadingMagnum(GetClientOfUserId(event.GetInt("bot")));
+        g_bIdleFlashlight[client]   = (GetEntProp(client, Prop_Send, "m_fEffects") & EF_DIMLIGHT) != 0;
     }
-    return Plugin_Continue;
 }
 
-Action Event_ReturnFromIdle(Event event, const char[] name, bool dontBroadcast)
+void Event_ReturnFromIdle(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("player"));
-    // 유휴 기록이 없는 봇 인수(라운드 시작 시 합류 등)는 건드리지 않음
-    if (IsValidAliveClient(client) && g_bHasIdleAngles[client])
+    if (!IsValidAliveClient(client))
     {
-        g_bHasIdleAngles[client] = false;
-        RequestFrame(RestoreViewAngles, GetClientUserId(client));
-
-        if (g_bIdleMagnumReload[client])
-        {
-            g_bIdleMagnumReload[client] = false;
-            RedeployMagnum(client);
-        }
+        return;
     }
-    return Plugin_Continue;
+
+    float fRemaining = g_fAdrenalineEndTime[client] - GetGameTime();
+    if (fRemaining > 0.0)
+    {
+        L4D2_UseAdrenaline(client, fRemaining, false, false);
+    }
+
+    // 유휴 기록이 없는 봇 인수(라운드 시작 시 합류 등)는 건드리지 않음
+    if (!g_bHasIdleState[client])
+    {
+        return;
+    }
+
+    g_bHasIdleState[client] = false;
+    RequestFrame(RestoreViewAngles, GetClientUserId(client));
+
+    if (g_bIdleMagnumReload[client])
+    {
+        g_bIdleMagnumReload[client] = false;
+        RedeployMagnum(client);
+    }
 }
 
 void RestoreViewAngles(int userid)
@@ -78,6 +125,9 @@ void RestoreViewAngles(int userid)
     if (IsValidAliveClient(client))
     {
         TeleportEntity(client, NULL_VECTOR, g_fIdleAngles[client], NULL_VECTOR);
+
+        int iEffects = GetEntProp(client, Prop_Send, "m_fEffects");
+        SetEntProp(client, Prop_Send, "m_fEffects", g_bIdleFlashlight[client] ? (iEffects | EF_DIMLIGHT) : (iEffects & ~EF_DIMLIGHT));
     }
 }
 

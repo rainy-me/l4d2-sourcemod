@@ -64,91 +64,85 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 12. [l4d2_hunter_audio_feedback](/Plugin/l4d2_hunter_audio_feedback/)  
     헌터가 도약할 때 항상 소리를 내도록 합니다.
 
-13. [l4d2_idle_adrenaline_fix](/Plugin/l4d2_idle_adrenaline_fix/)  
-    플레이어가 유휴 모드에서 복귀할 때 아드레날린 효과를 유지하도록 합니다.
-
-14. [l4d2_idle_fix](/Plugin/l4d2_idle_fix)  
+13. [l4d2_idle_fix](/Plugin/l4d2_idle_fix)  
     유휴 명령 미인식 문제를 해결합니다.
 
-15. [l4d2_idle_flashlight_fix](/Plugin/l4d2_idle_flashlight_fix/)  
-    유휴 전 손전등 on/off 상태를 유휴 후에도 유지합니다.
-
-16. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
+14. [l4d2_idle_reload_on_all_weapons](/Plugin/l4d2_idle_reload_on_all_weapons/)  
     모든 무기에서 유휴 장전이 가능하도록 합니다.
 
-17. [l4d2_idle_view_fix](/Plugin/l4d2_idle_view_fix/)  
-    유휴 전 시야각을 유휴 복귀 후에도 유지하고, 매그넘 재장전 중 유휴 복귀 시 시야 흔들림을 없앱니다.
+15. [l4d2_idle_state_fix](/Plugin/l4d2_idle_state_fix/)  
+    유휴 복귀 시 시야, 손전등, 아드레날린 상태를 유휴 전과 같게 유지합니다.
 
-18. [l4d2_item_thrower](/Plugin/l4d2_item_thrower/)  
+16. [l4d2_item_thrower](/Plugin/l4d2_item_thrower/)  
     들고 있는 무기/아이템을 앞으로 던집니다.
 
-19. [l4d2_jockey_shove_cap_block](/Plugin/l4d2_jockey_shove_cap_block/)  
+17. [l4d2_jockey_shove_cap_block](/Plugin/l4d2_jockey_shove_cap_block/)  
     생존자에게 밀쳐진 자키가 일정 시간 동안 생존자를 잡지 못하도록 합니다.
 
-20. [l4d2_motd_title](/Plugin/l4d2_motd_title/)  
+18. [l4d2_motd_title](/Plugin/l4d2_motd_title/)  
     MOTD 제목을 변경할 수 있도록 합니다.
 
-21. [l4d2_no_ci_melee_kill_collision](/Plugin/l4d2_no_ci_melee_kill_collision/)  
+19. [l4d2_no_ci_melee_kill_collision](/Plugin/l4d2_no_ci_melee_kill_collision/)  
     근접무기로 죽인 일반좀비와의 충돌을 제거합니다.
 
-22. [l4d2_no_close_ff](/Plugin/l4d2_no_close_ff/)  
+20. [l4d2_no_close_ff](/Plugin/l4d2_no_close_ff/)  
     팀원이 너무 가까이 있을 때 팀킬을 차단합니다.
 
-23. [l4d2_no_deathfall_cam](/Plugin/l4d2_no_deathfall_cam/)  
+21. [l4d2_no_deathfall_cam](/Plugin/l4d2_no_deathfall_cam/)  
     추락 시 카메라 시점 전환을 차단합니다.
 
-24. [l4d2_no_melee_ff](/Plugin/l4d2_no_melee_ff/)  
+22. [l4d2_no_melee_ff](/Plugin/l4d2_no_melee_ff/)  
     근접무기 팀킬을 차단합니다.
 
-25. [l4d2_no_saferoom_ff](/Plugin/l4d2_no_saferoom_ff/)  
+23. [l4d2_no_saferoom_ff](/Plugin/l4d2_no_saferoom_ff/)  
     은신처 안에 있는 생존자에 대한 팀킬을 차단합니다.
 
-26. [l4d2_no_si_fall_stagger_cancel](/Plugin/l4d2_no_si_fall_stagger_cancel/)  
+24. [l4d2_no_si_fall_stagger_cancel](/Plugin/l4d2_no_si_fall_stagger_cancel/)  
     특수좀비가 낙하로 스태거를 취소하지 못하도록 착지 시 다시 스태거를 겁니다.
 
-27. [l4d2_player_connect_notifier](/Plugin/l4d2_player_connect_notifier/)  
+25. [l4d2_player_connect_notifier](/Plugin/l4d2_player_connect_notifier/)  
     플레이어가 서버에 접속하면 채팅창에 알립니다.
 
-28. [l4d2_priority_sounds](/Plugin/l4d2_priority_sounds/)  
+26. [l4d2_priority_sounds](/Plugin/l4d2_priority_sounds/)  
     중단되지 않는 우선순위 사운드를 설정합니다.
 
-29. [l4d2_quick_healing](/Plugin/l4d2_quick_healing/)  
+27. [l4d2_quick_healing](/Plugin/l4d2_quick_healing/)  
     시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.
 
-30. [l4d2_ragdoll_remover](/Plugin/l4d2_ragdoll_remover/)  
+28. [l4d2_ragdoll_remover](/Plugin/l4d2_ragdoll_remover/)  
     CI/SI의 ragdoll을 즉시 제거합니다.
 
-31. [l4d2_rainy_server_assistant](/Plugin/l4d2_rainy_server_assistant/)  
+29. [l4d2_rainy_server_assistant](/Plugin/l4d2_rainy_server_assistant/)  
     Rainy 서버 자동화 플러그인
 
-32. [l4d2_reserve_ammo_multiplier](/Plugin/l4d2_reserve_ammo_multiplier/)  
+30. [l4d2_reserve_ammo_multiplier](/Plugin/l4d2_reserve_ammo_multiplier/)  
     예비 탄약 소지량을 배율로 조정합니다.
 
-33. [l4d2_round_restart_delay](/Plugin/l4d2_round_restart_delay/)  
+31. [l4d2_round_restart_delay](/Plugin/l4d2_round_restart_delay/)  
     라운드 재시작 지연 시간을 조정합니다.
 
-34. [l4d2_skip_outtro](/Plugin/l4d2_skip_outtro/)  
+32. [l4d2_skip_outtro](/Plugin/l4d2_skip_outtro/)  
     맵 클리어 시 아웃트로를 빠르게 건너뜁니다.
 
-35. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
+33. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
     특정 물체 위에 서 있을 때 스모커에게 잡히면 즉시 조작이 불가능한 버그를 고칩니다.
 
-36. [l4d2_spit_fizzle](/Plugin/l4d2_spit_fizzle/)  
+34. [l4d2_spit_fizzle](/Plugin/l4d2_spit_fizzle/)  
     스피터가 죽거나 비틀거리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.
 
-37. [l4d2_suicide](/Plugin/l4d2_suicide/)  
+35. [l4d2_suicide](/Plugin/l4d2_suicide/)  
     어드민 권한 없이 !kill 또는 /kill 명령을 사용할 수 있도록 합니다.
 
-38. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+36. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-39. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+37. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-40. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+38. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-41. [l4d2_witch_update_rate](/Plugin/l4d2_witch_update_rate/)  
+39. [l4d2_witch_update_rate](/Plugin/l4d2_witch_update_rate/)  
     nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.
 
 ### B. 자작 플러그인 (미사용)
