@@ -71,7 +71,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
     모든 무기에서 유휴 장전이 가능하도록 합니다.
 
 15. [l4d2_idle_state_fix](/Plugin/l4d2_idle_state_fix/)  
-    유휴 복귀 시 시야, 손전등, 아드레날린 상태를 유휴 전과 같게 유지합니다.
+    유휴 복귀 시 시야, 손전등, 아드레날린, 들고 있는 무기를 유휴 전 상태로 되돌립니다.
 
 16. [l4d2_item_thrower](/Plugin/l4d2_item_thrower/)  
     들고 있는 무기/아이템을 앞으로 던집니다.

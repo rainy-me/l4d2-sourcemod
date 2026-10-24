@@ -11,8 +11,7 @@
 
 ConVar g_hAdrenalineDuration;
 float  g_fIdleAngles[MAXPLAYERS + 1][3];
-bool   g_bHasIdleState[MAXPLAYERS + 1]      = { false, ... };
-int    g_iIdleBotUserId[MAXPLAYERS + 1]     = { 0, ... };
+int    g_iIdleBotUserId[MAXPLAYERS + 1]     = { 0, ... };    // 0이면 유휴 기록 없음
 int    g_iIdleWeapon[MAXPLAYERS + 1]        = { INVALID_ENT_REFERENCE, ... };
 int    g_iHeldWeapon[MAXPLAYERS + 1]        = { INVALID_ENT_REFERENCE, ... };
 bool   g_bIdleFlashlight[MAXPLAYERS + 1]    = { false, ... };
@@ -22,7 +21,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Idle State Fix",
     author      = "Rainy",
-    description = "유휴 복귀 시 시야, 손전등, 아드레날린 상태를 유휴 전과 같게 유지합니다.",
+    description = "유휴 복귀 시 시야, 손전등, 아드레날린, 들고 있는 무기를 유휴 전 상태로 되돌립니다.",
     version     = "1.0.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_idle_state_fix"
 };
@@ -48,17 +47,21 @@ public void OnPlayerRunCmdPost(int client)
 
 public void OnClientPutInServer(int client)
 {
-    g_bHasIdleState[client]      = false;
-    g_fAdrenalineEndTime[client] = 0.0;
+    ResetClient(client);
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     for (int i = 0; i <= MAXPLAYERS; i++)
     {
-        g_bHasIdleState[i]      = false;
-        g_fAdrenalineEndTime[i] = 0.0;
+        ResetClient(i);
     }
+}
+
+void ResetClient(int client)
+{
+    g_iIdleBotUserId[client]     = 0;
+    g_fAdrenalineEndTime[client] = 0.0;
 }
 
 void Event_AdrenalineUsed(Event event, const char[] name, bool dontBroadcast)
@@ -102,7 +105,7 @@ void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
     // 유휴 중 봇이 죽으면 나중에 다른 봇을 넘겨받을 때 예전 시야/손전등을 되돌리지 않도록 유휴 기록도 지움
     if (StrEqual(name, "player_death"))
     {
-        g_bHasIdleState[idlePlayer] = false;
+        g_iIdleBotUserId[idlePlayer] = 0;
     }
 }
 
@@ -112,7 +115,6 @@ void Event_GoIdle(Event event, const char[] name, bool dontBroadcast)
     if (IsClient(client) && IsClientInGame(client))
     {
         GetClientEyeAngles(client, g_fIdleAngles[client]);
-        g_bHasIdleState[client]   = true;
         g_iIdleBotUserId[client]  = event.GetInt("bot");
         g_iIdleWeapon[client]     = g_iHeldWeapon[client];
         g_bIdleFlashlight[client] = (GetEntProp(client, Prop_Send, "m_fEffects") & EF_DIMLIGHT) != 0;
@@ -127,16 +129,11 @@ void Event_ReturnFromIdle(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
-    // 유휴 기록이 없는 봇 인수(라운드 시작 시 합류 등)는 건드리지 않음
-    if (!g_bHasIdleState[client])
-    {
-        return;
-    }
-
-    g_bHasIdleState[client] = false;
-
+    // 유휴 기록이 없는 봇 인수(라운드 시작 시 합류 등)와
     // 관전/팀 이동 후 다른 봇을 넘겨받은 경우에는 예전 상태를 되돌리지 않음
-    if (event.GetInt("bot") != g_iIdleBotUserId[client])
+    int idleBot              = g_iIdleBotUserId[client];
+    g_iIdleBotUserId[client] = 0;
+    if (idleBot == 0 || event.GetInt("bot") != idleBot)
     {
         return;
     }
@@ -172,45 +169,41 @@ void Frame_RestoreIdleState(int userid)
 // 클라이언트가 직접 유휴 전에 들고 있던 무기를 다시 꺼내게 해서 그 애니메이션을 덮어씀
 void RedeployWeapon(int client, int weapon)
 {
-    int current = -1;
-    int other   = -1;
-    for (int i = 0; i < MAX_WEAPON_SLOTS; i++)
-    {
-        int slotWeapon = GetPlayerWeaponSlot(client, i);
-        if (slotWeapon == weapon)
-        {
-            current = i;
-        }
-        else if (slotWeapon != -1 && other == -1)
-        {
-            other = i;
-        }
-    }
-    if (current == -1)
+    int currentSlot = GetGunSlot(client, weapon);
+    if (currentSlot == -1)
     {
         return;
+    }
+
+    int otherSlot = -1;
+    for (int i = 0; i < MAX_WEAPON_SLOTS && otherSlot == -1; i++)
+    {
+        if (i != currentSlot && GetPlayerWeaponSlot(client, i) != -1)
+        {
+            otherSlot = i;
+        }
     }
 
     // 봇이 다른 무기로 바꿔 들고 있었으면 원래 무기를 바로 꺼냄
     if (GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon") != weapon)
     {
-        ClientCommand(client, "slot%d", current + 1);
+        ClientCommand(client, "slot%d", currentSlot + 1);
         return;
     }
 
-    if (other == -1 || !IsMagnum(weapon))
+    if (otherSlot == -1 || !IsMagnum(weapon))
     {
         return;
     }
 
     // 매그넘을 그대로 들고 있으면 다른 슬롯으로 먼저 바꿈
-    ClientCommand(client, "slot%d", other + 1);
+    ClientCommand(client, "slot%d", otherSlot + 1);
 
     // 무기가 실제로 바뀌면 원래 슬롯으로 되돌림
     DataPack pack = new DataPack();
     pack.WriteCell(GetClientUserId(client));
     pack.WriteCell(EntIndexToEntRef(weapon));
-    pack.WriteCell(current + 1);
+    pack.WriteCell(currentSlot);
     pack.WriteCell(GetGameTickCount() + SWITCH_WAIT_TICKS);
     RequestFrame(Frame_SwitchBack, pack);
 }
@@ -234,7 +227,7 @@ void Frame_SwitchBack(DataPack pack)
     if (GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon") != weapon || GetGameTickCount() >= expire)
     {
         delete pack;
-        ClientCommand(client, "slot%d", slot);
+        ClientCommand(client, "slot%d", slot + 1);
         return;
     }
 
@@ -255,8 +248,24 @@ int GetHeldWeapon(int client)
         return -1;
     }
 
-    bool held = weapon == GetPlayerWeaponSlot(client, 0) || weapon == GetPlayerWeaponSlot(client, 1);
-    return held ? weapon : -1;
+    return GetGunSlot(client, weapon) != -1 ? weapon : -1;
+}
+
+// 무기가 주무기면 0, 보조무기면 1, 아니면 -1을 반환
+int GetGunSlot(int client, int weapon)
+{
+    if (weapon == GetPlayerWeaponSlot(client, 0))
+    {
+        return 0;
+    }
+    else if (weapon == GetPlayerWeaponSlot(client, 1))
+    {
+        return 1;
+    }
+    else
+    {
+        return -1;
+    }
 }
 
 bool IsMagnum(int weapon)
@@ -278,7 +287,7 @@ int GetIdlePlayer(int client)
 
 bool IsValidAliveSurvivor(int client)
 {
-    return (IsClient(client) && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == 2);
+    return IsClient(client) && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == 2;
 }
 
 bool IsClient(int index)
