@@ -11,7 +11,7 @@ public Plugin myinfo =
     name        = "L4D2 Skip Outtro",
     author      = "Rainy",
     description = "맵 클리어 시 아웃트로를 빠르게 건너뜁니다.",
-    version     = "1.0.2",
+    version     = "1.0.3",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_skip_outtro"
 };
 
@@ -20,7 +20,7 @@ public void OnPluginStart()
     g_hEnable = CreateConVar(
         "l4d2_skip_outtro_enable", "1",
         "Enable skipping the finale outtro (0 = off, 1 = on)",
-        FCVAR_NOTIFY, true, 0.0, true, 1.0);
+        FCVAR_NONE, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_skip_outtro");
 
     HookEvent("finale_vehicle_leaving", Event_FinaleVehicleLeaving, EventHookMode_PostNoCopy);
