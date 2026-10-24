@@ -145,6 +145,9 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 39. [l4d2_witch_update_rate](/Plugin/l4d2_witch_update_rate/)  
     nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.
 
+40. [l4d2_worker_bile_fix](/Plugin/l4d2_worker_bile_fix/)  
+    공사장 인부 좀비가 담즙 폭탄에 반응하도록 고칩니다.
+
 ### B. 자작 플러그인 (미사용)
 
 1. [l4d2_block_idle](/Archive/l4d2_block_idle/)  
