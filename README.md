@@ -32,7 +32,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    AI SI가 비틀거리거나 공중에 떠 있는 동안 긁기공격을 하지 못하도록 방지합니다.
 
 2. [l4d2_bone_follower_lag_fix](/Plugin/l4d2_bone_follower_lag_fix/)  
-   감염자/생존자 모델의 phys_bone_follower를 제거하여 랙을 줄입니다.
+   감염자/생존자 모델의 phys_bone_follower를 제거하여 렉을 줄입니다.
 
 3. [l4d2_campaign_progress_notifier](/Plugin/l4d2_campaign_progress_notifier/)  
    캠페인 진행 상황을 알립니다.
