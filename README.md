@@ -127,25 +127,28 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 33. [l4d2_smoker_instant_grab_fix](/Plugin/l4d2_smoker_instant_grab_fix/)  
     특정 물체 위에 서 있을 때 스모커에게 잡히면 즉시 조작이 불가능한 버그를 고칩니다.
 
-34. [l4d2_spit_fizzle](/Plugin/l4d2_spit_fizzle/)  
+34. [l4d2_smoker_melee_shove](/Plugin/l4d2_smoker_melee_shove/)  
+    스모커 혀에 끌려가는 동안 근접무기로 밀치기를 할 수 있도록 합니다.
+
+35. [l4d2_spit_fizzle](/Plugin/l4d2_spit_fizzle/)  
     스피터가 죽거나 비틀거리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.
 
-35. [l4d2_suicide](/Plugin/l4d2_suicide/)  
+36. [l4d2_suicide](/Plugin/l4d2_suicide/)  
     어드민 권한 없이 !kill 또는 /kill 명령을 사용할 수 있도록 합니다.
 
-36. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+37. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-37. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+38. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-38. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+39. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-39. [l4d2_witch_update_rate](/Plugin/l4d2_witch_update_rate/)  
+40. [l4d2_witch_update_rate](/Plugin/l4d2_witch_update_rate/)  
     nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.
 
-40. [l4d2_worker_bile_fix](/Plugin/l4d2_worker_bile_fix/)  
+41. [l4d2_worker_bile_fix](/Plugin/l4d2_worker_bile_fix/)  
     공사장 인부 좀비가 담즙 폭탄에 반응하도록 고칩니다.
 
 ### B. 자작 플러그인 (미사용)
