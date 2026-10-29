@@ -88,13 +88,13 @@ bool StaggerNearby(int client)
 
     for (int i = 1; i <= MaxClients; i++)
     {
-        if (i == client || !IsClientInGame(i) || GetClientTeam(i) != TEAM_INFECTED || !IsPlayerAlive(i))
+        if (!IsClientInGame(i) || GetClientTeam(i) != TEAM_INFECTED || !IsPlayerAlive(i))
             continue;
         if (GetEntProp(i, Prop_Send, "m_isGhost") || GetEntProp(i, Prop_Send, "m_zombieClass") >= ZC_CHARGER)
             continue;
 
         GetClientAbsOrigin(i, pos);
-        if (GetVectorDistance(origin, pos) > SHOVE_RANGE || !ViewAndTraceCheck(client, pos))
+        if (!CanShove(client, origin, pos))
             continue;
 
         L4D_StaggerPlayer(i, client, origin);
@@ -108,7 +108,7 @@ bool StaggerNearby(int client)
             continue;
 
         GetEntPropVector(ent, Prop_Data, "m_vecAbsOrigin", pos);
-        if (GetVectorDistance(origin, pos) > SHOVE_RANGE || !ViewAndTraceCheck(client, pos))
+        if (!CanShove(client, origin, pos))
             continue;
 
         SDKHooks_TakeDamage(ent, client, client, 1.0, DMG_STUMBLE);
@@ -121,9 +121,12 @@ bool StaggerNearby(int client)
     return hit;
 }
 
-/** 정면 50° 원뿔 안에 있고 월드에 가려지지 않았는지 */
-bool ViewAndTraceCheck(int client, const float targetOrigin[3])
+/** 사거리 안, 정면 50° 원뿔 안에 있고 월드에 가려지지 않았는지 */
+bool CanShove(int client, const float origin[3], const float targetOrigin[3])
 {
+    if (GetVectorDistance(origin, targetOrigin) > SHOVE_RANGE)
+        return false;
+
     float eye[3], ang[3], fwd[3], end[3], dir[3];
     GetClientEyePosition(client, eye);
     GetClientEyeAngles(client, ang);
@@ -153,10 +156,23 @@ bool TraceFilter_IgnoreSelf(int entity, int contentsMask, any data)
 void PlayShoveAnimation(int client)
 {
     L4D2Direct_DoAnimationEvent(client, PLAYERANIMEVENT_SHOVE);
-
     SetVariantString(
-        "local w=self.GetActiveWeapon();local vm=NetProps.GetPropEntity(self,\"m_hViewModel\");local t=Time();" ... "local s=w.LookupSequence(\"ACT_VM_SECONDARYATTACK\");" ... "NetProps.SetPropIntArray(w,\"m_NetGestureSequence\",s,5);" ... "NetProps.SetPropIntArray(w,\"m_NetGestureActivity\",w.LookupActivity(\"ACT_VM_SECONDARYATTACK\"),5);" ... "NetProps.SetPropFloatArray(w,\"m_NetGestureStartTime\",0,5);" ... "if(vm){NetProps.SetPropInt(vm,\"m_nLayerSequence\",s);NetProps.SetPropInt(vm,\"m_nLayer\",0);NetProps.SetPropFloat(vm,\"m_flLayerStartTime\",t);}"
-        // 도움의 손길 모션이 끼어들지 않도록 잠시 억제
-        ... "NetProps.SetPropFloat(w,\"m_helpingHandSuppressionTimer.m_duration\",1);" ... "NetProps.SetPropFloat(w,\"m_helpingHandSuppressionTimer.m_timestamp\",t+1);" ... "NetProps.SetPropInt(w,\"m_helpingHandState\",0);");
+        "local w=self.GetActiveWeapon();"
+    ... "local vm=NetProps.GetPropEntity(self,\"m_hViewModel\");"
+    ... "local t=Time();"
+    ... "local s=w.LookupSequence(\"ACT_VM_SECONDARYATTACK\");"
+    ... "NetProps.SetPropIntArray(w,\"m_NetGestureSequence\",s,5);"
+    ... "NetProps.SetPropIntArray(w,\"m_NetGestureActivity\",w.LookupActivity(\"ACT_VM_SECONDARYATTACK\"),5);"
+    ... "NetProps.SetPropFloatArray(w,\"m_NetGestureStartTime\",0,5);"
+    ... "if(vm){"
+    ...     "NetProps.SetPropInt(vm,\"m_nLayerSequence\",s);"
+    ...     "NetProps.SetPropInt(vm,\"m_nLayer\",0);"
+    ...     "NetProps.SetPropFloat(vm,\"m_flLayerStartTime\",t);"
+    ... "}"
+    // 도움의 손길 모션이 끼어들지 않도록 잠시 억제
+    ... "NetProps.SetPropFloat(w,\"m_helpingHandSuppressionTimer.m_duration\",1);"
+    ... "NetProps.SetPropFloat(w,\"m_helpingHandSuppressionTimer.m_timestamp\",t+1);"
+    ... "NetProps.SetPropInt(w,\"m_helpingHandState\",0);"
+    );
     AcceptEntityInput(client, "RunScriptCode");
 }
