@@ -142,10 +142,13 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 38. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-39. [l4d2_witch_update_rate](/Plugin/l4d2_witch_update_rate/)  
+39. [l4d2_unstuck](/Plugin/l4d2_unstuck/)  
+    끼인 플레이어가 스스로 탈출할 수 있는 명령을 제공합니다.
+
+40. [l4d2_witch_update_rate](/Plugin/l4d2_witch_update_rate/)  
     nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.
 
-40. [l4d2_worker_bile_fix](/Plugin/l4d2_worker_bile_fix/)  
+41. [l4d2_worker_bile_fix](/Plugin/l4d2_worker_bile_fix/)  
     공사장 인부 좀비가 담즙 폭탄에 반응하도록 고칩니다.
 
 ### B. 자작 플러그인 (미사용)

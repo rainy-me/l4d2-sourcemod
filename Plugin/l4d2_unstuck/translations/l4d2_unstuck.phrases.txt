@@ -1,0 +1,8 @@
+"Phrases"
+{
+    "Unstuck"
+    {
+        "en"    "Tried to move you out of a stuck position."
+        "ko"    "끼인 위치에서 탈출을 시도했습니다."
+    }
+}
