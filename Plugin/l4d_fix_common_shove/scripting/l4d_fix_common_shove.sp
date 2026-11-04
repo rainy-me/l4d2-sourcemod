@@ -144,7 +144,7 @@ public void OnPluginStart()
 	g_bLeft4Dead2 = GetEngineVersion() == Engine_Left4Dead2;
 	
 	CreateConVarHook("l4d_common_shove_flag",
-					"15",
+					"31",
 					"Flag for fixing common shove.\n"
 				...	"1 = Crouch, 2 = Falling, 4 = Landing, 8 = Climbing, 16 = Crouch to sit (requires 1=Crouch)",
 					FCVAR_CHEAT,

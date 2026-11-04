@@ -220,7 +220,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 14. l4d_death_item_glow (보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
-15. l4d_fix_common_shove  
+15. l4d_fix_common_shove (기본값 31 설정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_fix_common_shove>
 
 16. l4d_fix_stagger_dir  
