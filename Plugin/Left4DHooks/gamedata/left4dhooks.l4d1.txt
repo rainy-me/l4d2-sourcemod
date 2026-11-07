@@ -1581,6 +1581,13 @@
 				"linux"		"948"
 			}
 
+			// FindSendPropInfo(“CTerrorPlayer", "m_scrimmageSphereCenter") - 4
+			"CTerrorPlayer::m_flBecomeGhostAt"
+			{
+				"windows"	"6544"
+				"linux"		"6564"
+			}
+
 			"m_rescueCheckTimer"
 			{
 				"windows"	"868"

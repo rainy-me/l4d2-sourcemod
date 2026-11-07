@@ -2914,6 +2914,9 @@ void LoadGameData()
 	g_iOff_m_fMapMaxFlowDistance = hGameData.GetOffset("m_fMapMaxFlowDistance");
 	ValidateOffset(g_iOff_m_fMapMaxFlowDistance, "m_fMapMaxFlowDistance");
 
+	g_iOff_m_flBecomeGhostAt = hGameData.GetOffset("CTerrorPlayer::m_flBecomeGhostAt");
+	ValidateOffset(g_iOff_m_flBecomeGhostAt, "CTerrorPlayer::m_flBecomeGhostAt");
+
 	g_iOff_m_rescueCheckTimer = hGameData.GetOffset("m_rescueCheckTimer");
 	ValidateOffset(g_iOff_m_rescueCheckTimer, "m_rescueCheckTimer");
 
@@ -2988,9 +2991,6 @@ void LoadGameData()
 
 		g_iOff_m_iszScriptId = hGameData.GetOffset("m_iszScriptId");
 		ValidateOffset(g_iOff_m_iszScriptId, "m_iszScriptId");
-
-		g_iOff_m_flBecomeGhostAt = hGameData.GetOffset("CTerrorPlayer::m_flBecomeGhostAt");
-		ValidateOffset(g_iOff_m_flBecomeGhostAt, "CTerrorPlayer::m_flBecomeGhostAt");
 
 		g_iOff_OnBeginRoundSetupTime = hGameData.GetOffset("OnBeginRoundSetupTime");
 		ValidateOffset(g_iOff_OnBeginRoundSetupTime, "OnBeginRoundSetupTime");
@@ -3101,6 +3101,7 @@ void LoadGameData()
 	PrintToServer("m_chapter = %d", g_iOff_m_chapter);
 	PrintToServer("m_PendingMobCount = %d", g_iOff_m_PendingMobCount);
 	PrintToServer("m_fMapMaxFlowDistance = %d", g_iOff_m_fMapMaxFlowDistance);
+	PrintToServer("m_flBecomeGhostAt = %d", g_iOff_m_flBecomeGhostAt);
 	PrintToServer("m_rescueCheckTimer = %d", g_iOff_m_rescueCheckTimer);
 	PrintToServer("VersusMaxCompletionScore = %d", g_iOff_VersusMaxCompletionScore);
 	PrintToServer("m_iTankCount = %d", g_iOff_m_iTankCount);
@@ -3120,7 +3121,6 @@ void LoadGameData()
 
 		PrintToServer("AddonEclipse1 = %d", g_iOff_AddonEclipse1);
 		PrintToServer("AddonEclipse2 = %d", g_iOff_AddonEclipse2);
-		PrintToServer("m_flBecomeGhostAt = %d", g_iOff_m_flBecomeGhostAt);
 		PrintToServer("iszScriptId = %d", g_iOff_m_iszScriptId);
 		PrintToServer("OnBeginRoundSetupTime = %d", g_iOff_OnBeginRoundSetupTime);
 		PrintToServer("m_iWitchCount = %d", g_iOff_m_iWitchCount);
