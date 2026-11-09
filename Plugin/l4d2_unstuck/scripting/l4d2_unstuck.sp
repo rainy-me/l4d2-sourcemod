@@ -16,6 +16,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+    LoadTranslations("l4d2_unstuck.phrases");
     RegConsoleCmd("sm_stuck", Cmd_Stuck, "Teleport myself out of a stuck position.");
 }
 
@@ -27,6 +28,6 @@ Action Cmd_Stuck(int client, int args)
     }
 
     L4D_WarpToValidPositionIfStuck(client);
-    CPrintToChat(client, "Tried to move you out of a stuck position.");
+    CPrintToChat(client, "%t", "Unstuck");
     return Plugin_Handled;
 }
