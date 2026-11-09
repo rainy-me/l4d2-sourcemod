@@ -1,0 +1,13 @@
+"Phrases"
+{
+    "Tank Spawned"
+    {
+        "en"    "{default}[{green}!{default}] {green}Tank{default} has spawned!"
+        "ko"    "{default}[{green}!{default}] {green}탱크{default}가 스폰했습니다!"
+    }
+    "Witch Spawned"
+    {
+        "en"    "{default}[{green}!{default}] {olive}Witch{default} has spawned!"
+        "ko"    "{default}[{green}!{default}] {olive}윗치{default}가 스폰했습니다!"
+    }
+}

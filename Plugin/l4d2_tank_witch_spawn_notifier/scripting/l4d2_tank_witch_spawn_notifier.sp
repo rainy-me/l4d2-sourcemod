@@ -17,12 +17,14 @@ public Plugin myinfo =
     name        = "L4D2 Tank Witch Spawn Notifier",
     author      = "Rainy",
     description = "탱크 및 윗치의 스폰을 알립니다.",
-    version     = "1.1.1",
+    version     = "1.1.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_tank_witch_spawn_notifier"
 };
 
 public void OnPluginStart()
 {
+    LoadTranslations("l4d2_tank_witch_spawn_notifier.phrases");
+
     g_hSoundCooldownTime = CreateConVar(
         "l4d2_tank_witch_spawn_notifier_sound_cooldown_time", "1.0",
         "Cooldown time between sound notifications. (in seconds)",
@@ -57,7 +59,7 @@ void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
         EmitSoundToAll(WARN_SOUND, SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NONE, SND_NOFLAGS, g_hSoundVolume.FloatValue);
         g_fTankSoundAllowTime = currentTime + g_hSoundCooldownTime.FloatValue;
     }
-    CPrintToChatAll("{default}[{green}!{default}] {green}Tank{default} has spawned!");
+    CPrintToChatAll("%t", "Tank Spawned");
 }
 
 void Event_WitchSpawn(Event event, const char[] name, bool dontBroadcast)
@@ -68,5 +70,5 @@ void Event_WitchSpawn(Event event, const char[] name, bool dontBroadcast)
         EmitSoundToAll(WARN_SOUND, SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NONE, SND_NOFLAGS, g_hSoundVolume.FloatValue);
         g_fWitchSoundAllowTime = currentTime + g_hSoundCooldownTime.FloatValue;
     }
-    CPrintToChatAll("{default}[{green}!{default}] {olive}Witch{default} has spawned!");
+    CPrintToChatAll("%t", "Witch Spawned");
 }

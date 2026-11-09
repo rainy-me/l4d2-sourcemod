@@ -1,0 +1,18 @@
+"Phrases"
+{
+    "Quick Heal Self"
+    {
+        "en"    "Quick healing used"
+        "ko"    "빠른 치료를 사용했습니다."
+    }
+    "Quick Heal Received"
+    {
+        "en"    "{green}%N{default} quick healed you"
+        "ko"    "{green}%N{default}님이 빠른 치료를 해주었습니다."
+    }
+    "Quick Heal Given"
+    {
+        "en"    "Used quick healing to {green}%N"
+        "ko"    "{green}%N{default}님에게 빠른 치료를 사용했습니다."
+    }
+}
