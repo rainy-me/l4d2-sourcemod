@@ -38,8 +38,8 @@
 				"windows"
 				{
 					"offset"	"621"
-					/** push 0 (COLLISION_GROUP_NONE); push esi; push 0x400B */
-					"verify"	"\x00\x56\x68\x0B\x40"
+					/** push 0 (COLLISION_GROUP_NONE); push esi; push (mask) - 마스크 패치(624~)와 겹치지 않게 3바이트만 검증 */
+					"verify"	"\x00\x56\x68"
 				}
 
 				/** COLLISION_GROUP_PLAYER_MOVEMENT */
