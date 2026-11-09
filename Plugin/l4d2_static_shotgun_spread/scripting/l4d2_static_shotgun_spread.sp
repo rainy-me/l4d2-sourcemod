@@ -98,6 +98,13 @@ public Action L4D_OnPelletSpreadDir(int weapon, float &angle, int nPellet, int n
     // 링 안은 등간격, 링마다 360/펠릿수씩 돌려 펠릿끼리 방향이 겹치지 않게 한다.
     float deg = 360.0 * index / count + 360.0 * ring / nMaxPellets;
 
+    // 퍼짐은 가로로 넓은 타원이라 2발 링은 일직선 방향에 따라 가로 퍼짐이 달라진다.
+    // 대각선에 두면 3발 링처럼 가로/세로로 고르게 퍼진다. (마지막 링 135°, 그 앞 링 45°)
+    if (count == 2)
+    {
+        deg = (start + count == nMaxPellets ? 135.0 : 45.0) + 180.0 * index;
+    }
+
     // 게임은 각도 0~180을 한 바퀴(360도)로 쓴다. (visualise_impacts로 확인)
     angle     = deg / 2.0;
     return Plugin_Changed;
