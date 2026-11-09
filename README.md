@@ -130,25 +130,28 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 34. [l4d2_spit_fizzle](/Plugin/l4d2_spit_fizzle/)  
     스피터가 죽거나 비틀거리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.
 
-35. [l4d2_suicide](/Plugin/l4d2_suicide/)  
+35. [l4d2_static_shotgun_spread](/Plugin/l4d2_static_shotgun_spread/)  
+    샷건 펠릿을 바닐라 위력에 맞춘 고정 링 패턴으로 발사합니다.
+
+36. [l4d2_suicide](/Plugin/l4d2_suicide/)  
     어드민 권한 없이 !kill 또는 /kill 명령을 사용할 수 있도록 합니다.
 
-36. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
+37. [l4d2_tank_props_glow](/Plugin/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-37. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
+38. [l4d2_tank_witch_spawn_notifier](/Plugin/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-38. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
+39. [l4d2_tickrate_door_fix](/Plugin/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-39. [l4d2_unstuck](/Plugin/l4d2_unstuck/)  
+40. [l4d2_unstuck](/Plugin/l4d2_unstuck/)  
     끼인 플레이어가 스스로 탈출할 수 있는 명령을 제공합니다.
 
-40. [l4d2_witch_update_rate](/Plugin/l4d2_witch_update_rate/)  
+41. [l4d2_witch_update_rate](/Plugin/l4d2_witch_update_rate/)  
     nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.
 
-41. [l4d2_worker_bile_fix](/Plugin/l4d2_worker_bile_fix/)  
+42. [l4d2_worker_bile_fix](/Plugin/l4d2_worker_bile_fix/)  
     공사장 인부 좀비가 담즙 폭탄에 반응하도록 고칩니다.
 
 ### B. 자작 플러그인 (미사용)
@@ -229,76 +232,70 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 17. l4d_lagcomp_skeet  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_lagcomp_skeet>
 
-18. l4d_pellet_spread_customizer  
-    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
-
-19. l4d_rock_invuln_duration (기본값 0 설정)  
+18. l4d_rock_invuln_duration (기본값 0 설정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_rock_invuln_duration>
 
-20. l4d_tank_damage_announce  
+19. l4d_tank_damage_announce  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/blob/master/The%20Last%20Stand/l4d_tank_damage_announce>
 
-21. l4d2_charge_target_fix  
+20. l4d2_charge_target_fix  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
 
-22. l4d2_fix_jockey_hitbox (버그 고침)  
+21. l4d2_fix_jockey_hitbox (버그 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-23. l4d2_static_shotgun_spread (바닐라 위력에 맞춰 퍼짐 수정)  
-    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
-
-24. l4d_witch_damage_announce  
+22. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-25. l4d_skip_intro  
+23. l4d_skip_intro  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_skip_intro.sp>
 
-26. l4d2_sg552_zoom_fix  
+24. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-27. survivor_mvp (convar 기본값 수정)  
+25. survivor_mvp (convar 기본값 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/survivor_mvp.sp>
 
-28. Hunter_pounce_alignment_fix  
+26. Hunter_pounce_alignment_fix  
     <https://github.com/LuxLuma/Left-4-fix/tree/master/left%204%20fix/hunter/Hunter_pounce_alignment_fix>
 
-29. l4d2_kill_sound  
+27. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-30. l4d2_a2s_fix  
+28. l4d2_a2s_fix  
     <https://github.com/lakwsh/l4d2_vomit_fix/blob/master/l4d2_a2s_fix.sp>
 
-31. l4d2_parseline_fix  
+29. l4d2_parseline_fix  
     <https://github.com/xiaolinRM/L4D2Plugins/tree/main/l4d2_parseline_fix>
 
-32. Explosion Announcer  
+30. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-33. Gear Transfer  
+31. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-34. l4d_path_to_goal  
+32. l4d_path_to_goal  
     <https://forums.alliedmods.net/showthread.php?t=352685>
 
-35. l4d2_bugfix_deathspit  
+33. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-36. l4d2_pistol_reload_empty_fix  
+34. l4d2_pistol_reload_empty_fix  
     <https://forums.alliedmods.net/showthread.php?t=320496>
 
-37. noteam_nudging  
+35. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-38. Shove Direction Fix  
+36. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-39. Throwable Announcer  
+37. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-40. Upgrade Ammo Pack Deploy Announce  
+38. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-41. weapon_give_no_auto_switch  
+39. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### D. 종속 플러그인
@@ -311,23 +308,26 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 3. l4d_heartbeat  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
 
-4. l4dtoolz  
+4. l4d_pellet_spread_customizer  
+   <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
+
+5. l4dtoolz  
    <https://github.com/lakwsh/l4dtoolz/releases>
 
-5. left4dhooks  
+6. left4dhooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
 
-6. Multi Colors  
+7. Multi Colors  
    <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
 
-7. SourceScramble  
+8. SourceScramble  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-8. ThirdPersonShoulder_Detect (유휴 복귀 후 3인칭 오감지 고침, TP_IsThirdPerson native 추가)  
+9. ThirdPersonShoulder_Detect (유휴 복귀 후 3인칭 오감지 고침, TP_IsThirdPerson native 추가)  
    <https://forums.alliedmods.net/showthread.php?t=298649>
 
-9. Use Priority Patch  
-   <https://forums.alliedmods.net/showthread.php?t=327511>
+10. Use Priority Patch  
+    <https://forums.alliedmods.net/showthread.php?t=327511>
 
 ## Rainy's 리포지토리
 
