@@ -7,8 +7,6 @@
 // You can use the visualise_impacts.smx plugin to test the resulting spread.
 // It will render small purple boxes where the server-side pellets land.
 
-ConVar g_hCvarRing1Bullets = null;
-ConVar g_hCvarRing1Factor = null;
 ConVar g_hCvarCenterPellet = null;
 
 public Plugin myinfo =
@@ -22,8 +20,6 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_hCvarRing1Bullets = CreateConVar("sgspread_ring1_bullets", "3", "Number of bullets for the first ring, the remaining bullets will be in the second ring.");
-	g_hCvarRing1Factor = CreateConVar("sgspread_ring1_factor", "2", "Determines how far or closer the bullets will be from the center for the first ring.");
 	g_hCvarCenterPellet = CreateConVar("sgspread_center_pellet", "1", "Center pellet: 0 - off, 1 - on.", _, true, 0.0, true, 1.0);
 }
 
@@ -32,34 +28,40 @@ public Action L4D_OnPelletFirstBullet(int weapon)
 	return g_hCvarCenterPellet.BoolValue ? Plugin_Continue : Plugin_Handled;
 }
 
+// 0 ~ nMaxPellets-1. Works whether nPellet is 0-based or 1-based, both forwards get the same slot.
+int PelletSlot(int nPellet, int nMaxPellets)
+{
+	return nPellet % nMaxPellets;
+}
+
+// Slot direction on a full circle. Vanilla angle is [0, 180] and a negative spread covers the other half.
+float SlotDirection(int slot, int nMaxPellets)
+{
+	return 360.0 * slot / nMaxPellets;
+}
+
 public Action L4D_OnPelletSpread(int weapon, float &spread, int nPellet, int nMaxPellets)
 {
-	// For bullets on the first ring, divides the spread value by the factor.
-	if (nPellet <= g_hCvarRing1Bullets.IntValue)
-	{
-		spread /= g_hCvarRing1Factor.FloatValue;
-	}
+	if (nMaxPellets <= 0)
+		return Plugin_Continue;
 
-	// For bullets on the second ring, sticks to the max spread value.
+	int slot = PelletSlot(nPellet, nMaxPellets);
+
+	// Vanilla |spread| is uniform in [0, max]; place one pellet at the middle of each equal slice.
+	spread *= (slot + 0.5) / nMaxPellets;
+
+	if (SlotDirection(slot, nMaxPellets) >= 180.0)
+		spread = -spread;
 
 	return Plugin_Changed;
 }
 
 public Action L4D_OnPelletSpreadDir(int weapon, float &angle, int nPellet, int nMaxPellets)
 {
-	int numSlices = 0;
-	if (nPellet <= g_hCvarRing1Bullets.IntValue)
-	{
-		numSlices = g_hCvarRing1Bullets.IntValue;
-	}
-	else
-	{
-		numSlices = nMaxPellets - g_hCvarRing1Bullets.IntValue;
-	}
-	
-	// @Forgetest:
-	// Not sure where the first pellet of ring should be. Actually no full understanding of the original ASM codes.
-	// Keep it simple here, starting at 0.
-	angle = 180.0 / numSlices * ((nPellet - 1) % numSlices); // "% numSlices" should be unnecessary, whatever.
+	if (nMaxPellets <= 0)
+		return Plugin_Continue;
+
+	float dir = SlotDirection(PelletSlot(nPellet, nMaxPellets), nMaxPellets);
+	angle = dir >= 180.0 ? dir - 180.0 : dir;
 	return Plugin_Changed;
 }

@@ -244,7 +244,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 22. l4d2_fix_jockey_hitbox (버그 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-23. l4d2_static_shotgun_spread  
+23. l4d2_static_shotgun_spread (바닐라 위력에 맞춰 퍼짐 수정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
 
 24. l4d_witch_damage_announce  
