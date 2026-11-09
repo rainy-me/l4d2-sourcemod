@@ -18,8 +18,10 @@
 					"offset"	"624"
 				}
 
+				/** original mask 0x400B (MASK_SOLID_BRUSHONLY) */
+				"verify"	"\x0B\x40\x00\x00"
 				/** survivor player solid mask as returned by CTerrorGameMovement::PlayerSolidMask */
-				"patch"		"0B 4A 01 02"
+				"patch"		"\x0B\x4A\x01\x02"
 			}
 
 			"CTongue::UpdateAirChoke::FixTraceCollisionGroup"
@@ -29,15 +31,19 @@
 				"linux"
 				{
 					"offset"	"1113"
+					/** mov [esp+8], 0 (COLLISION_GROUP_NONE) followed by mov [esp+4], edi */
+					"verify"	"\x00\x00\x00\x00\x89\x7C\x24\x04"
 				}
 
 				"windows"
 				{
 					"offset"	"621"
+					/** push 0 (COLLISION_GROUP_NONE); push esi; push 0x400B */
+					"verify"	"\x00\x56\x68\x0B\x40"
 				}
 
 				/** COLLISION_GROUP_PLAYER_MOVEMENT */
-				"patch"		"08"
+				"patch"		"\x08"
 			}
 		}
 

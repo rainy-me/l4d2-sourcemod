@@ -29,13 +29,24 @@ public void OnPluginStart()
     if (hGameData == null)
         SetFailState("Failed to load %s.txt gamedata.", GAMEDATA);
 
-    g_hPatchMask = MemoryPatch.CreateFromConf(
-        hGameData, "CTongue::UpdateAirChoke::FixTraceMask");
-    g_hPatchCollisionGroup = MemoryPatch.CreateFromConf(
-        hGameData, "CTongue::UpdateAirChoke::FixTraceCollisionGroup");
+    g_hPatchMask = CreatePatch(hGameData, "CTongue::UpdateAirChoke::FixTraceMask");
+    g_hPatchCollisionGroup = CreatePatch(hGameData, "CTongue::UpdateAirChoke::FixTraceCollisionGroup");
 
     delete hGameData;
 
-    g_hPatchMask.Enable();
-    g_hPatchCollisionGroup.Enable();
+    // 둘 다 검증된 뒤에만 적용해서 한쪽만 패치된 상태를 막는다
+    if (!g_hPatchMask.Enable())
+        SetFailState("Failed to enable patch \"CTongue::UpdateAirChoke::FixTraceMask\".");
+    if (!g_hPatchCollisionGroup.Enable())
+        SetFailState("Failed to enable patch \"CTongue::UpdateAirChoke::FixTraceCollisionGroup\".");
+}
+
+MemoryPatch CreatePatch(GameData hGameData, const char[] sName)
+{
+    MemoryPatch hPatch = MemoryPatch.CreateFromConf(hGameData, sName);
+    if (hPatch == null)
+        SetFailState("Failed to create patch \"%s\".", sName);
+    if (!hPatch.Validate())
+        SetFailState("Patch \"%s\" verify failed. Gamedata is outdated.", sName);
+    return hPatch;
 }
