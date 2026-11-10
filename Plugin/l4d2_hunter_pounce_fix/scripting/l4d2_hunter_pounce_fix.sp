@@ -41,10 +41,10 @@ public void OnPluginStart()
         SetFailState("Failed to enable patch \"CTerrorPlayer::UpdatePounce::SkipSetAbsVelocity\".");
 
     // Late load
-    for (int iClient = 1; iClient <= MaxClients; iClient++)
+    for (int i = 1; i <= MaxClients; i++)
     {
-        if (IsClientInGame(iClient))
-            OnClientPutInServer(iClient);
+        if (IsClientInGame(i))
+            OnClientPutInServer(i);
     }
 }
 
@@ -61,26 +61,26 @@ Handle PrepSetAbsCall(GameData hGameData, const char[] sName)
     return hCall;
 }
 
-public void OnClientPutInServer(int iClient)
+public void OnClientPutInServer(int client)
 {
-    SDKHook(iClient, SDKHook_PostThink, PostThink_Hunter);
+    SDKHook(client, SDKHook_PostThink, PostThink_Hunter);
 }
 
-void PostThink_Hunter(int iHunter)
+void PostThink_Hunter(int hunter)
 {
-    if (!IsPlayerAlive(iHunter) || GetClientTeam(iHunter) != 3)
+    if (!IsPlayerAlive(hunter) || GetClientTeam(hunter) != 3)
         return;
 
-    int iVictim = GetEntPropEnt(iHunter, Prop_Send, "m_pounceVictim");
-    if (iVictim < 1 || !IsPlayerAlive(iVictim) || GetEntPropEnt(iVictim, Prop_Send, "m_pounceAttacker") != iHunter)
+    int victim = GetEntPropEnt(hunter, Prop_Send, "m_pounceVictim");
+    if (victim < 1 || !IsPlayerAlive(victim) || GetEntPropEnt(victim, Prop_Send, "m_pounceAttacker") != hunter)
         return;
 
     // 피해자의 위치와 속도를 그대로 복사해 클라이언트 보간과 렉 보상이 피해자 기준으로 맞도록 한다
-    float vecOrigin[3], vecVelocity[3];
-    GetEntPropVector(iVictim, Prop_Data, "m_vecAbsOrigin", vecOrigin);
-    GetEntPropVector(iVictim, Prop_Data, "m_vecAbsVelocity", vecVelocity);
+    float origin[3], velocity[3];
+    GetEntPropVector(victim, Prop_Data, "m_vecAbsOrigin", origin);
+    GetEntPropVector(victim, Prop_Data, "m_vecAbsVelocity", velocity);
 
     // TeleportEntity는 헌터 외곽선을 깜빡이게 하므로 직접 호출한다
-    SDKCall(g_hSetAbsOrigin, iHunter, vecOrigin);
-    SDKCall(g_hSetAbsVelocity, iHunter, vecVelocity);
+    SDKCall(g_hSetAbsOrigin, hunter, origin);
+    SDKCall(g_hSetAbsVelocity, hunter, velocity);
 }
