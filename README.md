@@ -205,7 +205,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 8. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-9. l4d2_skill_detect (full/chip level 수정)  
+9. l4d2_skill_detect  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
 
 10. l4dffannounce (알림 문구 수정)  
