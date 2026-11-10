@@ -4,6 +4,7 @@
 #include <sourcemod>
 #include <sdktools>
 
+#define GAMEDATA         "l4d2_idle_reload_on_all_weapons"
 #define RELOAD_TIMEOUT   2.5
 #define MAX_WEAPON_SLOTS 5
 
@@ -31,10 +32,10 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    GameData hGameConf = LoadGameConfigFile("l4d2_idle_reload_on_all_weapons");
+    GameData hGameConf = LoadGameConfigFile(GAMEDATA);
     if (hGameConf == null)
     {
-        SetFailState("Failed to load game config file: l4d2_idle_reload_on_all_weapons.txt");
+        SetFailState("Failed to load game config file: %s.txt", GAMEDATA);
     }
 
     StartPrepSDKCall(SDKCall_Entity);
