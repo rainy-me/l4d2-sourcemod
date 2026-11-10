@@ -1,0 +1,21 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			/* CBaseAnimatingOverlay::StudioFrameAdvance
+			 * ZombieBotBody::Update (VPROF "ZombieBotBody::Update") calls it on the entity right before DispatchAnimEvents:
+			 *   mov eax, [edx + 328h]   ; StudioFrameAdvance
+			 *   call eax
+			 *   ...
+			 *   mov eax, [edx + 360h]   ; DispatchAnimEvents
+			 */
+			"CBaseAnimating::StudioFrameAdvance"
+			{
+				"linux"			"203"
+				"windows"		"202"
+			}
+		}
+	}
+}
