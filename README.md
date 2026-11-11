@@ -256,49 +256,52 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 23. l4d_skip_intro  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_skip_intro.sp>
 
-24. l4d2_sg552_zoom_fix  
+24. l4d2_ellis_hunter_bandaid_fix  
+    <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp>
+
+25. l4d2_sg552_zoom_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-25. survivor_mvp (convar 기본값 수정)  
+26. survivor_mvp (convar 기본값 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/survivor_mvp.sp>
 
-26. l4d2_kill_sound  
+27. l4d2_kill_sound  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-27. l4d2_a2s_fix  
+28. l4d2_a2s_fix  
     <https://github.com/lakwsh/l4d2_vomit_fix/blob/master/l4d2_a2s_fix.sp>
 
-28. l4d2_parseline_fix  
+29. l4d2_parseline_fix  
     <https://github.com/xiaolinRM/L4D2Plugins/tree/main/l4d2_parseline_fix>
 
-29. Explosion Announcer  
+30. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-30. Gear Transfer  
+31. Gear Transfer  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
-31. l4d_path_to_goal  
+32. l4d_path_to_goal  
     <https://forums.alliedmods.net/showthread.php?t=352685>
 
-32. l4d2_bugfix_deathspit  
+33. l4d2_bugfix_deathspit  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
-33. l4d2_pistol_reload_empty_fix  
+34. l4d2_pistol_reload_empty_fix  
     <https://forums.alliedmods.net/showthread.php?t=320496>
 
-34. noteam_nudging  
+35. noteam_nudging  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
-35. Shove Direction Fix  
+36. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-36. Throwable Announcer  
+37. Throwable Announcer  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
-37. Upgrade Ammo Pack Deploy Announce  
+38. Upgrade Ammo Pack Deploy Announce  
     <https://forums.alliedmods.net/showthread.php?p=2797826>
 
-38. weapon_give_no_auto_switch  
+39. weapon_give_no_auto_switch  
     <https://forums.alliedmods.net/showthread.php?t=341173>
 
 ### D. 종속 플러그인
