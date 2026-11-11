@@ -40,8 +40,8 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 4. [l4d2_charger_carry_ff_fix](/Plugin/l4d2_charger_carry_ff_fix/)  
    차저에게 끌려가는 생존자에 대한 팀킬을 방지합니다.
 
-5. [l4d2_common_witch_anim_tick](/Plugin/l4d2_common_witch_anim_tick/)  
-   일반 좀비와 윗치의 애니메이션을 매 틱 진행시켜 서버 히트박스의 자세가 NextBot 업데이트 주기만큼 늦는 문제를 수정합니다.
+5. [l4d2_common_anim_tick](/Plugin/l4d2_common_anim_tick/)  
+   일반 좀비의 애니메이션을 매 틱 진행시켜 서버 히트박스의 자세가 NextBot 업데이트 주기만큼 늦는 문제를 수정합니다.
 
 6. [l4d2_consistent_checkpoint_heal](/Plugin/l4d2_consistent_checkpoint_heal/)  
    맵 전환 시 생존자의 체력을 50까지 회복시키고, 무력화 효과를 제거합니다.
