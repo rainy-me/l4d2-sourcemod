@@ -247,17 +247,17 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 19. l4d_tank_damage_announce  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/blob/master/The%20Last%20Stand/l4d_tank_damage_announce>
 
-20. l4d2_charge_target_fix  
-    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_charge_target_fix>
-
-21. l4d2_fix_jockey_hitbox (버그 고침)  
+20. l4d2_fix_jockey_hitbox (버그 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-22. l4d_witch_damage_announce  
+21. l4d_witch_damage_announce  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-23. l4d_skip_intro  
+22. l4d_skip_intro  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_skip_intro.sp>
+
+23. l4d2_charge_target_fix  
+    <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_charge_target_fix.sp>
 
 24. l4d2_ellis_hunter_bandaid_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp>
