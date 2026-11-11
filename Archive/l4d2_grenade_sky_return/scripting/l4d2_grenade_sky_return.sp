@@ -19,7 +19,7 @@ public Plugin myinfo =
     author      = "Rainy",
     description = "유탄이 하늘에 닿아 사라지지 않고, 하늘이 끝없이 열려 있는 것처럼 다시 떨어지게 합니다.",
     version     = "1.0.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Plugin/l4d2_grenade_sky_return"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/Archive/l4d2_grenade_sky_return"
 };
 
 public void OnPluginStart()
