@@ -77,7 +77,7 @@ public Plugin myinfo =
     name        = "L4D2 Fix SI Sound",
     author      = "Rainy",
     description = "특수좀비의 무음 문제를 개선합니다.",
-    version     = "1.3.2",
+    version     = "1.3.3",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_fix_si_sound"
 };
 
@@ -89,12 +89,16 @@ public void OnPluginStart()
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     AutoExecConfig(true, "l4d2_fix_si_sound");
 
-    AutoConvars(g_hAutoConvars.BoolValue);
     AddNormalSoundHook(SoundHook);
     HookEvent("round_end", Event_RoundEnd);
     HookEvent("player_spawn", Event_PlayerSpawn);
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("charger_charge_end", Event_ChargerChargeEnd);
+}
+
+public void OnConfigsExecuted()
+{
+    AutoConvars(g_hAutoConvars.BoolValue);
 }
 
 public void OnMapStart()
@@ -416,7 +420,7 @@ void KillChargerSoundTimer(int client)
 
 Action EmitSmokerSound(Handle timer, any client)
 {
-    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
         g_hSmokerSoundTimer[client] = null;
         return Plugin_Stop;
@@ -426,7 +430,8 @@ Action EmitSmokerSound(Handle timer, any client)
         g_hSmokerSoundTimer[client] = null;
         return Plugin_Stop;
     }
-    if (L4D_GetVictimSmoker(client) != 0)
+    // 고스트 동안은 소리만 건너뛰고 타이머는 유지해서 실체화한 뒤 이어서 재생한다
+    if (L4D_IsPlayerGhost(client) || L4D_GetVictimSmoker(client) != 0)
     {
         return Plugin_Continue;
     }
@@ -440,7 +445,7 @@ Action EmitSmokerSound(Handle timer, any client)
 
 Action EmitHunterSound(Handle timer, any client)
 {
-    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
         g_hHunterSoundTimer[client] = null;
         return Plugin_Stop;
@@ -450,7 +455,8 @@ Action EmitHunterSound(Handle timer, any client)
         g_hHunterSoundTimer[client] = null;
         return Plugin_Stop;
     }
-    if (L4D_GetVictimHunter(client) != 0)
+    // 고스트 동안은 소리만 건너뛰고 타이머는 유지해서 실체화한 뒤 이어서 재생한다
+    if (L4D_IsPlayerGhost(client) || L4D_GetVictimHunter(client) != 0)
     {
         return Plugin_Continue;
     }
@@ -464,7 +470,7 @@ Action EmitHunterSound(Handle timer, any client)
 
 Action EmitJockeySound(Handle timer, any client)
 {
-    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
         g_hJockeySoundTimer[client] = null;
         return Plugin_Stop;
@@ -474,7 +480,8 @@ Action EmitJockeySound(Handle timer, any client)
         g_hJockeySoundTimer[client] = null;
         return Plugin_Stop;
     }
-    if (L4D_GetVictimJockey(client) != 0)
+    // 고스트 동안은 소리만 건너뛰고 타이머는 유지해서 실체화한 뒤 이어서 재생한다
+    if (L4D_IsPlayerGhost(client) || L4D_GetVictimJockey(client) != 0)
     {
         return Plugin_Continue;
     }
@@ -488,7 +495,7 @@ Action EmitJockeySound(Handle timer, any client)
 
 Action EmitChargerSound(Handle timer, any client)
 {
-    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
+    if (!IsClient(client) || !IsClientInGame(client) || !IsPlayerAlive(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
     {
         g_hChargerSoundTimer[client] = null;
         return Plugin_Stop;
@@ -498,7 +505,8 @@ Action EmitChargerSound(Handle timer, any client)
         g_hChargerSoundTimer[client] = null;
         return Plugin_Stop;
     }
-    if (L4D_GetVictimCharger(client) != 0)
+    // 고스트 동안은 소리만 건너뛰고 타이머는 유지해서 실체화한 뒤 이어서 재생한다
+    if (L4D_IsPlayerGhost(client) || L4D_GetVictimCharger(client) != 0)
     {
         return Plugin_Continue;
     }
