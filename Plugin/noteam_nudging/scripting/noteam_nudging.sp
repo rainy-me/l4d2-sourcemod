@@ -31,7 +31,7 @@ public void UpdateAvoid(Handle timer)
 	float flPropTime;
 	for(int i = 1; i <= MaxClients; ++i)
 	{
-		if(!IsClientInGame(i) || GetClientTeam(i) != 2 || !IsPlayerAlive(i) || IsFakeClient(i))
+		if(!IsClientInGame(i) || GetClientTeam(i) != 2 || !IsPlayerAlive(i) || (IsFakeClient(i) && !GetEntProp(i, Prop_Send, "m_bDucked")))
 			continue;
 		
 		flPropTime = GetEntPropFloat(i, Prop_Send, "m_noAvoidanceTimer", 1);

@@ -292,7 +292,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 34. l4d2_pistol_reload_empty_fix  
     <https://forums.alliedmods.net/showthread.php?t=320496>
 
-35. noteam_nudging  
+35. noteam_nudging (앉은 봇도 밀리지 않게 수정)  
     <https://forums.alliedmods.net/showthread.php?p=2758622>
 
 36. Shove Direction Fix  
