@@ -25,12 +25,13 @@ enum struct PlayingSound
     int    entref;
     Handle timer;
     int    priority;
+    int    sampleHash;    // 재생 중인 샘플 이름의 해시. 정지 호출이 이 소리를 가리키는지 확인하는 용도
 
     void   Init(){
         this.entref = INVALID_ENT_REFERENCE;
         this.timer  = null; }
 
-Action Play(int iEntity, Sound soundData)
+Action Play(int iEntity, Sound soundData, int iSampleHash)
 {
     if (this.timer
         && EntRefToEntIndex(this.entref) != INVALID_ENT_REFERENCE
@@ -41,14 +42,22 @@ Action Play(int iEntity, Sound soundData)
 
     if (soundData.priority)
     {
-        this.priority = soundData.priority;
-        this.entref   = EntIndexToEntRef(iEntity);
+        this.priority   = soundData.priority;
+        this.entref     = EntIndexToEntRef(iEntity);
+        this.sampleHash = iSampleHash;
 
         if (soundData.duration >= 0.1)
             this.timer = CreateTimer(soundData.duration, Timer_SoundFinish, this);
     }
 
     return Plugin_Continue;
+}
+
+/** the playing sound was stopped early, so the channel is free again */
+void Stop(int iSampleHash)
+{
+    if (this.timer && this.sampleHash == iSampleHash)
+        delete this.timer;
 }
 }
 
@@ -188,7 +197,7 @@ public Plugin myinfo =
     name        = "L4D2 Priority Sounds",
     author      = "Rainy",
     description = "중단되지 않는 우선순위 사운드를 설정합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_priority_sounds"
 };
 
@@ -236,10 +245,28 @@ Action OnNormalSound(int iClients[64], int &iNumClients, char sOriginalSample[PL
     Sound       soundData;
 
     CorrectSample(sOriginalSample, sSample, sizeof(sSample));
+
+    // 정지 호출은 새 재생이 아니므로 통과시키고, 재생 중이던 그 소리의 채널 점유만 푼다
+    if (iFlags & (SND_STOP | SND_STOPLOOPING))
+    {
+        g_lastSound[iEntity][iChannel].Stop(HashString(sSample));
+        return Plugin_Continue;
+    }
+
     if (!g_hMap_Sounds.GetArray(sSample, soundData, sizeof(soundData)))
         soundData.priority = 0;
 
-    return g_lastSound[iEntity][iChannel].Play(iEntity, soundData);
+    return g_lastSound[iEntity][iChannel].Play(iEntity, soundData, HashString(sSample));
+}
+
+// djb2
+int HashString(const char[] sString)
+{
+    int iHash = 5381;
+    for (int i = 0; sString[i] != '\0'; i++)
+        iHash = iHash * 33 + sString[i];
+
+    return iHash;
 }
 
 bool IsSoundChar(char c)
