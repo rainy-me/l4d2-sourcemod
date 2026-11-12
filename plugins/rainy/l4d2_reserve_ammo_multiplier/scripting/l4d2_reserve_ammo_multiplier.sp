@@ -41,7 +41,7 @@ public Plugin myinfo =
     name        = "L4D2 Reserve Ammo Multiplier",
     author      = "Rainy",
     description = "예비 탄약 소지량을 배율로 조정합니다.",
-    version     = "1.4.0",
+    version     = "1.4.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_reserve_ammo_multiplier"
 };
 
@@ -53,8 +53,10 @@ public void OnPluginStart()
     for (int i = 0; i < AMMO_COUNT; i++)
     {
         g_hAmmoCvars[i]     = FindConVar(g_sCvarAmmoGunList[i]);
-        g_iPreAmmoStored[i] = g_iCvarAmmoGunDefault[i];
-        g_iAmmoStored[i]    = g_iCvarAmmoGunDefault[i];
+        // 리로드 시에는 이전 배율이 cvar에 남아 있으므로 현재 값을 기준으로 삼는다
+        int current         = g_hAmmoCvars[i] != null ? g_hAmmoCvars[i].IntValue : g_iCvarAmmoGunDefault[i];
+        g_iPreAmmoStored[i] = current;
+        g_iAmmoStored[i]    = current;
     }
 
     HookEvent("round_freeze_end", Event_RoundFreezeEnd);
