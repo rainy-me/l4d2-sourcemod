@@ -6,6 +6,8 @@
 
 #define MOTD_TITLE_LIBRARY "motd_title"
 #define MAX_MOTD_TITLE_LEN 192
+#define MAX_MOTD_LINE_LEN  256
+#define MAX_USERMSG_LEN    255    // 유저 메시지 최대 크기
 
 enum MOTDTitle
 {
@@ -22,6 +24,7 @@ MOTDTitle  g_MOTDTitleType;
 char       g_sMOTDTitle[MAX_MOTD_TITLE_LEN];
 
 MOTDBuffer g_motd;
+ArrayList  g_hQueue;    // 같은 프레임에 여러 MOTD가 나가도 덮어쓰지 않도록 쌓아 둔다
 enum struct MOTDBuffer
 {
     int  flags;
@@ -29,11 +32,14 @@ enum struct MOTDBuffer
     int  playersRef[MAXPLAYERS_L4D2];
     int  playersNum;
 
-    char buffer[256];
+    char buffer[MAX_USERMSG_LEN];
     int  bufferLen;
+    bool overflow;
 
-    void Record(BfRead hBuffer, const int[] iPlayers, int iPlayersNum, bool bReliable, bool bInit, char sLine[MAX_MOTD_TITLE_LEN]){
+    /** returns false if the message does not fit; the caller must let the original through */
+    bool Record(BfRead hBuffer, const int[] iPlayers, int iPlayersNum, bool bReliable, bool bInit, char sLine[MAX_MOTD_LINE_LEN]){
         this.bufferLen = 0;
+        this.overflow  = false;
 
         bool bTitleFound;
         int  iTotalKVIndex;
@@ -79,6 +85,8 @@ for (int i = 0; i < iPlayersNum; i++)
     this.players[i]    = iPlayers[i];
     this.playersRef[i] = EntIndexToEntRef(iPlayers[i]);
 }
+
+return !this.overflow;
 }
 
 void Send()
@@ -113,13 +121,20 @@ void AppendString(const char[] sString)
 {
     for (int i = 0;; i++)
     {
-        this.buffer[this.bufferLen++] = sString[i];
-        if (sString[i] == '\0') break;
+        if (this.AppendByte(sString[i]) == -1 || sString[i] == '\0') break;
     }
 }
 
+/** returns the index written to. -1 if the buffer is full */
 int AppendByte(int iByte)
 {
+    /** leave at least 1 byte for the title's terminator */
+    if (this.bufferLen >= MAX_USERMSG_LEN - 1)
+    {
+        this.overflow = true;
+        return -1;
+    }
+
     this.buffer[this.bufferLen++] = iByte;
     return this.bufferLen - 1;
 }
@@ -131,7 +146,11 @@ void SendUserMessage(const int[] iPlayers, int iPlayersNum, const char[] sTitle)
     for (int i = 0; i < this.bufferLen; i++)
         hBuffer.WriteByte(this.buffer[i]);
 
-    hBuffer.WriteString(sTitle);
+    /** cut the title to what is left of the message */
+    char sFit[MAX_MOTD_TITLE_LEN];
+    int  iMax = MAX_USERMSG_LEN - this.bufferLen;
+    strcopy(sFit, iMax < sizeof(sFit) ? iMax : sizeof(sFit), sTitle);
+    hBuffer.WriteString(sFit);
 
     EndMessage();
 }
@@ -142,7 +161,7 @@ public Plugin myinfo =
     name        = "L4D2 MOTD Title",
     author      = "Rainy",
     description = "MOTD 제목을 변경할 수 있도록 합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_motd_title"
 };
 
@@ -170,6 +189,8 @@ public void OnPluginStart()
 
     LoadTranslations("l4d2_motd_title.phrases");
 
+    g_hQueue = new ArrayList(sizeof(MOTDBuffer));
+
     HookUserMessage(GetUserMessageId("VGUIMenu"), MsgHook_VGUIMenu, true);
 }
 
@@ -194,7 +215,7 @@ void ReadConVars()
 
 Action MsgHook_VGUIMenu(UserMsg msg_id, BfRead hBuffer, const int[] iPlayers, int iPlayersNum, bool bReliable, bool bInit)
 {
-    static char sLine[MAX_MOTD_TITLE_LEN];
+    static char sLine[MAX_MOTD_LINE_LEN];
 
     if (g_MOTDTitleType == MOTDTitle_Vanilla)
         return Plugin_Continue;
@@ -203,7 +224,10 @@ Action MsgHook_VGUIMenu(UserMsg msg_id, BfRead hBuffer, const int[] iPlayers, in
     if (strcmp(sLine, "info") != 0)
         return Plugin_Continue;
 
-    g_motd.Record(hBuffer, iPlayers, iPlayersNum, bReliable, bInit, sLine);
+    if (!g_motd.Record(hBuffer, iPlayers, iPlayersNum, bReliable, bInit, sLine))
+        return Plugin_Continue;
+
+    g_hQueue.PushArray(g_motd);
     RequestFrame(SendNewMsg);
 
     return Plugin_Handled;
@@ -215,5 +239,10 @@ Action MsgHook_VGUIMenu(UserMsg msg_id, BfRead hBuffer, const int[] iPlayers, in
 
 void SendNewMsg()
 {
-    g_motd.Send();
+    for (int i = 0; i < g_hQueue.Length; i++)
+    {
+        g_hQueue.GetArray(i, g_motd);
+        g_motd.Send();
+    }
+    g_hQueue.Clear();
 }
