@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Rainy Server Assistant",
     author      = "Rainy",
     description = "Rainy 서버 자동화 플러그인",
-    version     = "1.2.3",
+    version     = "1.2.4",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_rainy_server_assistant"
 };
 
@@ -44,7 +44,7 @@ public void OnClientPutInServer(int client)
         return;
     }
 
-    CreateTimer(RESPAWN_DELAY, Timer_RespawnNewPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+    CreateTimer(RESPAWN_DELAY, Timer_RespawnNewPlayer, GetClientUserId(client), TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public void OnClientDisconnect(int client)
@@ -65,10 +65,21 @@ public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
     }
 }
 
-void Timer_RespawnNewPlayer(Handle timer, int userid)
+Action Timer_RespawnNewPlayer(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
+    if (!IsValidClient(client))
+    {
+        return Plugin_Stop;
+    }
+    // 로딩이 느리면 아직 생존자 팀에 들어오지 않았을 수 있으므로 들어올 때까지 다시 확인
+    if (GetClientTeam(client) != 2)
+    {
+        return Plugin_Continue;
+    }
+
     RespawnNewPlayer(client);
+    return Plugin_Stop;
 }
 
 void Timer_KillBots(Handle timer)
