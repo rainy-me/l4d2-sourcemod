@@ -26,7 +26,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Reload On All Weapons",
     author      = "Rainy",
     description = "모든 무기에서 유휴 장전이 가능하도록 합니다.",
-    version     = "1.1.0",
+    version     = "1.1.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_idle_reload_on_all_weapons"
 };
 
@@ -60,6 +60,7 @@ public void OnPluginStart()
     HookEvent("give_weapon", Event_ResetState);
     HookEvent("upgrade_pack_used", Event_ResetState);
     HookEvent("weapon_drop", Event_ResetState);
+    HookEvent("weapon_fire", Event_ResetState);
 }
 
 void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
