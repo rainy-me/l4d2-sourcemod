@@ -12,7 +12,7 @@ public Plugin myinfo =
     name        = "L4D2 One Punch Shove",
     author      = "Rainy",
     description = "CI, SI를 밀치기 한 번으로 죽일 수 있습니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/archive/l4d2_one_punch_shove"
 };
 
@@ -23,9 +23,14 @@ public void OnPluginStart()
     HookEvent("entity_shoved", Event_EntityShoved);
 }
 
-public void OnMapStart()
+public void OnConfigsExecuted()
 {
     MeleeRagdollEffect(g_bEnabled);
+}
+
+public void OnPluginEnd()
+{
+    MeleeRagdollEffect(false);
 }
 
 void MeleeRagdollEffect(bool enabled)
@@ -44,11 +49,6 @@ void MeleeRagdollEffect(bool enabled)
 
 Action Cmd_OnePunchShove(int client, int args)
 {
-    if (!IsClient(client) || !IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client))
-    {
-        return Plugin_Handled;
-    }
-
     g_bEnabled = !g_bEnabled;
     MeleeRagdollEffect(g_bEnabled);
     PrintToChatAll("\x01[One-Punch Shove] \x04%s", g_bEnabled ? "ON" : "OFF");
