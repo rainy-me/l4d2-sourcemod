@@ -18,13 +18,13 @@ float  g_fDeadline[MAXPLAYERS + 1];    // 이 시각이 지나면 재스태거 �
 ConVar g_cvMaxStagger;
 int    g_iImpactCharger;    // 이번 틱에 벽에 충돌한 차저
 int    g_iImpactTick;
-
+bool   g_bReStaggering;    // 이 플러그인이 직접 거는 재스태거 중
 public Plugin myinfo =
 {
     name        = "L4D2 No SI Fall Stagger Cancel",
     author      = "Rainy",
     description = "특수좀비가 낙하로 스태거를 취소하지 못하도록 착지 시 다시 스태거를 겁니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_no_si_fall_stagger_cancel"
 };
 
@@ -55,6 +55,7 @@ public void L4D_OnShovedBySurvivor_Post(int client, int victim, const float vecD
     if (IsClient(victim))
     {
         g_iSource[victim] = client;
+        RefreshDeadline(victim);
     }
 }
 
@@ -67,6 +68,8 @@ public void L4D2_OnChargerImpact(int client)
 
 public void L4D2_OnStagger_Post(int client, int source)
 {
+    RefreshDeadline(client);
+
     // 부머 폭발은 부머, 파이프·프로판은 던지거나 쏜 생존자, 차저 충돌은 -1로 온다.
     if (IsClient(source))
     {
@@ -75,6 +78,16 @@ public void L4D2_OnStagger_Post(int client, int source)
     else if (source == -1 && g_iImpactTick == GetGameTickCount())
     {
         g_iSource[client] = g_iImpactCharger;    // 주변 SI는 차저 기준. 차저 본인은 자기 자신 기준(고정 방향)
+    }
+}
+
+// 낙하로 끊긴 상태에서 새 스태거를 받으면 시한을 그 스태거 기준으로 다시 잡는다.
+// 직접 건 재스태거는 제외해서 재스태거가 시한을 계속 늘리지 못하게 한다.
+void RefreshDeadline(int client)
+{
+    if (!g_bReStaggering && IsClient(client))
+    {
+        g_fDeadline[client] = GetGameTime() + g_cvMaxStagger.FloatValue;
     }
 }
 
@@ -145,7 +158,9 @@ void ReStagger(int client)
     {
         return;
     }
+    g_bReStaggering = true;
     L4D_StaggerPlayer(client, source, NULL_VECTOR);
+    g_bReStaggering = false;
 }
 
 int GetClosestSurvivor(int client)
