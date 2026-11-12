@@ -3,9 +3,9 @@ name: Compile and Release
 on:
   pull_request:
     paths-ignore:
-      - "API/**"
-      - "Archive/**"
-      - "Plugin_metamod/**"
+      - "base/**"
+      - "plugins/archive/**"
+      - "plugins_metamod/**"
       - ".python-version"
       - "*.py"
       - "*.cmd"
@@ -16,9 +16,9 @@ on:
       - main
   push:
     paths-ignore:
-      - "API/**"
-      - "Archive/**"
-      - "Plugin_metamod/**"
+      - "base/**"
+      - "plugins/archive/**"
+      - "plugins_metamod/**"
       - ".python-version"
       - "*.py"
       - "*.cmd"
@@ -39,7 +39,7 @@ jobs:
     permissions:
       contents: read
     env:
-      SRC_PLUGIN_DIR: ${{ github.workspace }}/Plugin
+      SRC_PLUGIN_DIR: ${{ github.workspace }}/plugins
 
     steps:
       - name: Checkout repository
@@ -53,7 +53,7 @@ jobs:
       - name: Copy include files
         run: |
           shopt -s nullglob
-          for inc in "$SRC_PLUGIN_DIR"/*/scripting/include; do
+          for inc in "$SRC_PLUGIN_DIR"/{libs,public,rainy}/*/scripting/include; do
             if [ -d "$inc" ]; then
               cp -rv "$inc"/. "$includePath"/
             fi
@@ -63,7 +63,7 @@ jobs:
         working-directory: ${{ env.SRC_PLUGIN_DIR }}
         run: |
           shopt -s nullglob
-          for dir in */; do
+          for dir in {libs,public,rainy}/*/; do
             dir=${dir%/}
             for file in "$dir"/scripting/*.sp; do
               mkdir -p "$dir/plugins"
@@ -83,7 +83,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: rainy_plugins_sm1.12
-          path: Plugin
+          path: |
+            plugins
+            !plugins/archive
 
   release:
     name: Release

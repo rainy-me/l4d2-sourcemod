@@ -1,4 +1,2 @@
-Archive/**/*.smx
-Archive/**/*.cmd
-Plugin/**/*.smx
-Plugin/**/*.cmd
+plugins/**/*.smx
+plugins/**/*.cmd

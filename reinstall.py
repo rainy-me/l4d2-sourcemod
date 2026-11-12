@@ -6,6 +6,7 @@ from collections.abc import Iterator
 from pathlib import Path
 
 REPO = Path(__file__).parent
+PLUGIN_DIRS = [REPO / "plugins" / d for d in ("libs", "public", "rainy")]  # plugins/archive는 설치 안 함
 STEAM_KEYS = (
     (winreg.HKEY_CURRENT_USER, r"Software\Valve\Steam"),
     (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam"),
@@ -66,9 +67,9 @@ def uninstall(game_dir: Path) -> None:
 
 def install(game_dir: Path) -> None:
     for src, dst in (
-        (REPO / "API", game_dir),
-        (REPO / "Plugin", game_dir / "addons/sourcemod"),
-        (REPO / "Plugin_metamod", game_dir),
+        (REPO / "base", game_dir),
+        *((d, game_dir / "addons/sourcemod") for d in PLUGIN_DIRS),
+        (REPO / "plugins_metamod", game_dir),
     ):
         for item in sorted(i for i in src.iterdir() if i.is_dir() and not i.name.endswith("-linux")):
             shutil.copytree(item, dst, dirs_exist_ok=True)
@@ -76,10 +77,10 @@ def install(game_dir: Path) -> None:
 
 
 def compile_plugins(game_dir: Path) -> None:
-    """리포지토리의 Plugin 디렉토리에 있는 .sp 파일을 컴파일해 plugins 폴더로 이동."""
+    """리포지토리의 PLUGIN_DIRS에 있는 .sp 파일을 컴파일해 plugins 폴더로 이동."""
     scripting_dir = game_dir / "addons/sourcemod/scripting"
 
-    for sp in sorted(i.name for i in (REPO / "Plugin").rglob("scripting/*.sp")):
+    for sp in sorted(i.name for d in PLUGIN_DIRS for i in d.glob("*/scripting/*.sp")):
         print(f"\n컴파일: {sp}", flush=True)  # flush so it lands before spcomp's own output
         subprocess.run(
             [scripting_dir / "spcomp.exe", sp, "-iinclude", f"-o../plugins/{Path(sp).stem}.smx"],

@@ -1,1 +1,0 @@
-xcopy plugins "D:\SteamLibrary\steamapps\common\Left 4 Dead 2\left4dead2\addons\sourcemod\plugins" /e /y
