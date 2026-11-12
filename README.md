@@ -16,7 +16,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 공개하지 않고 개인적으로만 사용하실 플러그인은 유료로 제작해 드립니다.  
 원하는 기능을 정리해서 [스팀 채팅](https://steamcommunity.com/id/rainy-me/)으로 문의해 주시면 제작 가능 여부와 비용을 안내해 드리겠습니다.
 
-## API
+## 요구 사항
 
 1. SourceMod  
    <https://www.sourcemod.net/downloads.php?branch=stable>
