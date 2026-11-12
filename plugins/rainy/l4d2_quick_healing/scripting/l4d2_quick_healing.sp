@@ -11,15 +11,16 @@
 
 #define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 
-ConVar g_hHealPercent;
-bool   g_bFastHealUsed[MAXPLAYERS + 1] = { false, ... };
+ConVar    g_hHealPercent;
+bool      g_bFastHealUsed[MAXPLAYERS + 1] = { false, ... };
+StringMap g_hUsedAuth;
 
 public Plugin myinfo =
 {
     name        = "L4D2 Quick Healing",
     author      = "Rainy",
     description = "시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.",
-    version     = "1.2.4",
+    version     = "1.2.5",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_quick_healing"
 };
 
@@ -31,6 +32,10 @@ public void OnPluginStart()
 
     HookEvent("round_start", Event_RoundStart);
     HookEvent("heal_begin", Event_HealBegin);
+    HookEvent("player_bot_replace", Event_PlayerBotReplace);
+    HookEvent("bot_player_replace", Event_BotPlayerReplace);
+
+    g_hUsedAuth = new StringMap();
 }
 
 public void OnMapStart()
@@ -54,6 +59,35 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
     {
         g_bFastHealUsed[i] = false;
     }
+    g_hUsedAuth.Clear();
+}
+
+// 유휴·퇴장으로 봇이 캐릭터를 넘겨받거나 플레이어가 봇을 넘겨받으면 사용 기록도 따라간다
+void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
+{
+    int player = GetClientOfUserId(event.GetInt("player"));
+    int bot    = GetClientOfUserId(event.GetInt("bot"));
+    if (IsValidClient(player) && IsValidClient(bot) && HasUsed(player))
+    {
+        g_bFastHealUsed[bot] = true;
+    }
+}
+
+void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
+{
+    int player = GetClientOfUserId(event.GetInt("player"));
+    int bot    = GetClientOfUserId(event.GetInt("bot"));
+    if (IsValidClient(player) && IsValidClient(bot) && g_bFastHealUsed[bot])
+    {
+        g_bFastHealUsed[player] = true;
+    }
+}
+
+bool HasUsed(int client)
+{
+    char auth[32];
+    return g_bFastHealUsed[client]
+        || (!IsFakeClient(client) && GetClientAuthId(client, AuthId_Steam2, auth, sizeof(auth)) && g_hUsedAuth.ContainsKey(auth));
 }
 
 void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
@@ -65,15 +99,20 @@ void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
         return;
     }
 
-    if (g_bFastHealUsed[healee] || !L4D_IsInFirstCheckpoint(healee))
+    if (HasUsed(healee) || !L4D_IsInFirstCheckpoint(healee))
     {
         return;
     }
 
     // Use quick healing
     g_bFastHealUsed[healee] = true;
-    int rawHealth           = GetClientHealth(healee);
-    int newHealth           = RoundToFloor(float(rawHealth) + (100.0 - float(rawHealth)) * g_hHealPercent.FloatValue);
+    char auth[32];
+    if (!IsFakeClient(healee) && GetClientAuthId(healee, AuthId_Steam2, auth, sizeof(auth)))
+    {
+        g_hUsedAuth.SetValue(auth, true);
+    }
+    int rawHealth = GetClientHealth(healee);
+    int newHealth = RoundToFloor(float(rawHealth) + (100.0 - float(rawHealth)) * g_hHealPercent.FloatValue);
     SetEntityHealth(healee, newHealth);
     L4D_SetTempHealth(healee, 0.0);
     L4D_SetPlayerReviveCount(healee, 0);
