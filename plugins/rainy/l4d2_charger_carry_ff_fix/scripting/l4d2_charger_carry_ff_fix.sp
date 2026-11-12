@@ -6,14 +6,15 @@
 
 #define CLEAR_CARRIED_DELAY 0.85
 
-bool g_bIsCarried[MAXPLAYERS + 1] = { false, ... };
+bool  g_bIsCarried[MAXPLAYERS + 1]    = { false, ... };
+float g_fProtectUntil[MAXPLAYERS + 1] = { 0.0, ... };
 
 public Plugin myinfo =
 {
     name        = "L4D2 Charger Carry FF Fix",
     author      = "Rainy",
     description = "차저에게 끌려가는 생존자에 대한 팀킬을 방지합니다.",
-    version     = "1.2.1",
+    version     = "1.2.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_charger_carry_ff_fix"
 };
 
@@ -35,13 +36,15 @@ public void OnPluginStart()
 
 public void OnClientPutInServer(int client)
 {
-    g_bIsCarried[client] = false;
+    g_bIsCarried[client]    = false;
+    g_fProtectUntil[client] = 0.0;
     SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public void OnClientDisconnect(int client)
 {
-    g_bIsCarried[client] = false;
+    g_bIsCarried[client]    = false;
+    g_fProtectUntil[client] = 0.0;
     SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
@@ -49,7 +52,8 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     for (int i = 0; i < sizeof(g_bIsCarried); i++)
     {
-        g_bIsCarried[i] = false;
+        g_bIsCarried[i]    = false;
+        g_fProtectUntil[i] = 0.0;
     }
 }
 
@@ -67,22 +71,15 @@ void Event_ChargerCarryEnd(Event event, const char[] name, bool dontBroadcast)
     int victim = GetClientOfUserId(event.GetInt("victim"));
     if (victim > 0 && victim <= MaxClients)
     {
-        CreateTimer(CLEAR_CARRIED_DELAY, Timer_ClearCarried, event.GetInt("victim"), TIMER_FLAG_NO_MAPCHANGE);
-    }
-}
-
-void Timer_ClearCarried(Handle timer, int userid)
-{
-    int victim = GetClientOfUserId(userid);
-    if (victim > 0 && victim <= MaxClients)
-    {
-        g_bIsCarried[victim] = false;
+        g_bIsCarried[victim]    = false;
+        g_fProtectUntil[victim] = GetGameTime() + CLEAR_CARRIED_DELAY;
     }
 }
 
 Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-    if (victim != attacker && IsValidSurvivor(victim) && IsValidSurvivor(attacker) && g_bIsCarried[victim])
+    if (victim != attacker && IsValidSurvivor(victim) && IsValidSurvivor(attacker)
+        && (g_bIsCarried[victim] || GetGameTime() < g_fProtectUntil[victim]))
     {
         return Plugin_Handled;
     }
