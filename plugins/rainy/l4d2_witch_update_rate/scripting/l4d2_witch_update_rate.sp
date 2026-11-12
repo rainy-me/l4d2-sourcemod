@@ -16,7 +16,7 @@ public Plugin myinfo =
     name        = "L4D2 Witch Update Rate",
     author      = "Rainy",
     description = "nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.",
-    version     = "1.0.1",
+    version     = "1.0.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_witch_update_rate"
 };
 
@@ -94,7 +94,7 @@ public void OnGameFrame()
         Address nb = SDKCall(g_hMyNextBotPointer, g_hWitches.Get(i));
         if (nb != Address_Null)
         {
-            StoreToAddress(nb + view_as<Address>(g_iFlaggedForUpdate), 1, NumberType_Int8);
+            StoreToAddress(nb + view_as<Address>(g_iFlaggedForUpdate), 1, NumberType_Int8, false);
         }
     }
 }
