@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Dingshot",
     author      = "Rainy",
     description = "헤드샷 시 띵 소리를 출력합니다.",
-    version     = "1.1.1",
+    version     = "1.1.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/archive/l4d2_dingshot"
 };
 
@@ -46,9 +46,14 @@ void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue
     }
 }
 
-void EnableDingshot()
+// 프리캐시 목록은 맵마다 초기화된다
+public void OnMapStart()
 {
     PrecacheSound(HEADSHOT_SOUND);
+}
+
+void EnableDingshot()
+{
     HookEvent("player_hurt", HeadshotHook, EventHookMode_Pre);
     HookEvent("infected_hurt", HeadshotHook, EventHookMode_Pre);
 }
@@ -65,9 +70,9 @@ void HeadshotHook(Event event, const char[] name, bool dontBroadcast)
     int hitgroup = event.GetInt("hitgroup");
     int type     = event.GetInt("type");
 
-    if (IsValidAliveClient(attacker) && hitgroup == 1 && type != 8 && type != 2097152)
+    if (IsValidAliveClient(attacker) && hitgroup == 1 && !(type & DMG_BURN) && type != 2097152)
     {
-        // 8 == death by fire
+        // DMG_BURN(8) == death by fire (다른 비트가 섞여도 제외)
         // 2097152 == death by slow burn
         EmitSoundToClient(attacker, HEADSHOT_SOUND, SOUND_FROM_PLAYER, SNDCHAN_AUTO,
                           SNDLEVEL_NONE, SND_NOFLAGS, VOLUME);
