@@ -8,7 +8,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 코드가 수정되면 컴파일 결과물도 자동으로 업데이트됩니다.
 
 - 다운로드: [`rainy_plugins_sm1.12.zip`](https://github.com/rainy-me/l4d2-sourcemod/releases/download/latest/rainy_plugins_sm1.12.zip)
-- 설치 방법: [`Youtube`](https://youtu.be/vSR5Lb6wTy8)
+- 설치 방법: [YouTube](https://youtu.be/vSR5Lb6wTy8)
 
 ## 개인 소장 플러그인 제작 (유료)
 
@@ -16,9 +16,19 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 공개하지 않고 개인적으로만 사용하실 플러그인은 유료로 제작해 드립니다.  
 원하는 기능을 정리해서 [스팀 채팅](https://steamcommunity.com/id/rainy-me/)으로 문의해 주시면 제작 가능 여부와 비용을 안내해 드리겠습니다.
 
+## 저장소 구조
+
+- `base`: SourceMod, Metamod (Windows/Linux)
+- `plugins`: SourceMod 플러그인
+  - `rainy`: 자작 플러그인
+  - `public`: 공개 플러그인
+  - `libs`: 라이브러리
+  - `archive`: 사용하지 않는 자작 플러그인 (설치·컴파일 제외)
+- `plugins_metamod`: Metamod 플러그인
+
 ## 요구 사항
 
-1. SourceMod  
+1. SourceMod 1.12  
    <https://www.sourcemod.net/downloads.php?branch=stable>
 
 2. Metamod  
@@ -29,10 +39,10 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 ### A. 자작 플러그인
 
 1. [l4d2_ai_stagger_claw_fix](/plugins/rainy/l4d2_ai_stagger_claw_fix/)  
-   AI SI가 비틀거리거나 공중에 떠 있는 동안 긁기공격을 하지 못하도록 방지합니다.
+   AI 특수좀비가 스태거 중이거나 공중에 떠 있는 동안 긁기 공격을 하지 못하도록 방지합니다.
 
 2. [l4d2_bone_follower_lag_fix](/plugins/rainy/l4d2_bone_follower_lag_fix/)  
-   감염자/생존자 모델의 phys_bone_follower를 제거하여 렉을 줄입니다.
+   감염자/생존자 모델의 phys_bone_follower를 제거하여 랙을 줄입니다.
 
 3. [l4d2_campaign_progress_notifier](/plugins/rainy/l4d2_campaign_progress_notifier/)  
    캠페인 진행 상황을 알립니다.
@@ -41,7 +51,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    차저에게 끌려가는 생존자에 대한 팀킬을 방지합니다.
 
 5. [l4d2_common_anim_tick](/plugins/rainy/l4d2_common_anim_tick/)  
-   일반 좀비의 애니메이션을 매 틱 진행시켜 서버 히트박스의 자세가 NextBot 업데이트 주기만큼 늦는 문제를 수정합니다.
+   일반좀비의 애니메이션을 매 틱 진행시켜 서버 히트박스의 자세가 NextBot 업데이트 주기만큼 늦는 문제를 고칩니다.
 
 6. [l4d2_consistent_checkpoint_heal](/plugins/rainy/l4d2_consistent_checkpoint_heal/)  
    맵 전환 시 생존자의 체력을 50까지 회복시키고, 무력화 효과를 제거합니다.
@@ -53,10 +63,10 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    다음 챕터로 넘어가는 데 걸리는 시간을 줄여줍니다.
 
 9. [l4d2_fix_si_sound](/plugins/rainy/l4d2_fix_si_sound/)  
-   특수좀비의 무음 문제를 개선합니다.
+   특수좀비의 무음 문제를 고칩니다.
 
 10. [l4d2_getup_damage_fix](/plugins/rainy/l4d2_getup_damage_fix/)  
-    일어나는 애니메이션이 진행되는 동안의 무적타임 불일치 문제를 고칩니다.
+    일어나는 애니메이션이 진행되는 동안의 무적 시간 불일치 문제를 고칩니다.
 
 11. [l4d2_hang_fall_death_defib_fix](/plugins/rainy/l4d2_hang_fall_death_defib_fix/)  
     매달리는 중에 떨어져 사망한 생존자의 소생 불가 버그를 고칩니다.
@@ -71,7 +81,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
     헌터가 생존자를 덮치는 동안 헌터의 위치와 속도를 생존자에 맞춰 어긋나 보이지 않게 합니다.
 
 15. [l4d2_idle_command_fix](/plugins/rainy/l4d2_idle_command_fix/)  
-    유휴 명령 미인식 문제를 해결합니다.
+    유휴 명령 미인식 문제를 고칩니다.
 
 16. [l4d2_idle_reload_on_all_weapons](/plugins/rainy/l4d2_idle_reload_on_all_weapons/)  
     모든 무기에서 유휴 장전이 가능하도록 합니다.
@@ -116,10 +126,10 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
     시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.
 
 30. [l4d2_ragdoll_remover](/plugins/rainy/l4d2_ragdoll_remover/)  
-    CI/SI의 ragdoll을 즉시 제거합니다.
+    일반좀비/특수좀비의 ragdoll을 즉시 제거합니다.
 
 31. [l4d2_rainy_server_assistant](/plugins/rainy/l4d2_rainy_server_assistant/)  
-    Rainy 서버 자동화 플러그인
+    Rainy 서버 운영을 자동화합니다.
 
 32. [l4d2_reserve_ammo_multiplier](/plugins/rainy/l4d2_reserve_ammo_multiplier/)  
     예비 탄약 소지량을 배율로 조정합니다.
@@ -134,7 +144,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
     특정 물체 위에 서 있을 때 스모커에게 잡히면 즉시 조작이 불가능한 버그를 고칩니다.
 
 36. [l4d2_spit_fizzle](/plugins/rainy/l4d2_spit_fizzle/)  
-    스피터가 죽거나 비틀거리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.
+    스피터가 죽거나 스태거에 걸리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.
 
 37. [l4d2_static_shotgun_spread](/plugins/rainy/l4d2_static_shotgun_spread/)  
     샷건 펠릿을 바닐라 위력에 맞춘 고정 링 패턴으로 발사합니다.
@@ -181,7 +191,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    생존자가 난간에 매달리는 기능을 제거합니다.
 
 7. [l4d2_one_punch_shove](/plugins/archive/l4d2_one_punch_shove/)  
-   CI, SI를 밀치기 한 번으로 죽일 수 있습니다.
+   일반좀비, 특수좀비를 밀치기 한 번으로 죽일 수 있습니다.
 
 8. [l4d2_print_entity_info](/plugins/archive/l4d2_print_entity_info/)  
    크로스헤어가 가리키는 엔티티의 상세 정보를 출력합니다.
@@ -193,11 +203,11 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 1. charging_takedamage_patch  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/charging_takedamage_patch>
 
-2. l4d_ai_hunter_skeet_dmg_fix  
-   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
-
-3. drop_secondary (forward 추가)  
+2. drop_secondary (forward 추가)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/drop_secondary>
+
+3. l4d_ai_hunter_skeet_dmg_fix  
+   <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
 
 4. l4d_cutscene_nodamage  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_cutscene_nodamage>
@@ -223,11 +233,11 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 11. LMC_Black_and_White_Notifier (알림 문구 수정)  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/LMC_Black_and_White_Notifier>
 
-12. trigger_horde_notify  
-    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
-
-13. physics_object_pushfix  
+12. physics_object_pushfix  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/physics_object_pushfix>
+
+13. trigger_horde_notify (알림 문구 수정)  
+    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
 14. l4d_death_item_glow (보조무기 glow 추가)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
@@ -244,17 +254,17 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 18. l4d_rock_invuln_duration (기본값 0 설정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_rock_invuln_duration>
 
-19. l4d_tank_damage_announce  
-    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/blob/master/The%20Last%20Stand/l4d_tank_damage_announce>
+19. l4d_tank_damage_announce (cfg 자동 생성 추가)  
+    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tank_damage_announce>
 
 20. l4d2_fix_jockey_hitbox (버그 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-21. l4d_witch_damage_announce  
-    <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
-
-22. l4d_skip_intro  
+21. l4d_skip_intro  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_skip_intro.sp>
+
+22. l4d_witch_damage_announce  
+    <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
 23. l4d2_charge_target_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_charge_target_fix.sp>
@@ -309,10 +319,13 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 
 ### D. 라이브러리
 
-1. Actions  
+`[Extension]`은 SourceMod 확장, `[Metamod]`는 Metamod 플러그인입니다.
+
+1. Actions `[Extension]`  
    <https://github.com/Vinillia/actions.ext>
 
-2. [hxlib](/plugins/libs/hxlib/)
+2. [hxlib](/plugins/libs/hxlib/)  
+   다른 플러그인에서 사용하는 네이티브, 포워드, 스톡을 제공합니다.
 
 3. l4d_heartbeat  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
@@ -320,7 +333,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 4. l4d_pellet_spread_customizer  
    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
 
-5. l4dtoolz  
+5. l4dtoolz `[Metamod]`  
    <https://github.com/lakwsh/l4dtoolz/releases>
 
 6. left4dhooks  
@@ -329,7 +342,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 7. Multi Colors  
    <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
 
-8. SourceScramble  
+8. SourceScramble `[Extension]`  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
 9. ThirdPersonShoulder_Detect (유휴 복귀 후 3인칭 오감지 고침, TP_IsThirdPerson native 추가)  
@@ -338,7 +351,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 10. Use Priority Patch  
     <https://forums.alliedmods.net/showthread.php?t=327511>
 
-## Rainy's 리포지토리
+## Rainy의 저장소
 
 - [l4d2-server](https://github.com/rainy-me/l4d2-server): Left 4 Dead 2 데디케이티드 서버 구성 모음
 - [l4d2-settings](https://github.com/rainy-me/l4d2-settings): Left 4 Dead 2 설정 모음
