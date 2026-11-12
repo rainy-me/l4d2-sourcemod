@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Campaign Progress Notifier",
     author      = "Rainy",
     description = "캠페인 진행 상황을 알립니다.",
-    version     = "1.1.3",
+    version     = "1.2.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_campaign_progress_notifier"
 };
 
@@ -36,6 +36,7 @@ public void OnPluginStart()
     HookEvent("round_start", Event_RoundStart);
 
     RegConsoleCmd("sm_p", Cmd_Progress);
+    RegConsoleCmd("sm_ㅔ", Cmd_Progress);
 }
 
 public void OnMapStart()
