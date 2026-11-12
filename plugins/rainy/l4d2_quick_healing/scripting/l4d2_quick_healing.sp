@@ -5,6 +5,11 @@
 #include <sdktools>
 #include <multicolors>
 #include <left4dhooks>
+#undef REQUIRE_PLUGIN
+#include <l4d_heartbeat>
+#define REQUIRE_PLUGIN
+
+#define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 
 ConVar g_hHealPercent;
 bool   g_bFastHealUsed[MAXPLAYERS + 1] = { false, ... };
@@ -14,7 +19,7 @@ public Plugin myinfo =
     name        = "L4D2 Quick Healing",
     author      = "Rainy",
     description = "시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.",
-    version     = "1.2.3",
+    version     = "1.2.4",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_quick_healing"
 };
 
@@ -74,6 +79,17 @@ void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
     L4D_SetPlayerReviveCount(healee, 0);
     L4D_SetPlayerThirdStrikeState(healee, false);
     L4D_SetPlayerIsGoingToDie(healee, false);
+
+    // heal_success가 나가지 않으므로 흑백 상태의 심장박동 소리와 l4d_heartbeat의 부활 횟수를 직접 정리
+    if (GetFeatureStatus(FeatureType_Native, "Heartbeat_SetRevives") == FeatureStatus_Available)
+    {
+        Heartbeat_SetRevives(healee, 0);
+    }
+    else
+    {
+        StopSound(healee, SNDCHAN_AUTO, SOUND_HEARTBEAT);
+        StopSound(healee, SNDCHAN_STATIC, SOUND_HEARTBEAT);
+    }
 
     // Notify quick healing use
     if (healer == healee)
