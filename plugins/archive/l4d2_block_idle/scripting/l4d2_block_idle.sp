@@ -8,7 +8,7 @@ public Plugin myinfo =
     name        = "L4D2 Block Idle",
     author      = "Rainy",
     description = "유휴 모드를 차단합니다.",
-    version     = "1.1.0",
+    version     = "1.1.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/archive/l4d2_block_idle"
 };
 
@@ -17,7 +17,7 @@ public void OnPluginStart()
     RegConsoleCmd("go_away_from_keyboard", Cmd_BlockIdle);
 }
 
-public void OnMapStart()
+public void OnConfigsExecuted()
 {
     FindConVar("director_afk_timeout").IntValue = 9999;
 }
