@@ -2549,6 +2549,13 @@ bool SparseRewind(int entity, float target)
 // hitbox beams, run the trace command, and make sure nothing is left rewound.
 public void OnGameFrame()
 {
+	// the tick rate can change after the map started (l4dtoolz sv_tickrate): follow it
+	float tick = GetTickInterval();
+	if (tick != g_fTick)
+	{
+		g_fTick = tick;
+		UpdateRingSize();
+	}
 	if (g_bDbgPass)
 		DbgEndPass(0);     // a rewind outside a player command
 	if (g_bProfiling && GetEngineTime() >= g_fProfEnd)

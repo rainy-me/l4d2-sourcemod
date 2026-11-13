@@ -287,7 +287,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 29. l4d2_parseline_fix  
     <https://github.com/xiaolinRM/L4D2Plugins/tree/main/l4d2_parseline_fix>
 
-30. l4d2_posesync  
+30. l4d2_posesync (버그 수정)  
     <https://github.com/Thumos96/L4D2-Pose-Parameter-Lag-Compensation-Fix>
 
 31. Explosion Announcer  
