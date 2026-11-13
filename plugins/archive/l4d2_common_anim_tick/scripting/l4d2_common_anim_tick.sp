@@ -15,7 +15,7 @@ public Plugin myinfo =
     author      = "Rainy",
     description = "일반 좀비의 애니메이션을 매 틱 진행시켜 서버 히트박스의 자세가 NextBot 업데이트 주기만큼 늦는 문제를 수정합니다.",
     version     = "1.0.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_common_anim_tick"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/archive/l4d2_common_anim_tick"
 };
 
 public void OnPluginStart()
