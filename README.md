@@ -257,7 +257,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 19. l4d_tank_damage_announce (cfg 자동 생성 추가, 버그 수정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tank_damage_announce>
 
-20. l4d2_fix_jockey_hitbox (버그 고침)  
+20. l4d2_fix_jockey_hitbox (버그 수정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
 21. l4d_skip_intro (버그 수정)  

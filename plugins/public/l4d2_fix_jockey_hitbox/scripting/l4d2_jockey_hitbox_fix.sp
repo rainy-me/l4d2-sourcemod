@@ -24,7 +24,7 @@ public void OnPluginStart()
 {
     g_iOffs_m_flEstIkOffset = FindSendPropInfo("CBaseAnimating", "m_flModelScale") + 24;
 
-    HookEvent("jockey_ride", Event_JockeyRide, EventHookMode_Pre);
+    HookEvent("jockey_ride", Event_JockeyRide);
     HookEvent("player_bot_replace", Event_player_bot_replace);
     HookEvent("bot_player_replace", Event_bot_player_replace);
     HookEvent("jockey_ride_end", Event_JockeyRideEnd);
