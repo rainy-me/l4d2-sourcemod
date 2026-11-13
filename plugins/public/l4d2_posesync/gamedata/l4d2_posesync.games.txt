@@ -1,0 +1,361 @@
+"Games"
+{
+	"left4dead2"
+	{
+		// Windows: server.dll md5 533888fbb4e5ed534b172470613a3017.
+		// Linux: server_srv.so md5 bf54b537f4707f0c602208c427ec62df (dedicated server) and
+		// server.so md5 e962508781885d7b0d871d79e456b03d (listen server). The Linux byte signatures
+		// match exactly once in both; server_srv.so also has symbols (given in the comments).
+		"Functions"
+		{
+			// void CLagCompensationManager::RecordDataIntoTrack(CBaseEntity *pEntity, LagRecordList *track, bool bWantsAnims)
+			// Called per entity from FrameUpdatePostEntityThink. Adds a LagRecord only if
+			// the entity's m_flSimulationTime is newer than the head record.
+			"CLagCompensationManager::RecordDataIntoTrack"
+			{
+				"signature"	"CLagCompensationManager::RecordDataIntoTrack"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"ignore"
+				"arguments"
+				{
+					"pEntity"
+					{
+						"type"	"cbaseentity"
+					}
+					"track"
+					{
+						"type"	"int"
+					}
+					"bWantsAnims"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			// bool CLagCompensationManager::BacktrackEntity(CBaseEntity *pEntity, float flTargetTime,
+			//      LagRecordList *track, LagRecord *restore, LagRecord *change, bool bWantsAnims)
+			// Rewinds one entity: origin and angles; bounds, sequence, cycle and layers only for lag
+			// compensation type 1 (type 2 only near its ray, so never for FireTerrorBullets' empty ray);
+			// flushes the bone cache (sv_lagflushbonecache) and draws sv_showlagcompensation
+			// hitboxes. Never touches m_flPoseParameter. Returns false without moving anything when two
+			// neighbouring records are more than 64 units apart.
+			"CLagCompensationManager::BacktrackEntity"
+			{
+				"signature"	"CLagCompensationManager::BacktrackEntity"
+				"callconv"	"thiscall"
+				"return"	"bool"
+				"this"		"ignore"
+				"arguments"
+				{
+					"pEntity"
+					{
+						"type"	"cbaseentity"
+					}
+					"flTargetTime"
+					{
+						"type"	"float"
+					}
+					"track"
+					{
+						"type"	"int"
+					}
+					"restore"
+					{
+						"type"	"int"
+					}
+					"change"
+					{
+						"type"	"int"
+					}
+					"bWantsAnims"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			// void CLagCompensationManager::FinishLagCompensation(CBasePlayer *player)
+			"CLagCompensationManager::FinishLagCompensation"
+			{
+				"signature"	"CLagCompensationManager::FinishLagCompensation"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"ignore"
+				"arguments"
+				{
+					"player"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+
+			// bool CTerrorPlayer::WantsLagCompensationOnEntity(const CBaseEntity *pEntity, const CUserCmd *pCmd,
+			//      const CBitVec<MAX_EDICTS> *pEntityTransmitBits) const
+			// this = the player whose command is being lag compensated. Asked by StartLagCompensation
+			// for every lag compensated entity. Used by sm_posesync_swing and sm_posesync_ridden.
+			"CTerrorPlayer::WantsLagCompensationOnEntity"
+			{
+				"signature"	"CTerrorPlayer::WantsLagCompensationOnEntity"
+				"callconv"	"thiscall"
+				"return"	"bool"
+				"this"		"entity"
+				"arguments"
+				{
+					"pEntity"
+					{
+						"type"	"cbaseentity"
+					}
+					"pCmd"
+					{
+						"type"	"objectptr"
+					}
+					"pEntityTransmitBits"
+					{
+						"type"	"objectptr"
+					}
+				}
+			}
+
+			// void CLagCompensationManager::StartLagCompensation(CBasePlayer *player, LagCompensationType type,
+			//      const Vector &weaponPos, const QAngle &weaponAngles, float weaponRange)
+			// type: 0 bounds, 1 hitboxes, 2 hitboxes along ray. Used by sm_posesync_animrewind.
+			"CLagCompensationManager::StartLagCompensation"
+			{
+				"signature"	"CLagCompensationManager::StartLagCompensation"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"ignore"
+				"arguments"
+				{
+					"player"
+					{
+						"type"	"cbaseentity"
+					}
+					"type"
+					{
+						"type"	"int"
+					}
+					"weaponPos"
+					{
+						"type"	"int"
+					}
+					"weaponAngles"
+					{
+						"type"	"int"
+					}
+					"weaponRange"
+					{
+						"type"	"float"
+					}
+				}
+			}
+		}
+
+		"Offsets"
+		{
+			// CTerrorPlayer: command number of the last shove (CTerrorPlayer::OnMeleeAttack, from
+			// CTerrorWeapon::OnSwingStart). WantsLagCompensationOnEntity:
+			//   windows: mov ecx,[edi+4] ; sub ecx,[ebx+0x2998] ; cmp ecx,5   (0x1030191a)
+			//   linux:   mov edx,[edi+0x298c] ... sub ecx,edx ; cmp ecx,5       (0x9c954e)
+			// Infected::m_clientAnimatedOverlay, the CUtlVector of CInfectedAnimationLayer (0x18 bytes each)
+			// that DT_Infected sends instead of the overlay layers; right after m_clientLeanYaw.
+			//   windows: SendPropUtlVector("m_clientAnimatedOverlay", 0x1d18, 0x18, 6) (0x104018c6)
+			//   linux:   Infected::UpdateClientAnimationLayers reads [edi+0x1d14] (0x9fe46c)
+			"Infected::m_clientAnimatedOverlay"
+			{
+				"windows"	"7448"
+				"linux"		"7444"
+			}
+
+			"CTerrorPlayer::m_iLastShoveCommand"
+			{
+				"windows"	"10648"
+				"linux"		"10636"
+			}
+
+			// CBasePlayer::m_fLerpTime, read by StartLagCompensation:
+			//   windows: movss xmm2, [edi+0x1CF4] ; addss xmm0, latency ; clamp to sv_maxunlag
+			//   linux:   movss xmm1, [eax+0x1CF0] ; addss xmm0, xmm1 (0x7bc9ef)
+			"CBasePlayer::m_fLerpTime"
+			{
+				"windows"	"7412"
+				"linux"		"7408"
+			}
+
+			// CTerrorPlayerAnimState *CTerrorPlayer::m_PlayerAnimState.
+			// CBaseAnimating::SetupBones (0x10036d29): if IsPlayer(), angles = m_PlayerAnimState->GetRenderAngles()
+			// linux: mov eax,[ebx+0x2910]; call CMultiPlayerAnimState::GetRenderAngles (0x5d65d0)
+			"CTerrorPlayer::m_PlayerAnimState"
+			{
+				"windows"	"10524"
+				"linux"		"10512"
+			}
+			// QAngle m_angRender (GetRenderAngles = lea eax,[ecx+0x20]); yaw = current feet yaw, pitch/roll 0
+			"CTerrorPlayerAnimState::m_angRender"
+			{
+				"windows"	"32"
+				"linux"		"32"
+			}
+			// from the sv_showanimstate printout "EyeYaw: %2.2f, FeetYaw: %2.2f, GoalFeetYaw: %2.2f"
+			"CTerrorPlayerAnimState::m_flEyeYaw"
+			{
+				"windows"	"228"
+				"linux"		"228"
+			}
+			"CTerrorPlayerAnimState::m_flGoalFeetYaw"
+			{
+				"windows"	"236"
+				"linux"		"236"
+			}
+			"CTerrorPlayerAnimState::m_flCurrentFeetYaw"
+			{
+				"windows"	"240"
+				"linux"		"240"
+			}
+
+			// CAnimationLayer (CBaseAnimatingOverlay::m_AnimOverlay elements). Same layout on Linux:
+			// CAnimationLayer::Init writes the same fields, the accessors index with imul 0x4c and read
+			// m_nSequence at +8, m_flCycle at +0xc, m_flWeight at +0x14, m_flPlaybackRate at +0x18
+			"CAnimationLayer::size"
+			{
+				"windows"	"76"
+				"linux"		"76"
+			}
+			"CAnimationLayer::m_fFlags"
+			{
+				"windows"	"0"
+				"linux"		"0"
+			}
+			"CAnimationLayer::m_nSequence"
+			{
+				"windows"	"8"
+				"linux"		"8"
+			}
+			"CAnimationLayer::m_flCycle"
+			{
+				"windows"	"12"
+				"linux"		"12"
+			}
+			"CAnimationLayer::m_flPrevCycle"
+			{
+				"windows"	"16"
+				"linux"		"16"
+			}
+			"CAnimationLayer::m_flWeight"
+			{
+				"windows"	"20"
+				"linux"		"20"
+			}
+			"CAnimationLayer::m_flPlaybackRate"
+			{
+				"windows"	"24"
+				"linux"		"24"
+			}
+			"CAnimationLayer::m_nOrder"
+			{
+				"windows"	"60"
+				"linux"		"60"
+			}
+		}
+
+		"Signatures"
+		{
+			// 0x10187100 in server.dll (md5 533888fbb4e5ed534b172470613a3017)
+			// linux: _ZN23CLagCompensationManager19RecordDataIntoTrackEP11CBaseEntityP19CUtlFixedLinkedListI9LagRecordEb (0x7bbcc0)
+			"CLagCompensationManager::RecordDataIntoTrack"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x51\xA1\x2A\x2A\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\xF3\x0F\x10\x40\x0C"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x2C\x8B\x45\x14\x8B\x75\x10\x8B\x5D\x0C\x89\x45\xE0\xA1\x2A\x2A\x2A\x2A\x8B\x7E\x10\xF3\x0F\x10"
+			}
+			// 0x10185c50, contains the "BacktrackEntity" telemetry string
+			// linux: _ZN23CLagCompensationManager15BacktrackEntityEP11CBaseEntityfP19CUtlFixedLinkedListI9LagRecordEPS3_S6_b (0x7ba460)
+			"CLagCompensationManager::BacktrackEntity"
+			{
+				"library"	"server"
+				"windows"	"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\x38\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x43\x14"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x81\xEC\x4C\x01\x00\x00\xC7\x85\x2A\x2A\x2A\x2A\x00\x00\x00\x00\xC7\x85\x2A\x2A\x2A\x2A\x00\x00\x00\x00\x8B\x45\x20\x8B\x5D\x14\x89\x85"
+			}
+			// 0x101881b0, contains the "FinishLagCompensation" telemetry string
+			// linux: _ZN23CLagCompensationManager21FinishLagCompensationEP11CBasePlayer (0x7bc110); the 4 bytes after
+			// \xA1 are a relocated address (gpGlobals), so they are wildcards; it runs on to the telemetry
+			// line number 0x2F0 to be unique
+			"CLagCompensationManager::FinishLagCompensation"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x18\xA1\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x33\xC9\x89\x4D\xF8\x89\x4D\xFC\x57\x39\x48\x08\x74\x37\x8B\x40\x08\x68\x2A\x2A\x2A\x2A\x8B\x50\x50\x68\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x68\xF0\x02\x00\x00"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x6C\xC7\x45\xD0\x00\x00\x00\x00\xA1\x2A\x2A\x2A\x2A\xC7\x45\xD4\x00\x00\x00\x00\x8B\x75\x08\x85\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8D\x55\xD0\x89\x04\x24\x89\x54\x24\x04\xC7\x44\x24\x2C\x2A\x2A\x2A\x2A\xC7\x44\x24\x28\x2A\x2A\x2A\x2A\xC7\x44\x24\x24\x2A\x2A\x2A\x2A\xC7\x44\x24\x20\x2A\x2A\x2A\x2A\xC7\x44\x24\x1C\xF0\x02\x00\x00"
+			}
+			// 0x10034630: Vector CBaseAnimating::ScriptGetBoneOrigin(int iBone) (VScript GetBoneOrigin),
+			// reads the bone cache through GetBoneTransform. Used by sm_posesync_debug 3 and sm_posesync_drawhitboxes.
+			// linux: _ZN14CBaseAnimating19ScriptGetBoneOriginEi (0x5d1ca0)
+			"CBaseAnimating::ScriptGetBoneOrigin"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x40\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x56\x8B\xF1\x83\xBE\xD0\x13\x00\x00\x00"
+				"linux"		"\x55\x89\xE5\x53\x8D\x45\xEC\x83\xEC\x24\x89\x44\x24\x0C\x8B\x45\x10\x8B\x5D\x08\x89\x44\x24\x04\x8B\x45\x0C\x89\x5C\x24\x08\x89\x04\x24\xE8\x2A\x2A\x2A\x2A\x83\xC4\x24\x89\xD8\x5B\x5D\xC2\x04"
+			}
+			// 0x100346e0: QAngle CBaseAnimating::ScriptGetBoneAngles(int iBone) (VScript GetBoneAngles),
+			// MatrixAngles of GetBoneTransform. Used by sm_posesync_drawhitboxes.
+			// linux: _ZN14CBaseAnimating19ScriptGetBoneAnglesEi (0x5d1ce0); the function body is byte-identical to ScriptGetAttachmentAngles, so the signature runs on into the padding and the start of the next function
+			"CBaseAnimating::ScriptGetBoneAngles"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x34\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x56\x8B\xF1\x83\xBE\xD0\x13\x00\x00\x00"
+				"linux"		"\x55\x89\xE5\x53\x8D\x45\xEC\x83\xEC\x24\x89\x44\x24\x08\x8B\x45\x10\x8B\x5D\x08\x89\x44\x24\x04\x8B\x45\x0C\x89\x5C\x24\x0C\x89\x04\x24\xE8\x2A\x2A\x2A\x2A\x83\xC4\x24\x89\xD8\x5B\x5D\xC2\x04\x00\x90\x8D\xB4\x26\x00\x00\x00\x00\x8D\xBC\x27\x00\x00\x00\x00\x55\x89\xE5\x56"
+			}
+			// 0x100306b0: mov eax,[ecx+m_boneCacheHandle]; push eax; call Studio_InvalidateBoneCache
+			// (BacktrackEntity calls it when sv_lagflushbonecache is on)
+			// linux: _ZN14CBaseAnimating19InvalidateBoneCacheEv (0x5d5820)
+			// CCollisionProperty::MarkSurroundingBoundsDirty (this = &entity->m_Collision):
+			// m_iEFlags |= EFL_DIRTY_SURROUNDING_COLLISION_BOUNDS (0x4000), MarkPartitionHandleDirty.
+			// Players and common infected use USE_ROTATION_EXPANDED_SEQUENCE_BOUNDS (7): the box the
+			// spatial partition tests rays against comes from the current sequence.
+			// windows 0x10093a80, linux _ZN18CCollisionProperty26MarkSurroundingBoundsDirtyEv (0x41b4c0
+			// in server_srv.so, 0x41b5e0 in server.so)
+			"CCollisionProperty::MarkSurroundingBoundsDirty"
+			{
+				"library"	"server"
+				"windows"	"\x56\x8B\xF1\x8B\x4E\x04\x8B\x41\x28\x85\xC0\x74\x55\x8B\x15\x2A\x2A\x2A\x2A\x2B\x42\x58\xC1\xF8\x04\x85\xC0\x74\x45\x81\x89\x38\x01\x00\x00\x00\x40\x00\x00"
+				"linux"		"\x55\x89\xE5\x53\x83\xEC\x14\x8B\x5D\x08\x8B\x53\x04\x8B\x42\x30\x85\xC0\x74\x10\x8B\x0D\x2A\x2A\x2A\x2A\x2B\x41\x58\xC1\xF8\x04\x85\xC0\x75\x0C\x83\xC4\x14\x5B\x5D\xC3\x8D\xB6\x00\x00\x00\x00\x81\x8A\x4C\x01\x00\x00\x00\x40\x00\x00"
+			}
+			"CBaseAnimating::InvalidateBoneCache"
+			{
+				"library"	"server"
+				"windows"	"\x8B\x81\x0C\x05\x00\x00\x50\xE8\x2A\x2A\x2A\x2A"
+				"linux"		"\x55\x89\xE5\x8B\x45\x08\x8B\x80\x20\x05\x00\x00\x89\x45\x08\x5D\xE9\x2A\x2A\x2A\x2A\x90\x8D\x76"
+			}
+			// 0x10301900; linux _ZNK13CTerrorPlayer28WantsLagCompensationOnEntityEPK11CBaseEntityPK8CUserCmdPK7CBitVecILi2048EE (0x9c9530)
+			"CTerrorPlayer::WantsLagCompensationOnEntity"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x53\x57\x8B\x7D\x0C\xF6\x47\x24\x01\x8B\xD9\x75\x20\x8B"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x1C\x8B\x75\x10\x8B\x45\x14\x8B\x7D\x08\x8B\x5D\x0C\x8B"
+			}
+			// 0x10187a70; linux _ZN23CLagCompensationManager20StartLagCompensationEP11CBasePlayer19LagCompensationTypeRK6VectorRK6QAnglef (0x7bc570)
+			"CLagCompensationManager::StartLagCompensation"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x64\x53\x33\xC0\x56\x89\x4D\xF8\x57\x83\xC1"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x7C\xC7\x45\xD4\x00\x00\x00\x00\x8B\x45\x08\xC7"
+			}
+			// 0x100635b0, called by BacktrackEntity (0x101866bb); linux _ZN11CBaseEntity12SetAbsOriginERK6Vector (0x5fc720)
+			"CBaseEntity::SetAbsOrigin"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x44\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x56\x57\x8B\x7D\x08\x8B\xF1\xE8"
+				"linux"		"\x55\x89\xE5\x56\x53\x83\xEC\x50\x8B\x5D\x08\x8B\x75\x0C\x89\x1C\x24\xE8\x2A\x2A\x2A\x2A\xF3"
+			}
+			// 0x100637d0, called by BacktrackEntity (0x101864b9); linux _ZN11CBaseEntity12SetAbsAnglesERK6QAngle (0x5fbfc0)
+			"CBaseEntity::SetAbsAngles"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x74\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x56\x57\x8B\x7D\x08\x8B\xF1\xE8"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x81\xEC\x8C\x00\x00\x00\x8B\x5D\x08\x8B\x75\x0C\x89\x1C\x24\xE8\x2A\x2A\x2A\x2A\xF3\x0F\x10\x06\x0F\x2F\x83\x7C\x03"
+			}
+		}
+	}
+}
