@@ -24,72 +24,30 @@ public void OnPluginStart()
 {
     g_iOffs_m_flEstIkOffset = FindSendPropInfo("CBaseAnimating", "m_flModelScale") + 24;
 
-    HookEvent("jockey_ride", Event_JockeyRide);
-    HookEvent("player_bot_replace", Event_player_bot_replace);
-    HookEvent("bot_player_replace", Event_bot_player_replace);
     HookEvent("jockey_ride_end", Event_JockeyRideEnd);
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (IsClientInGame(i))
+            OnClientPutInServer(i);
+    }
 }
 
-void Event_JockeyRide(Event event, const char[] name, bool dontBroadcast)
+// Hooked for the client's whole lifetime: m_jockeyAttacker may not be set yet
+// when jockey_ride / bot replace events fire, so event-time checks miss rides.
+public void OnClientPutInServer(int client)
 {
-    int victim = GetClientOfUserId(event.GetInt("victim"));
-    if (!victim || !IsClientInGame(victim))
-        return;
-
-    FixHitbox(victim);
-}
-
-void Event_player_bot_replace(Event event, const char[] name, bool dontBroadcast)
-{
-    HandlePlayerReplace(event.GetInt("bot"));
-}
-
-void Event_bot_player_replace(Event event, const char[] name, bool dontBroadcast)
-{
-    HandlePlayerReplace(event.GetInt("player"));
-}
-
-void HandlePlayerReplace(int replacer)
-{
-    replacer = GetClientOfUserId(replacer);
-    if (!replacer || !IsClientInGame(replacer))
-        return;
-
-    if (!IsPlayerAlive(replacer))
-        return;
-
-    FixHitbox(replacer);
-}
-
-void FixHitbox(int client)
-{
-    if (!FixHitboxInternal(client))
-        return;
-
     SDKHook(client, SDKHook_PostThink, SDK_OnPostThink);
 }
 
-Action SDK_OnPostThink(int client)
-{
-    if (IsClientInGame(client))
-    {
-        if (!FixHitboxInternal(client))
-        {
-            SDKUnhook(client, SDKHook_PostThink, SDK_OnPostThink);
-        }
-    }
-    return Plugin_Continue;
-}
-
-bool FixHitboxInternal(int client)
+void SDK_OnPostThink(int client)
 {
     if (GetClientTeam(client) != 2)
-        return false;
+        return;
 
-    // in all circumstances this should make sure the client is being jockeyed
     int attacker = GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker");
     if (attacker == -1)
-        return false;
+        return;
 
     // Fix bounding box
     int flags = GetEntityFlags(client);
@@ -110,8 +68,6 @@ bool FixHitboxInternal(int client)
     {
         SetEntDataFloat(attacker, g_iOffs_m_flEstIkOffset, flOffset);
     }
-
-    return true;
 }
 
 void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadcast)
