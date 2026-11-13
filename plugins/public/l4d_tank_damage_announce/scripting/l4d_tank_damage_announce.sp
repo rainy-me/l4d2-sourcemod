@@ -608,17 +608,22 @@ void PrintTankDamageTitle(const TankInfo info)
 
 void PrintTankFactsTitle(const TankInfo info)
 {
-	int client = GetClientOfUserId(info.userid);
-	
 	char name[MAX_NAME_LENGTH];
-	bool bHumanControlled = FindTankControlName(info.userid, name, sizeof(name));
-	
-	Format(name, sizeof(name), "%t", IsFakeClient(client) ? (bHumanControlled ? "Frustrated" : "AI") : "HumanControlled", name);
+	GetTankFactsName(info, name, sizeof(name));
 
 	CPrintToChatAll("%t",
 			"FactsTitle",
 			name,
 			info.index);
+}
+
+void GetTankFactsName(const TankInfo info, char[] name, int maxlen)
+{
+	int client = GetClientOfUserId(info.userid);
+	
+	bool bHumanControlled = FindTankControlName(info.userid, name, maxlen);
+	
+	Format(name, maxlen, "%t", IsFakeClient(client) ? (bHumanControlled ? "Frustrated" : "AI") : "HumanControlled", name);
 }
 
 void PrintTankInfo(int userid = 0)
@@ -804,8 +809,13 @@ void PrintTankFacts(int userid, float delay = 0.0)
 		info.survivorInfoVector = view_as<AutoUserVector>(info.survivorInfoVector.Clone());
 		
 		DataPack dp;
-		CreateDataTimer(delay, Timer_PrintTankFacts, dp, TIMER_FLAG_NO_MAPCHANGE);
+		CreateDataTimer(delay, Timer_PrintTankFacts, dp); // no TIMER_FLAG_NO_MAPCHANGE: the callback frees the cloned vector
 		dp.WriteCellArray(info, sizeof(info));
+		
+		// the tank may be gone when the timer fires, so resolve the title name now
+		char name[MAX_NAME_LENGTH];
+		GetTankFactsName(info, name, sizeof(name));
+		dp.WriteString(name);
 		
 		return;
 	}
@@ -820,6 +830,10 @@ Action Timer_PrintTankFacts(Handle timer, DataPack dp)
 
 	TankInfo info;
 	dp.ReadCellArray(info, sizeof(info));
+	
+	char name[MAX_NAME_LENGTH];
+	dp.ReadString(name, sizeof(name));
+	CPrintToChatAll("%t", "FactsTitle", name, info.index);
 	
 	PrintTankFactsInternal(info);
 	

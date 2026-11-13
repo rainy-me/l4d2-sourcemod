@@ -113,7 +113,7 @@ public void OnClientPutInServer(int client)
 
 void SDK_OnWeaponDrop_Post(int client, int weapon)
 {
-	if (GetClientHealth(client) > 0)
+	if (weapon == -1 || GetClientHealth(client) > 0)
 		return;
 
 	AddWeaponGlow(weapon);

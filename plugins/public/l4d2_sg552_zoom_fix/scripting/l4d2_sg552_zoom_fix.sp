@@ -19,6 +19,9 @@ void WeaponZoom_Event(Event hEvent, const char[] eName, bool dontBroadcast)
     int userid = GetEventInt(hEvent, "userid");
     int client = GetClientOfUserId(userid);
 
+    if (!client)
+        return;
+
     if (GetEntProp(client, Prop_Send, "m_hZoomOwner") == -1 && UsingTheGunSG552(client))
         UnZoom(client);
 }
@@ -33,6 +36,9 @@ stock void UnZoom(int client)
 stock bool UsingTheGunSG552(int client)
 {
     int  weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+
+    if (weapon == -1)
+        return false;
 
     char classname[256];
     GetEntityClassname(weapon, classname, sizeof(classname));

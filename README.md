@@ -209,7 +209,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 3. l4d_ai_hunter_skeet_dmg_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
 
-4. l4d_cutscene_nodamage  
+4. l4d_cutscene_nodamage (버그 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_cutscene_nodamage>
 
 5. l4d_shotgun_sound_fix  
@@ -221,25 +221,25 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 7. l4d2_chainsaw_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_chainsaw_fix>
 
-8. l4d2_item_hint  
+8. l4d2_item_hint (버그 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-9. l4d2_skill_detect  
+9. l4d2_skill_detect (버그 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
 
-10. l4dffannounce (알림 문구 수정)  
+10. l4dffannounce (알림 문구 수정, 버그 수정)  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-11. LMC_Black_and_White_Notifier (알림 문구 수정)  
+11. LMC_Black_and_White_Notifier (알림 문구 수정, 버그 수정)  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/LMC_Black_and_White_Notifier>
 
 12. physics_object_pushfix  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/physics_object_pushfix>
 
-13. trigger_horde_notify (알림 문구 수정)  
+13. trigger_horde_notify (알림 문구 수정, 버그 수정)  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
-14. l4d_death_item_glow (보조무기 glow 추가)  
+14. l4d_death_item_glow (보조무기 glow 추가, 버그 수정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_death_item_glow>
 
 15. l4d_fix_common_shove (기본값 31 설정)  
@@ -254,34 +254,34 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 18. l4d_rock_invuln_duration (기본값 0 설정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_rock_invuln_duration>
 
-19. l4d_tank_damage_announce (cfg 자동 생성 추가)  
+19. l4d_tank_damage_announce (cfg 자동 생성 추가, 버그 수정)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_tank_damage_announce>
 
 20. l4d2_fix_jockey_hitbox (버그 고침)  
     <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d2_fix_jockey_hitbox>
 
-21. l4d_skip_intro  
+21. l4d_skip_intro (버그 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_skip_intro.sp>
 
-22. l4d_witch_damage_announce  
+22. l4d_witch_damage_announce (버그 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d_witch_damage_announce.sp>
 
-23. l4d2_charge_target_fix  
+23. l4d2_charge_target_fix (버그 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_charge_target_fix.sp>
 
 24. l4d2_ellis_hunter_bandaid_fix  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_ellis_hunter_bandaid_fix.sp>
 
-25. l4d2_sg552_zoom_fix  
+25. l4d2_sg552_zoom_fix (버그 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/l4d2_sg552_zoom_fix.sp>
 
-26. survivor_mvp (convar 기본값 수정)  
+26. survivor_mvp (convar 기본값 수정, 버그 수정)  
     <https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/addons/sourcemod/scripting/survivor_mvp.sp>
 
-27. l4d2_kill_sound  
+27. l4d2_kill_sound (버그 수정)  
     <https://github.com/Hatsune-Imagine/l4d2-plugins/tree/main/l4d2_kill_sound>
 
-28. l4d2_a2s_fix  
+28. l4d2_a2s_fix (버그 수정)  
     <https://github.com/lakwsh/l4d2_vomit_fix/blob/master/l4d2_a2s_fix.sp>
 
 29. l4d2_parseline_fix  
@@ -290,13 +290,13 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 30. Explosion Announcer  
     <https://forums.alliedmods.net/showthread.php?t=328006>
 
-31. Gear Transfer  
+31. Gear Transfer (버그 수정)  
     <https://forums.alliedmods.net/showthread.php?t=137616>
 
 32. l4d_path_to_goal  
     <https://forums.alliedmods.net/showthread.php?t=352685>
 
-33. l4d2_bugfix_deathspit  
+33. l4d2_bugfix_deathspit (버그 수정)  
     <https://forums.alliedmods.net/showthread.php?p=2827186>
 
 34. l4d2_pistol_reload_empty_fix  
@@ -308,7 +308,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 36. Shove Direction Fix  
     <https://forums.alliedmods.net/showthread.php?p=2675039>
 
-37. Throwable Announcer  
+37. Throwable Announcer (버그 수정)  
     <https://forums.alliedmods.net/showthread.php?p=2719564>
 
 38. Upgrade Ammo Pack Deploy Announce  

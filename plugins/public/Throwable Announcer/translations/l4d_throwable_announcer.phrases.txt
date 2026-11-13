@@ -31,7 +31,7 @@
 		"pt"			"{orange}{1} {lightgreen}jogou um {olive}molotov"
 		"pt_p"			"{orange}{1} {lightgreen}jogou um {olive}molotov"
 		"ru"			"{orange}{1} {lightgreen}бросил {olive}молотов"
-		"zho"			"{orange}{1} {lightgreen}扔了一瓶 {olive}汽油彈
+		"zho"			"{orange}{1} {lightgreen}扔了一瓶 {olive}汽油彈"
 	}
 	"Thrown a pipe bomb"
 	{

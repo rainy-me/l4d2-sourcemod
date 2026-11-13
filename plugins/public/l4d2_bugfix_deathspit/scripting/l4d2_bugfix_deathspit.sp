@@ -68,10 +68,12 @@ void IsAllowed()
 	if(bPluginOn && !bHooked)
 	{
 		HookEvent("spitter_killed", SpitterKilled_Event, EventHookMode_PostNoCopy);
+		bHooked = true;
 	}
 	else if(!bPluginOn && bHooked)
 	{
 		UnhookEvent("spitter_killed", SpitterKilled_Event, EventHookMode_PostNoCopy);
+		bHooked = false;
 	}
 }
 

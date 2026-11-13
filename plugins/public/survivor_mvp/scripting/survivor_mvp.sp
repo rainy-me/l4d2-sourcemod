@@ -533,7 +533,7 @@ Action Say_Cmd(client, args)
 Action SurvivorMVP_Cmd(client, args)
 {
     decl String:printBuffer[4096];
-    new String:strLines[8][192];
+    new String:strLines[8][256];
     
     GetMVPString(printBuffer, sizeof(printBuffer));
     
@@ -561,7 +561,7 @@ Action ShowMVPStats_Cmd(client, args)
 Action:delayedMVPPrint(Handle:timer)
 {
     decl String:printBuffer[4096];
-    new String:strLines[8][192];
+    new String:strLines[8][256];
     
     GetMVPString(printBuffer, sizeof(printBuffer));
     
@@ -604,13 +604,13 @@ void PrintLoserz(bool:bSolo, client)
                 {
                     if (mvp_SI_losers[i] == client)
                     {
-                        FormatEx(tmpBuffer, sizeof(tmpBuffer), "{blue}Your Rank {green}SI: {olive}#%d - {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{olive}, {default}%d {green}kills {blue}[{default}%.0f%%{blue}])", (i + 2), iDidDamageAll[mvp_SI_losers[i]], (float(iDidDamageAll[mvp_SI_losers[i]]) / float(iTotalDamageAll)) * 100, iGotKills[mvp_SI_losers[i]], (float(iGotKills[mvp_SI_losers[i]]) / float(iTotalKills)) * 100);
+                        FormatEx(tmpBuffer, sizeof(tmpBuffer), "{blue}Your Rank {green}SI: {olive}#%d - {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{olive}, {default}%d {green}kills {blue}[{default}%.0f%%{blue}])", (i + 2), iDidDamageAll[mvp_SI_losers[i]], (float(iDidDamageAll[mvp_SI_losers[i]]) / float(iTotalDamageAll)) * 100, iGotKills[mvp_SI_losers[i]], (float(iGotKills[mvp_SI_losers[i]]) / float(iTotalKills > 0 ? iTotalKills : 1)) * 100);
                         CPrintToChat(mvp_SI_losers[i], "%s", tmpBuffer);
                     }
                 }
                 else 
                 {
-                    FormatEx(tmpBuffer, sizeof(tmpBuffer), "{blue}Your Rank {green}SI: {olive}#%d - {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{olive}, {default}%d {green}kills {blue}[{default}%.0f%%{blue}])", (i + 2), iDidDamageAll[mvp_SI_losers[i]], (float(iDidDamageAll[mvp_SI_losers[i]]) / float(iTotalDamageAll)) * 100, iGotKills[mvp_SI_losers[i]], (float(iGotKills[mvp_SI_losers[i]]) / float(iTotalKills)) * 100);
+                    FormatEx(tmpBuffer, sizeof(tmpBuffer), "{blue}Your Rank {green}SI: {olive}#%d - {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{olive}, {default}%d {green}kills {blue}[{default}%.0f%%{blue}])", (i + 2), iDidDamageAll[mvp_SI_losers[i]], (float(iDidDamageAll[mvp_SI_losers[i]]) / float(iTotalDamageAll)) * 100, iGotKills[mvp_SI_losers[i]], (float(iGotKills[mvp_SI_losers[i]]) / float(iTotalKills > 0 ? iTotalKills : 1)) * 100);
                     CPrintToChat(mvp_SI_losers[i], "%s", tmpBuffer);
                 }
             }
@@ -861,6 +861,9 @@ void PlayerHurt_Event(Handle:event, const String:name[], bool:dontBroadcast)
         if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_INFECTED)
         {
             zombieClass = GetEntProp(victim, Prop_Send, "m_zombieClass");
+            
+            // A dying tank still takes damage during its death animation
+            if (zombieClass == ZC_TANK && GetEntProp(victim, Prop_Send, "m_isIncapacitated")) return;
             
             // Increment the damage for that class to the total
             iDidDamageClass[attacker][zombieClass] += damageDone;
@@ -1122,9 +1125,9 @@ void GetMVPString(char[] printBuffer, const int iSize)
                 if (iBrevityFlags & BREV_PERCENT) {
                     FormatEx(tmpBuffer, sizeof(tmpBuffer), "[MVP] SI:\x03 %s \x01(\x05%d \x01dmg,\x05 %d \x01kills)\n", mvp_SI_name, iDidDamageAll[mvp_SI], iGotKills[mvp_SI]);
                 } else if (iBrevityFlags & BREV_ABSOLUTE) {
-                    FormatEx(tmpBuffer, sizeof(tmpBuffer), "[MVP] SI:\x03 %s \x01(dmg \x04%2.0f%%\x01, kills \x04%.0f%%\x01)\n", mvp_SI_name, (float(iDidDamageAll[mvp_SI]) / float(iTotalDamageAll)) * 100, (float(iGotKills[mvp_SI]) / float(iTotalKills)) * 100);
+                    FormatEx(tmpBuffer, sizeof(tmpBuffer), "[MVP] SI:\x03 %s \x01(dmg \x04%2.0f%%\x01, kills \x04%.0f%%\x01)\n", mvp_SI_name, (float(iDidDamageAll[mvp_SI]) / float(iTotalDamageAll)) * 100, (float(iGotKills[mvp_SI]) / float(iTotalKills > 0 ? iTotalKills : 1)) * 100);
                 } else {
-                    FormatEx(tmpBuffer, sizeof(tmpBuffer), "{blue}[{default}MVP{blue}] SI: {olive}%s {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{olive}, {default}%d {green}kills {blue}[{default}%.0f%%{blue}])\n", mvp_SI_name, iDidDamageAll[mvp_SI], (float(iDidDamageAll[mvp_SI]) / float(iTotalDamageAll)) * 100, iGotKills[mvp_SI], (float(iGotKills[mvp_SI]) / float(iTotalKills)) * 100);
+                    FormatEx(tmpBuffer, sizeof(tmpBuffer), "{blue}[{default}MVP{blue}] SI: {olive}%s {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{olive}, {default}%d {green}kills {blue}[{default}%.0f%%{blue}])\n", mvp_SI_name, iDidDamageAll[mvp_SI], (float(iDidDamageAll[mvp_SI]) / float(iTotalDamageAll)) * 100, iGotKills[mvp_SI], (float(iGotKills[mvp_SI]) / float(iTotalKills > 0 ? iTotalKills : 1)) * 100);
                 }
                 StrCat(printBuffer, iSize, tmpBuffer);
             }

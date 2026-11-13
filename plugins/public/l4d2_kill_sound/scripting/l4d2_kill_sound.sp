@@ -98,7 +98,8 @@ Action Event_Player_Death(Event event, const char[] name, bool dontBroadcast) {
 	char weapon[32];
 	event.GetString("weapon", weapon, sizeof(weapon));
 	float victimPos[3];
-	GetEntPropVector(event.GetInt("entityid"), Prop_Send, "m_vecOrigin", victimPos);
+	// entityid is 0 when a special infected dies
+	GetEntPropVector(victim ? victim : event.GetInt("entityid"), Prop_Send, "m_vecOrigin", victimPos);
 	// PrintToChatAll("[Debug] damage type: %s", weapon);
 
 	if (!g_hEnable.BoolValue) return Plugin_Continue;

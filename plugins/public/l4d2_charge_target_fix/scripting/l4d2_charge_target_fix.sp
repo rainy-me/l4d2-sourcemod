@@ -206,6 +206,28 @@ void Event_PlayerIncap(Event event, const char[] name, bool dontBroadcast)
 	g_bNotSolid[client] = true;
 }
 
+// A charger kicked mid-charge fires neither charger_killed nor charger_pummel_end
+public void OnClientDisconnect(int client)
+{
+	int victim = g_iChargeVictim[client];
+	if (victim != -1)
+	{
+		if (g_bNotSolid[victim] && IsClientInGame(victim))
+			SetPlayerSolid(victim, true);
+		
+		g_bNotSolid[victim] = false;
+		g_iChargeAttacker[victim] = -1;
+		g_iChargeVictim[client] = -1;
+	}
+	
+	int attacker = g_iChargeAttacker[client];
+	if (attacker != -1)
+	{
+		g_iChargeVictim[attacker] = -1;
+		g_iChargeAttacker[client] = -1;
+	}
+}
+
 // Clear arrays if the victim dies to slams
 void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
@@ -383,7 +405,7 @@ void HandlePlayerReplace(int replacer, int replacee)
 		return;
 	
 	if (!replacee)
-		replacee = -1;
+		return;
 	
 	if (GetClientTeam(replacer) == 3)
 	{

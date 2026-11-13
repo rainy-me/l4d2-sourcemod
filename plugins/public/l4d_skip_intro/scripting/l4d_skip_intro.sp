@@ -276,12 +276,12 @@ void Event_NoDraw(Event event, const char[] name, bool dontBroadcast)
 		g_bOutput2 = false;
 
 		// Multiple times to make sure it works
-		CreateTimer(1.0, TimerStart);
-		CreateTimer(5.0, TimerStart);
-		CreateTimer(6.0, TimerStart);
-		CreateTimer(6.5, TimerStart);
-		CreateTimer(7.0, TimerStart);
-		CreateTimer(8.0, TimerStart);
+		CreateTimer(1.0, TimerStart, _, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(5.0, TimerStart, _, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(6.0, TimerStart, _, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(6.5, TimerStart, _, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(7.0, TimerStart, _, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(8.0, TimerStart, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 

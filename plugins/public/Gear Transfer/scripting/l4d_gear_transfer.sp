@@ -847,7 +847,7 @@ void ResetPlugin()
 		}
 
 		if( !g_bLeft4Dead2 )
-			SDKUnhook(i, SDKHook_WeaponEquip, OnWeaponDrop);
+			SDKUnhook(i, SDKHook_WeaponDrop, OnWeaponDrop);
 		SDKUnhook(i, SDKHook_WeaponEquip, OnWeaponEquip);
 	}
 }
@@ -880,7 +880,7 @@ public void OnClientPutInServer(int client)
 	if( g_bCvarAllow )
 	{
 		if( !g_bLeft4Dead2 )
-			SDKHook(client, SDKHook_WeaponEquip, OnWeaponDrop);
+			SDKHook(client, SDKHook_WeaponDrop, OnWeaponDrop);
 		SDKHook(client, SDKHook_WeaponEquip, OnWeaponEquip);
 	}
 }
@@ -918,6 +918,7 @@ public void OnConfigsExecuted()
 void ConVarChanged_Allow(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	IsAllowed();
+	ConVarChanged_AutoMode(null, "", ""); // mp_gamemode changed
 }
 
 void ConVarChanged_AutoMode(Handle convar, const char[] oldValue, const char[] newValue)
@@ -1002,7 +1003,7 @@ void IsAllowed()
 			{
 				// Hook WeaponEquip
 				if( !g_bLeft4Dead2 )
-					SDKHook(i, SDKHook_WeaponEquip, OnWeaponDrop);
+					SDKHook(i, SDKHook_WeaponDrop, OnWeaponDrop);
 				SDKHook(i, SDKHook_WeaponEquip, OnWeaponEquip);
 
 				for( int slot = SLOT_NADE; slot <= SLOT_MEDS; slot++ )
@@ -1235,9 +1236,13 @@ Action TimerIntro(Handle timer)
 //					EVENT - SPAWNER GIVE ITEM
 // ======================================================================================
 // Delete the last item picked up from a weapon_spawn to stop bots auto grabbing nothing!
+bool g_bOwnSpawnerEvent;
 void Event_SpawnerGiveItem(Event event, const char[] name, bool dontBroadcast)
 {
 	if( !g_iCvarGrab )					// Bug only with auto grab
+		return;
+
+	if( g_bOwnSpawnerEvent )			// Auto grab already updated the spawner count itself
 		return;
 
 	int ent = event.GetInt("spawner");
@@ -1267,7 +1272,7 @@ void Event_SpawnerGiveItem(Event event, const char[] name, bool dontBroadcast)
 void Event_WeaponFire(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	if( GetClientTeam(client) != 2 )
+	if( !client || GetClientTeam(client) != 2 )
 		return;
 
 	static char classname[10];
@@ -1297,6 +1302,7 @@ void Event_WeaponGiven(Event event, const char[] name, bool dontBroadcast)
 	if( weapon == 15 || weapon == 23 )
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
+		if( !client ) return;
 
 		if( g_iCvarNotify & NOTIFY_EVENT && g_iCvarNotifies & NOTIFY_GIVE && g_fNextTransfer[client] < GetGameTime() )
 		{
@@ -1375,12 +1381,12 @@ void Event_PlayerShoved(Event event, const char[] name, bool dontBroadcast)
 		return;
 
 	int target = GetClientOfUserId(event.GetInt("userid"));
-	if( GetClientTeam(target) != 2 || !IsPlayerAlive(target) )
+	if( !target || GetClientTeam(target) != 2 || !IsPlayerAlive(target) )
 		return;
 
 	// Validate client
 	int client = GetClientOfUserId(event.GetInt("attacker"));
-	if( IsFakeClient(client) )
+	if( !client || IsFakeClient(client) )
 		return;
 
 	// They just transferred, return
@@ -1695,8 +1701,8 @@ void GiveItem(int client, int target, int item, int slot, int type, int transfer
 		int type_c = g_iClientType[client][slot];
 		int type_t = g_iClientType[target][slot];
 
-		if( g_iClientType[client][slot] - 1 == TYPE_MOLO )	StopSound(ent_t, SNDCHAN_STATIC, SOUND_MOLOTOV_IDLE);
-		if( g_iClientType[target][slot] - 1 == TYPE_MOLO )	StopSound(ent_c, SNDCHAN_STATIC, SOUND_MOLOTOV_IDLE);
+		if( g_iClientType[client][slot] - 1 == TYPE_MOLO )	StopSound(ent_c, SNDCHAN_STATIC, SOUND_MOLOTOV_IDLE);
+		if( g_iClientType[target][slot] - 1 == TYPE_MOLO )	StopSound(ent_t, SNDCHAN_STATIC, SOUND_MOLOTOV_IDLE);
 
 		RemovePlayerItem(target, ent_t);
 		RemovePlayerItem(client, ent_c);
@@ -1729,8 +1735,8 @@ void GiveItem(int client, int target, int item, int slot, int type, int transfer
 		}
 
 		// Events
-		FireEventsGeneral(client, target, ent_c, type);
-		FireEventsGeneral(target, client, ent_t, type);
+		FireEventsGeneral(client, target, ent_c, type_c - 1);
+		FireEventsGeneral(target, client, ent_t, type_t - 1);
 
 		// Forward
 		Call_StartForward(g_hForwardSwap);
@@ -1959,6 +1965,8 @@ Action TimerAutoGive(Handle timer)
 
 
 	// Loop through bots
+	if( lastBot > MaxClients ) lastBot = 1; // an early continue/return on the last slot skips the reset below
+
 	for( int bot = lastBot; bot <= MaxClients; bot++ )
 	{
 		lastBot = bot + 1;
@@ -2238,7 +2246,7 @@ Action TimerAutoGrab(Handle timer)
 						lastIndex = index;
 						type = aType.Get(index);
 
-						if( type > MAX_TYPES )
+						if( type >= MAX_TYPES )
 						{
 							spawner = true;
 							type -= MAX_TYPES;
@@ -2446,7 +2454,9 @@ void FireEventsFootlocker(int client, int target, int type, bool spawner)
 			hEvent.SetInt("userid", GetClientUserId(client));
 			hEvent.SetString("item", g_sPickups[type]);
 			hEvent.SetInt("spawner", target);
+			g_bOwnSpawnerEvent = true;
 			hEvent.Fire();
+			g_bOwnSpawnerEvent = false;
 		}
 	}
 
@@ -2707,7 +2717,7 @@ void Vocalize(int client, int type)
 	int random = GetRandomInt(min, max);
 
 	// Select random vocalize
-	static char sTemp[40];
+	static char sTemp[64];
 	switch( surv )
 	{
 		case 1: Format(sTemp, sizeof(sTemp), g_Coach[random]);
@@ -2795,7 +2805,7 @@ void VocalizeGive(int client)
 		case 8: random = GetRandomInt(0, sizeof(g_GiveZoey) - 1);
 	}
 
-	static char sTemp[40];
+	static char sTemp[64];
 	switch( surv )
 	{
 		case 1: Format(sTemp, sizeof(sTemp), g_GiveCoach[random]);
@@ -2849,7 +2859,7 @@ void CPrintToChatAll(int client, const char[] format, any ...)
 
 	if( g_iCvarNotify & NOTIFY_CLIENT )
 	{
-		if( IsClientInGame(client) && !IsFakeClient(client) )
+		if( client && IsClientInGame(client) && !IsFakeClient(client) )
 		{
 			SetGlobalTransTarget(client);
 			VFormat(buffer, sizeof(buffer), format, 3);
@@ -2893,7 +2903,7 @@ void MPrintToChatAll(int client, const char[] phrase, const char[] item, int tar
 			user = i;
 		}
 
-		if( IsClientInGame(user) && !IsFakeClient(user) )
+		if( user && IsClientInGame(user) && !IsFakeClient(user) )
 		{
 			SetGlobalTransTarget(user);
 			pickupItem = Translate(user, "\x04%t\x01", item);

@@ -244,7 +244,7 @@ void PrintWitchDamage(int witch, bool witchAlive = false)
         percentAdjustment,
         adjustedPercentDamage;
 
-    int[] survivorClients = new int[GetSurvivorCount()];
+    int[] survivorClients = new int[GetSurvivorCount() + 1]; // size 0 is invalid
 
     int lastPercent = 100;
 
@@ -365,6 +365,12 @@ int GetSurvivorCount()
     }
 
     return count;
+}
+
+public void OnClientDisconnect(int client)
+{
+    for (int i = 0; i < sizeof(damageToWitch[]); i++)
+        damageToWitch[client][i] = 0;
 }
 
 void ClearDamage(int witch)

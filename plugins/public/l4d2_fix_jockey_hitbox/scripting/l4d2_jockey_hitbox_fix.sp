@@ -143,11 +143,11 @@ float GetCharacterScale(int survivorCharacter)
 
 int ConvertToExternalCharacter(int survivorCharacter)
 {
-    if (survivorCharacter < 0 || survivorCharacter > 4)
+    if (survivorCharacter < 0 || survivorCharacter > 7)
         return 8;
 
     if (L4D2_GetSurvivorSetMod() == 1)
-        return survivorCharacter + 4;
+        return survivorCharacter < 4 ? survivorCharacter + 4 : 8;
 
     return survivorCharacter;
 }
