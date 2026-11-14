@@ -2215,12 +2215,9 @@ Action TimerAutoGrab(Handle timer)
 
 		// Make sure bot is team survivor and alive
 		// Don't allow transfers while incapped/reviving
-		if( IsClientInGame(bot) && GetClientTeam(bot) == 2 && IsPlayerAlive(bot) && IsFakeClient(bot) && !IsReviving(bot) && !IsIncapped(bot) )
+		// Transferred recently: checked here, a "continue" would skip the loop reset at the bottom
+		if( times >= g_fNextTransfer[bot] && IsClientInGame(bot) && GetClientTeam(bot) == 2 && IsPlayerAlive(bot) && IsFakeClient(bot) && !IsReviving(bot) && !IsIncapped(bot) )
 		{
-			// Transferred recently
-			if( times < g_fNextTransfer[bot] )
-				continue;
-
 			// Loop through weapon slots
 			for( slot = 0; slot < 3; slot++ )
 			{

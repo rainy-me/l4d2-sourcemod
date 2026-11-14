@@ -550,7 +550,7 @@ Action SurvivorMVP_Cmd(client, args)
     {
         for (new i = 0; i < intPieces; i++) 
         {
-            CPrintToChat(client, "%s", strLines[i]);
+            if (strLines[i][0]) CPrintToChat(client, "%s", strLines[i]);
         }
     }
     PrintLoserz(true, client);
@@ -573,8 +573,10 @@ Action:delayedMVPPrint(Handle:timer)
     
     // PrintToChatAll has a max length. Split it in to individual lines to output separately
     new intPieces = ExplodeString(printBuffer, "\n", strLines, sizeof(strLines), sizeof(strLines[]));
-    for (new i = 0; i < intPieces; i++) 
+    for (new i = 0; i < intPieces; i++)
     {
+        if (!strLines[i][0]) continue; // the string ends with "\n", so the last piece is empty
+
         for (new client = 1; client <= MaxClients; client++)
         {
             if (IsClientInGame(client)) CPrintToChat(client, "{default}%s", strLines[i]);
@@ -909,7 +911,7 @@ void PlayerHurt_Event(Handle:event, const String:name[], bool:dontBroadcast)
         }
         
         // Otherwise if friendly fire
-        else if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_SURVIVOR && bTrackFF && !L4D_IsPlayerIncapacitated(victim))                // survivor on survivor action == FF
+        else if (attacker != victim && GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_SURVIVOR && bTrackFF && !L4D_IsPlayerIncapacitated(victim))                // survivor on survivor action == FF
         {
             if (bRUPLive || bPlayerLeftStartArea) {
                 // but don't record before readyup ended or before leaving saferoom if readyup is not loaded.

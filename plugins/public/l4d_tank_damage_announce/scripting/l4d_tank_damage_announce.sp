@@ -478,8 +478,8 @@ void OnTankTakeDamage(int tank, int attacker, int damage)
 		if (team == TEAM_SURVIVOR)
 		{
 			AutoUserVector survivorVector;
-			g_aTankInfo.Get(tankid, survivorVector, TankInfo::survivorInfoVector);
-			survivorVector.Add(attackerid, damage, SurvivorInfo::damageDone);
+			if (g_aTankInfo.Get(tankid, survivorVector, TankInfo::survivorInfoVector))
+				survivorVector.Add(attackerid, damage, SurvivorInfo::damageDone);
 		}
 		else if (team == TEAM_INFECTED)
 		{
@@ -513,8 +513,9 @@ void OnTankAttackDamage(int tank, int victim, int damage, const char[] weapon)
 	int victimid = GetClientUserId(victim);
 	
 	AutoUserVector survivorVector;
-	g_aTankInfo.Get(attackerid, survivorVector, TankInfo::survivorInfoVector);
-	
+	if (!g_aTankInfo.Get(attackerid, survivorVector, TankInfo::survivorInfoVector))
+		return; // tank already removed from tracking (e.g. its rock lands after it died)
+
 	if (StrContains(weapon, "tank_claw") != -1)
 		survivorVector.Add(victimid, 1, SurvivorInfo::punch);
 	else if (strcmp(weapon, "tank_rock") == 0)
