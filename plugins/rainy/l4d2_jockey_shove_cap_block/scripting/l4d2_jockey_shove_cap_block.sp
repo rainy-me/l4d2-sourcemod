@@ -43,6 +43,11 @@ public void OnPluginStart()
 
     HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
     HookEvent("player_shoved", Event_PlayerShoved);
+
+    // Late load
+    int entity = -1;
+    while ((entity = FindEntityByClassname(entity, "ability_leap")) != -1)
+        g_hLeapOnTouch.HookEntity(Hook_Pre, entity, DHook_LeapOnTouch);
 }
 
 public void OnEntityCreated(int entity, const char[] classname)

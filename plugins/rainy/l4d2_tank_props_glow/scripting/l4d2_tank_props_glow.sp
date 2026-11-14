@@ -40,6 +40,10 @@ public void OnPluginStart()
     HookEvent("tank_spawn", Event_TankSpawn);
     HookEvent("tank_killed", Event_TankKilled);
     HookEvent("round_end", Event_RoundEnd);
+
+    // Late load
+    if (IsAnyTankAlive())
+        StartTankPropsGlow();
 }
 
 public void OnPluginEnd()
@@ -48,6 +52,11 @@ public void OnPluginEnd()
 }
 
 void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
+{
+    StartTankPropsGlow();
+}
+
+void StartTankPropsGlow()
 {
     ToggleTankPropsGlow(true);
     // tank_killed 없이 탱크가 사라지는 경우 대비
