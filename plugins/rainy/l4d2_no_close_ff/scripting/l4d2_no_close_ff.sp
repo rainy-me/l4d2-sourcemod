@@ -62,16 +62,16 @@ Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damag
     GetClientAbsOrigin(attacker, attackerPos);
 
     // 차이(delta) 계산
-    float dx = attackerPos[0] - victimPos[0];
-    float dy = attackerPos[1] - victimPos[1];
-    float dz = attackerPos[2] - victimPos[2];
+    float dx      = attackerPos[0] - victimPos[0];
+    float dy      = attackerPos[1] - victimPos[1];
+    float dz      = attackerPos[2] - victimPos[2];
 
     // 수평 거리(제곱)와 수직 거리(절댓값) 분리 계산
     float horizSq = dx * dx + dy * dy;
     float vert    = FloatAbs(dz);
 
     // 원기둥 판정: 수평 거리 + 수직 높이 차 분리
-    float r = g_hConVarRadius.FloatValue;
+    float r       = g_hConVarRadius.FloatValue;
     if (horizSq <= r * r && vert <= g_hConVarVertGap.FloatValue)
         return Plugin_Handled;
 

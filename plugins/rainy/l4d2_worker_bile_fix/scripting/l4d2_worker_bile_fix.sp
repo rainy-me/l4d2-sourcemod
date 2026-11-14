@@ -51,12 +51,12 @@ void Frame_CollectGoals(DataPack pack)
     pack.ReadFloatArray(bilePos, 3);
     delete pack;
 
-    int ent = -1;
-    while ((ent = FindEntityByClassname(ent, "info_goal_infected_chase")) != -1)
+    int entity = -1;
+    while ((entity = FindEntityByClassname(entity, "info_goal_infected_chase")) != -1)
     {
-        GetEntPropVector(ent, Prop_Data, "m_vecAbsOrigin", goalPos);
+        GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", goalPos);
         if (GetVectorDistance(bilePos, goalPos) <= GOAL_SPAWN_RANGE)
-            g_hGoals.Push(EntIndexToEntRef(ent));
+            g_hGoals.Push(EntIndexToEntRef(entity));
     }
 
     if (g_hGoals.Length > 0 && g_hTimer == null)

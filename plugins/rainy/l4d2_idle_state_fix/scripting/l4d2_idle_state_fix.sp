@@ -72,7 +72,7 @@ void Event_AdrenalineUsed(Event event, const char[] name, bool dontBroadcast)
     g_fAdrenalineEndTime[client] = endTime;
 
     // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어에게도 기록
-    int idlePlayer = GetIdlePlayer(client);
+    int idlePlayer               = GetIdlePlayer(client);
     if (idlePlayer != 0)
         g_fAdrenalineEndTime[idlePlayer] = endTime;
 }
@@ -86,7 +86,7 @@ void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
     g_fAdrenalineEndTime[client] = 0.0;
 
     // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어 기록도 지움
-    int idlePlayer = GetIdlePlayer(client);
+    int idlePlayer               = GetIdlePlayer(client);
     if (idlePlayer == 0)
         return;
 
@@ -234,8 +234,8 @@ int GetGunSlot(int client, int weapon)
 
 bool IsMagnum(int weapon)
 {
-    char cls[32];
-    return weapon > 0 && IsValidEntity(weapon) && GetEntityClassname(weapon, cls, sizeof(cls)) && StrEqual(cls, "weapon_pistol_magnum");
+    char classname[32];
+    return weapon > 0 && IsValidEntity(weapon) && GetEntityClassname(weapon, classname, sizeof(classname)) && StrEqual(classname, "weapon_pistol_magnum");
 }
 
 // 유휴 플레이어가 있는 봇이면 그 플레이어를, 아니면 0을 반환

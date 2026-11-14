@@ -8,12 +8,12 @@
 
 #define WARNING_SOUND "ui/beepclear.wav"
 
-bool g_bPluginStarted;
+bool   g_bPluginStarted;
 
 ConVar g_hConVarThreshold;
 
 // 탄약 종류별로 이미 알렸는지 기억해서 부족한 동안 재장전할 때마다 다시 알리지 않는다
-bool g_bLowAmmo[MAXPLAYERS_L4D2 + 1][Ammo_MAX];
+bool   g_bLowAmmo[MAXPLAYERS_L4D2 + 1][Ammo_MAX];
 
 public Plugin myinfo =
 {

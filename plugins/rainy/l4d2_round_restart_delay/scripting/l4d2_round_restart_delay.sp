@@ -9,8 +9,8 @@ enum
     REASON_DEFEAT = 1
 };
 
-bool g_bLateLoad;
-bool g_bPluginStarted;
+bool   g_bLateLoad;
+bool   g_bPluginStarted;
 
 ConVar g_hConVarDelay;
 float  g_fDelay;

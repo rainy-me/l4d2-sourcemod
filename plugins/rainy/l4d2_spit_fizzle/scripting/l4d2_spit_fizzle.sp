@@ -7,16 +7,16 @@
 
 #define SPIT_MIN_FLAMES 2
 
-bool g_bLateLoad;
+bool   g_bLateLoad;
 
 ConVar g_hConVarFizzleOnStagger;
 ConVar g_hConVarFizzleOnDeath;
 
-bool g_bFizzleOnStagger;
-bool g_bFizzleOnDeath;
+bool   g_bFizzleOnStagger;
+bool   g_bFizzleOnDeath;
 
-int g_iSpittersProjectile[MAXPLAYERS_L4D2 + 1] = { INVALID_ENT_REFERENCE, ... };
-int g_iSpittersPuddle[MAXPLAYERS_L4D2 + 1]     = { INVALID_ENT_REFERENCE, ... };
+int    g_iSpittersProjectile[MAXPLAYERS_L4D2 + 1] = { INVALID_ENT_REFERENCE, ... };
+int    g_iSpittersPuddle[MAXPLAYERS_L4D2 + 1]     = { INVALID_ENT_REFERENCE, ... };
 
 public Plugin myinfo =
 {

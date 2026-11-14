@@ -4,9 +4,9 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define ZC_HUNTER 3
-#define ZC_JOCKEY 5
-#define ZC_TANK   8
+#define ZC_HUNTER      3
+#define ZC_JOCKEY      5
+#define ZC_TANK        8
 
 // 스태거가 끝난 뒤 공격을 다시 허용하기까지의 지연
 #define REENABLE_DELAY 0.5

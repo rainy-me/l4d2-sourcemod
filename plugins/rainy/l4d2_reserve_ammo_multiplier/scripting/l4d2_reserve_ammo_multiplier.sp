@@ -52,7 +52,7 @@ public void OnPluginStart()
     // Init cvars and store defaults
     for (int i = 0; i < AMMO_COUNT; i++)
     {
-        g_hConVarAmmo[i] = FindConVar(g_sConVarAmmoGunList[i]);
+        g_hConVarAmmo[i]    = FindConVar(g_sConVarAmmoGunList[i]);
         // 리로드 시에는 이전 배율이 cvar에 남아 있으므로 현재 값을 기준으로 삼는다
         int current         = g_hConVarAmmo[i] != null ? g_hConVarAmmo[i].IntValue : g_iConVarAmmoGunDefault[i];
         g_iPreAmmoStored[i] = current;
@@ -128,7 +128,7 @@ Action Cmd_AmmoMultiplier(int client, int args)
 
 void SetConVarAmmo(int index, int value)
 {
-    int intAbs              =(value < 0) ? -value : value;
+    int intAbs              = (value < 0) ? -value : value;
     g_iPreAmmoStored[index] = g_iAmmoStored[index];
     g_iAmmoStored[index]    = intAbs;
 

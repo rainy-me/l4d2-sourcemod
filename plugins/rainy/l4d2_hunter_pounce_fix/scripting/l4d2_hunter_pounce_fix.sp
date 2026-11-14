@@ -27,8 +27,8 @@ public void OnPluginStart()
     if (gameData == null)
         SetFailState("Failed to load %s.txt gamedata.", GAMEDATA);
 
-    g_hSetAbsOrigin   = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsOrigin");
-    g_hSetAbsVelocity = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsVelocity");
+    g_hSetAbsOrigin        = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsOrigin");
+    g_hSetAbsVelocity      = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsVelocity");
 
     g_hPatchSetAbsVelocity = MemoryPatch.CreateFromConf(gameData, "CTerrorPlayer::UpdatePounce::SkipSetAbsVelocity");
     delete gameData;

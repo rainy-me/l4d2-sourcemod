@@ -19,7 +19,6 @@ ConVar g_hConVarMaxStagger;
 int    g_iImpactCharger;    // 이번 틱에 벽에 충돌한 차저
 int    g_iImpactTick;
 bool   g_bReStaggering;    // 이 플러그인이 직접 거는 재스태거 중
-
 public Plugin myinfo =
 {
     name        = "L4D2 No SI Fall Stagger Cancel",

@@ -11,11 +11,11 @@
 enum EventState
 {
     EventState_None,
-    EventState_Event1Done,
+    EventState_Event1Done
 };
 
-Handle    g_hFinishReload          = null;
-StringMap g_hIdleReloadableWeapons = null;
+Handle     g_hFinishReload                        = null;
+StringMap  g_hIdleReloadableWeapons               = null;
 
 int        g_iActiveWeapon[MAXPLAYERS + 1]        = { -1, ... };
 int        g_iReloadingWeaponSlot[MAXPLAYERS + 1] = { -1, ... };
@@ -113,9 +113,9 @@ void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
         return;
 
     // 무기가 유휴 재장전 가능한지 확인
-    char activeWeaponClsname[64];
-    GetEntityClassname(activeWeapon, activeWeaponClsname, sizeof(activeWeaponClsname));
-    if (!IsIdleReloadableWeapon(activeWeaponClsname))
+    char activeWeaponClass[64];
+    GetEntityClassname(activeWeapon, activeWeaponClass, sizeof(activeWeaponClass));
+    if (!IsIdleReloadableWeapon(activeWeaponClass))
         return;
 
     // 현재 활성화된 무기 및 슬롯 저장
@@ -123,8 +123,8 @@ void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
     g_iReloadingWeaponSlot[client] = activeWeaponSlot;
 
     // 이벤트: 상태를 1단계 완료로 설정하고 타임아웃 시작
-    g_eEventState[client]   = EventState_Event1Done;
-    g_fStateTimeout[client] = GetGameTime() + RELOAD_TIMEOUT;
+    g_eEventState[client]          = EventState_Event1Done;
+    g_fStateTimeout[client]        = GetGameTime() + RELOAD_TIMEOUT;
 }
 
 void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)

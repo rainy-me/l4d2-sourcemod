@@ -14,13 +14,13 @@
 // 플러그인이 alert를 낸 뒤 이 시간 동안 엔진의 alert를 막는다 (가장 긴 alert가 약 3초)
 #define ALERT_BLOCK_TIME      3.0
 
-ConVar g_hConVarAutoConvars;
+ConVar      g_hConVarAutoConvars;
 
-bool   g_bEmitting[MAXPLAYERS + 1];    // 플러그인이 직접 소리를 내는 중인지
-bool   g_bIdleCue[MAXPLAYERS + 1];     // 지난 틱에 헌터가 웅크리고 있었는지, 자키가 생존자를 보고 있었는지
-float  g_fAlertTime[MAXPLAYERS + 1];
-float  g_fJockeyCueTime[MAXPLAYERS + 1];
-Handle g_hIdleTimer[MAXPLAYERS + 1];
+bool        g_bEmitting[MAXPLAYERS + 1];    // 플러그인이 직접 소리를 내는 중인지
+bool        g_bIdleCue[MAXPLAYERS + 1];     // 지난 틱에 헌터가 웅크리고 있었는지, 자키가 생존자를 보고 있었는지
+float       g_fAlertTime[MAXPLAYERS + 1];
+float       g_fJockeyCueTime[MAXPLAYERS + 1];
+Handle      g_hIdleTimer[MAXPLAYERS + 1];
 
 static char g_sSmokerAlert[][] = {
     "player/smoker/voice/alert/smoker_alert_01.wav",

@@ -8,10 +8,10 @@
 ConVar    g_hConVarGravity;
 ArrayList g_hProjectiles;
 
-float    g_fResumeTime[2049];
-float    g_fResumePos[2049][3];
-float    g_fResumeVel[2049][3];
-MoveType g_eMoveType[2049];
+float     g_fResumeTime[2049];
+float     g_fResumePos[2049][3];
+float     g_fResumeVel[2049][3];
+MoveType  g_eMoveType[2049];
 
 public Plugin myinfo =
 {
@@ -28,7 +28,7 @@ public void OnPluginStart()
     g_hProjectiles   = new ArrayList();
 
     // Late load
-    int entity = -1;
+    int entity       = -1;
     while ((entity = FindEntityByClassname(entity, "grenade_launcher_projectile")) != -1)
         Track(entity);
 }
@@ -96,9 +96,9 @@ void CheckSky(int entity)
     float hideTime = 2.0 * vel[2] / gravity;
 
     // 숨어 있는 동안의 수평 이동, 벽에 막히면 그 앞에서 떨어진다
-    end[0] = pos[0] + vel[0] * hideTime;
-    end[1] = pos[1] + vel[1] * hideTime;
-    end[2] = pos[2];
+    end[0]         = pos[0] + vel[0] * hideTime;
+    end[1]         = pos[1] + vel[1] * hideTime;
+    end[2]         = pos[2];
     TR_TraceHullFilter(pos, end, mins, maxs, MASK_SOLID, TraceFilter_Self, entity);
     TR_GetEndPosition(g_fResumePos[entity]);
 
@@ -119,11 +119,11 @@ void Resume(int entity)
 {
     g_fResumeTime[entity] = 0.0;
 
-    float ang[3];
-    GetVectorAngles(g_fResumeVel[entity], ang);
+    float angles[3];
+    GetVectorAngles(g_fResumeVel[entity], angles);
 
     SetEntityMoveType(entity, g_eMoveType[entity]);
-    TeleportEntity(entity, g_fResumePos[entity], ang, g_fResumeVel[entity]);
+    TeleportEntity(entity, g_fResumePos[entity], angles, g_fResumeVel[entity]);
 
     SDKUnhook(entity, SDKHook_SetTransmit, Hook_SetTransmit);
 

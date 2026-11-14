@@ -119,7 +119,7 @@ bool IsTankProp(int entity)
     // 아틀라스 볼, 벽돌 팔레트, 쓰레기통, 지게차, 통나무, 나무
     static const char keywords[][] = { "atlas_ball", "brick_pallet", "dumpster", "forklift", "log", "tree" };
 
-    char modelName[128];
+    char              modelName[128];
     GetEntPropString(entity, Prop_Data, "m_ModelName", modelName, sizeof(modelName));
 
     // 자동차류 (트럭·밴 제외)

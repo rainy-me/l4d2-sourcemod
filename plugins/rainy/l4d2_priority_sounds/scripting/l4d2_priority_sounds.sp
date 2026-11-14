@@ -28,7 +28,7 @@ enum
     SNDCHAR_DIR_STEREO     = '(',    // indicates directional stereo wav (like doppler)
     SNDCHAR_FAST_PITCH     = '}',    // forces low quality, non-interpolated pitch shift
     SNDCHAR_SUBTITLED      = '$'     // indicates the subtitles are forced
-}
+};
 
 // enum struct 메서드가 참조하므로 enum struct보다 앞에 둔다
 StringMap g_hMapSounds;
@@ -87,7 +87,7 @@ enum ParserState
     ParserState_LookingForSound,
     ParserState_ReadingSound,
     ParserState_Skip
-}
+};
 
 enum struct SoundParser
 {

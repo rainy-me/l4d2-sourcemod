@@ -11,8 +11,8 @@ bool   g_bAlwaysShriek;
 ConVar g_hConVarHonestWarn;
 bool   g_bHonestWarn;
 
-int  g_iOffsetPounceSoundCooldown;
-bool g_bLateLoad;
+int    g_iOffsetPounceSoundCooldown;
+bool   g_bLateLoad;
 
 public Plugin myinfo =
 {

@@ -78,11 +78,11 @@ void PrintEntityInfo(int client, int entity)
     // Distance (Player eye position -> Entity coordinates)
     float eyePos[3];
     GetClientEyePosition(client, eyePos);
-    float dist = GetVectorDistance(eyePos, origin);
+    float dist      = GetVectorDistance(eyePos, origin);
 
     // HP
-    int health    = -1;
-    int maxHealth = -1;
+    int   health    = -1;
+    int   maxHealth = -1;
     if (HasEntProp(entity, Prop_Data, "m_iHealth"))
         health = GetEntProp(entity, Prop_Data, "m_iHealth");
     if (HasEntProp(entity, Prop_Data, "m_iMaxHealth"))

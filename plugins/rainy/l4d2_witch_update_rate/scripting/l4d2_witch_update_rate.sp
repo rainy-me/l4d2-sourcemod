@@ -46,7 +46,7 @@ public void OnPluginStart()
     g_hWitches = new ArrayList();
 
     // Late load
-    int witch = -1;
+    int witch  = -1;
     while ((witch = FindEntityByClassname(witch, "witch")) != -1)
         g_hWitches.Push(witch);
 }
@@ -77,8 +77,8 @@ public void OnGameFrame()
     // NextBotManager가 nb_update_frequency 주기에만 세우는 플래그를 윗치에게 직접 세운다.
     for (int i = 0; i < g_hWitches.Length; i++)
     {
-        Address nb = SDKCall(g_hMyNextBotPointer, g_hWitches.Get(i));
-        if (nb != Address_Null)
-            StoreToAddress(nb + view_as<Address>(g_iFlaggedForUpdate), 1, NumberType_Int8, false);
+        Address nextBot = SDKCall(g_hMyNextBotPointer, g_hWitches.Get(i));
+        if (nextBot != Address_Null)
+            StoreToAddress(nextBot + view_as<Address>(g_iFlaggedForUpdate), 1, NumberType_Int8, false);
     }
 }
