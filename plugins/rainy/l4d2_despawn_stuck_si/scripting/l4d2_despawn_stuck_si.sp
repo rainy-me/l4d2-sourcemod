@@ -1,5 +1,5 @@
-#pragma semicolon 1
 #pragma newdecls required
+#pragma semicolon 1
 
 #include <sourcemod>
 #include <sdktools>
@@ -7,6 +7,15 @@
 #include <hxlib>
 
 #define CVAR_FLAGS FCVAR_NOTIFY
+
+public Plugin myinfo =
+{
+    name        = "L4D2 Despawn Stuck SI",
+    author      = "Rainy",
+    description = "끼인 좀비를 제거합니다.",
+    version     = "1.0.0",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_despawn_stuck_si"
+};
 
 Despawner g_despawner;
 
@@ -94,6 +103,7 @@ void Update()
 
             if (!IsVisibleToTeam(Team_Survivor, vPos, fDespawnRange, _, 0, false, true))
             {
+                // ForcePlayerSuicide는 클라이언트 전용이라 윗치·일반 좀비는 엔티티 제거
                 if (iEntIndex <= MaxClients)
                     ForcePlayerSuicide(iEntIndex);
                 else
@@ -131,15 +141,6 @@ bool ShouldDespawn()
 }
 }
 
-public Plugin myinfo =
-{
-    name        = "L4D2 Despawn Stuck SI",
-    author      = "Rainy",
-    description = "끼인 특수좀비를 제거합니다.",
-    version     = "1.0.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_despawn_stuck_si"
-};
-
 public void OnPluginStart()
 {
     g_hConVar_ZombieDiscardRangeDefault = FindConVar("z_discard_range");
@@ -163,6 +164,7 @@ public void OnPluginStart()
     g_hMap_TargetBehaviors.SetValue("ChargerBehavior", 0);
     g_hMap_TargetBehaviors.SetValue("TankBehavior", 0);
     g_hMap_TargetBehaviors.SetValue("WitchBehavior", 0);
+    g_hMap_TargetBehaviors.SetValue("InfectedBehavior", 0);
 
     g_despawner.Init();
 }

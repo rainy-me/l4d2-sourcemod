@@ -54,7 +54,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    맵 전환 시 생존자의 체력을 50까지 회복시키고, 무력화 효과를 제거합니다.
 
 6. [l4d2_despawn_stuck_si](/plugins/rainy/l4d2_despawn_stuck_si/)  
-   끼인 특수좀비를 제거합니다.
+   끼인 좀비를 제거합니다.
 
 7. [l4d2_fast_map_transition](/plugins/rainy/l4d2_fast_map_transition/)  
    다음 챕터로 넘어가는 데 걸리는 시간을 줄여줍니다.
