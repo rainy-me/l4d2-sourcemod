@@ -114,7 +114,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
     플레이어가 서버에 접속하면 채팅창에 알립니다.
 
 26. [l4d2_priority_sounds](/plugins/rainy/l4d2_priority_sounds/)  
-    중단되지 않는 우선순위 사운드를 설정합니다.
+    우선순위가 높은 소리가 다른 소리에 끊기지 않게 합니다.
 
 27. [l4d2_quick_healing](/plugins/rainy/l4d2_quick_healing/)  
     시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.

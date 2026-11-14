@@ -1,11 +1,21 @@
-#pragma semicolon 1
 #pragma newdecls required
+#pragma semicolon 1
 
 #include <sourcemod>
 #include <sdktools>
 #include <hxstocks>
 
-#define DATA_FILE             "data/l4d2_priority_sounds.txt"
+#define DATA_FILE "data/l4d2_priority_sounds.txt"
+
+public Plugin myinfo =
+{
+    name        = "L4D2 Priority Sounds",
+    author      = "Rainy",
+    description = "우선순위가 높은 소리가 다른 소리에 끊기지 않게 합니다.",
+    version     = "1.0.0",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_priority_sounds"
+};
+
 #define MIN_SUPPORTED_SNDCHAN SNDCHAN_WEAPON    // 1
 #define MAX_SUPPORTED_SNDCHAN SNDCHAN_STREAM    // 5
 
@@ -13,6 +23,34 @@ PlayingSound g_lastSound[MAXEDICTS + 1][MAX_SUPPORTED_SNDCHAN + 1];
 
 StringMap    g_hMap_Sounds;
 SoundParser  g_soundParser;
+
+public void OnPluginStart()
+{
+    g_hMap_Sounds = new StringMap();
+    g_soundParser.LoadSoundData();
+
+    for (int e = 0; e < sizeof(g_lastSound); e++)
+    {
+        for (int c = MIN_SUPPORTED_SNDCHAN; c < sizeof(g_lastSound[]); c++)
+            g_lastSound[e][c].Init();
+    }
+
+    AddNormalSoundHook(OnNormalSound);
+
+    RegAdminCmd("sm_priority_si_sounds_reset", Command_Reset, ADMFLAG_ROOT);
+}
+
+Action Command_Reset(int iClient, int iArgs)
+{
+    g_hMap_Sounds.Clear();
+    g_soundParser.LoadSoundData();
+
+    return Plugin_Handled;
+}
+
+/**********************
+ * track playing sounds
+ **********************/
 
 enum struct Sound
 {
@@ -25,13 +63,12 @@ enum struct PlayingSound
     int    entref;
     Handle timer;
     int    priority;
-    int    sampleHash;    // 재생 중인 샘플 이름의 해시. 정지 호출이 이 소리를 가리키는지 확인하는 용도
 
     void   Init(){
         this.entref = INVALID_ENT_REFERENCE;
         this.timer  = null; }
 
-Action Play(int iEntity, Sound soundData, int iSampleHash)
+Action Play(int iEntity, Sound soundData)
 {
     if (this.timer
         && EntRefToEntIndex(this.entref) != INVALID_ENT_REFERENCE
@@ -42,9 +79,8 @@ Action Play(int iEntity, Sound soundData, int iSampleHash)
 
     if (soundData.priority)
     {
-        this.priority   = soundData.priority;
-        this.entref     = EntIndexToEntRef(iEntity);
-        this.sampleHash = iSampleHash;
+        this.priority = soundData.priority;
+        this.entref   = EntIndexToEntRef(iEntity);
 
         if (soundData.duration >= 0.1)
             this.timer = CreateTimer(soundData.duration, Timer_SoundFinish, this);
@@ -52,13 +88,28 @@ Action Play(int iEntity, Sound soundData, int iSampleHash)
 
     return Plugin_Continue;
 }
-
-/** the playing sound was stopped early, so the channel is free again */
-void Stop(int iSampleHash)
-{
-    if (this.timer && this.sampleHash == iSampleHash)
-        delete this.timer;
 }
+
+void Timer_SoundFinish(Handle hTimer, PlayingSound sound)
+{
+    sound.timer = null;
+}
+
+Action OnNormalSound(int iClients[64], int &iNumClients, char sOriginalSample[PLATFORM_MAX_PATH], int &iEntity,
+                     int &iOriginalChannel, float &fVolume, int &iLevel, int &iPitch, int &iFlags, char sSoundEntry[256], int &iSeed)
+{
+    int iChannel = iOriginalChannel;
+    if (!IsValidEdict(iEntity) || !ProcessChannel(sOriginalSample, iChannel))
+        return Plugin_Continue;
+
+    static char sSample[sizeof(sOriginalSample)];
+    Sound       soundData;
+
+    CorrectSample(sOriginalSample, sSample, sizeof(sSample));
+    if (!g_hMap_Sounds.GetArray(sSample, soundData, sizeof(soundData)))
+        soundData.priority = 0;
+
+    return g_lastSound[iEntity][iChannel].Play(iEntity, soundData);
 }
 
 /** prefix of sample names for networked messages. up to the first 2 characters can have these chars.
@@ -80,6 +131,72 @@ enum
     SndChar_FastPitch     = '}',    // forces low quality, non-interpolated pitch shift
     SndChar_Subtitled     = '$'     // indicates the subtitles are forced
 }
+
+bool
+    IsSoundChar(char c)
+{
+    return c == SndChar_Stream || c == SndChar_UserVOX
+        || c == SndChar_Sentence || c == SndChar_DryMix
+        || c == SndChar_Doppler || c == SndChar_Directional
+        || c == SndChar_DistVariant || c == SndChar_Omni
+        || c == SndChar_HRTF || c == SndChar_Radio
+        || c == SndChar_SpatialStereo || c == SndChar_DirStereo
+        || c == SndChar_FastPitch || c == SndChar_Subtitled;
+}
+
+bool HasSoundChar(const char[] sSample, char c)
+{
+    for (int i = 0; i < PLATFORM_MAX_PATH; i++)
+    {
+        if (!IsSoundChar(sSample[i]))
+            break;
+
+        if (sSample[i] == c)
+            return true;
+    }
+
+    return false;
+}
+
+/**
+ * correct channel to what it's expected to translate to client side.
+ * returns true if this expected channel is targetted by the plugin.
+ */
+bool ProcessChannel(const char[] sSample, int &iChannel)
+{
+    if (iChannel > 7) iChannel %= 8;
+
+    if (iChannel != SNDCHAN_STREAM && iChannel != SNDCHAN_VOICE && iChannel != SNDCHAN_STATIC
+        && HasSoundChar(sSample, SndChar_Stream))
+    {
+        iChannel = SNDCHAN_STREAM;
+        return true;
+    }
+
+    return MIN_SUPPORTED_SNDCHAN <= iChannel <= MAX_SUPPORTED_SNDCHAN;
+}
+
+void CorrectSample(const char[] sOriginal, char[] sBuffer, int iBufferLen)
+{
+    int iWrite = 0;
+    for (int i = 0; iWrite < iBufferLen; i++)
+    {
+        if (!iWrite && IsSoundChar(sOriginal[i]))
+            continue;
+
+        if (IsCharAlpha(sOriginal[i]))
+            sBuffer[iWrite++] = CharToLower(sOriginal[i]);
+        else if (sOriginal[i] == '\\')
+            sBuffer[iWrite++] = '/';
+        else sBuffer[iWrite++] = sOriginal[i];
+
+        if (sOriginal[i] == '\0') return;
+    }
+}
+
+/******************
+ * parse data file
+ *****************/
 
 enum ParserState
 {
@@ -191,148 +308,6 @@ SMCResult Read(const char[] sKey, const char[] sValue)
     return SMCParse_Continue;
 }
 }
-
-public Plugin myinfo =
-{
-    name        = "L4D2 Priority Sounds",
-    author      = "Rainy",
-    description = "중단되지 않는 우선순위 사운드를 설정합니다.",
-    version     = "1.0.1",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_priority_sounds"
-};
-
-public void OnPluginStart()
-{
-    g_hMap_Sounds = new StringMap();
-    g_soundParser.LoadSoundData();
-
-    for (int e = 0; e < sizeof(g_lastSound); e++)
-    {
-        for (int c = MIN_SUPPORTED_SNDCHAN; c < sizeof(g_lastSound[]); c++)
-            g_lastSound[e][c].Init();
-    }
-
-    AddNormalSoundHook(OnNormalSound);
-
-    RegAdminCmd("sm_priority_si_sounds_reset", Command_Reset, ADMFLAG_ROOT);
-}
-
-Action Command_Reset(int iClient, int iArgs)
-{
-    g_hMap_Sounds.Clear();
-    g_soundParser.LoadSoundData();
-
-    return Plugin_Handled;
-}
-
-/**********************
- * track playing sounds
- **********************/
-
-void Timer_SoundFinish(Handle hTimer, PlayingSound sound)
-{
-    sound.timer = null;
-}
-
-Action OnNormalSound(int iClients[64], int &iNumClients, char sOriginalSample[PLATFORM_MAX_PATH], int &iEntity,
-                     int &iOriginalChannel, float &fVolume, int &iLevel, int &iPitch, int &iFlags, char sSoundEntry[256], int &iSeed)
-{
-    int iChannel = iOriginalChannel;
-    if (!IsValidEdict(iEntity) || !ProcessChannel(sOriginalSample, iChannel))
-        return Plugin_Continue;
-
-    static char sSample[sizeof(sOriginalSample)];
-    Sound       soundData;
-
-    CorrectSample(sOriginalSample, sSample, sizeof(sSample));
-
-    // 정지 호출은 새 재생이 아니므로 통과시키고, 재생 중이던 그 소리의 채널 점유만 푼다
-    if (iFlags & (SND_STOP | SND_STOPLOOPING))
-    {
-        g_lastSound[iEntity][iChannel].Stop(HashString(sSample));
-        return Plugin_Continue;
-    }
-
-    if (!g_hMap_Sounds.GetArray(sSample, soundData, sizeof(soundData)))
-        soundData.priority = 0;
-
-    return g_lastSound[iEntity][iChannel].Play(iEntity, soundData, HashString(sSample));
-}
-
-// djb2
-int HashString(const char[] sString)
-{
-    int iHash = 5381;
-    for (int i = 0; sString[i] != '\0'; i++)
-        iHash = iHash * 33 + sString[i];
-
-    return iHash;
-}
-
-bool IsSoundChar(char c)
-{
-    return c == SndChar_Stream || c == SndChar_UserVOX
-        || c == SndChar_Sentence || c == SndChar_DryMix
-        || c == SndChar_Doppler || c == SndChar_Directional
-        || c == SndChar_DistVariant || c == SndChar_Omni
-        || c == SndChar_HRTF || c == SndChar_Radio
-        || c == SndChar_SpatialStereo || c == SndChar_DirStereo
-        || c == SndChar_FastPitch || c == SndChar_Subtitled;
-}
-
-bool HasSoundChar(const char[] sSample, char c)
-{
-    for (int i = 0; i < PLATFORM_MAX_PATH; i++)
-    {
-        if (!IsSoundChar(sSample[i]))
-            break;
-
-        if (sSample[i] == c)
-            return true;
-    }
-
-    return false;
-}
-
-/**
- * correct channel to what it's expected to translate to client side.
- * returns true if this expected channel is targetted by the plugin.
- */
-bool ProcessChannel(const char[] sSample, int &iChannel)
-{
-    if (iChannel > 7) iChannel %= 8;
-
-    if (iChannel != SNDCHAN_STREAM && iChannel != SNDCHAN_VOICE && iChannel != SNDCHAN_STATIC
-        && HasSoundChar(sSample, SndChar_Stream))
-    {
-        iChannel = SNDCHAN_STREAM;
-        return true;
-    }
-
-    return MIN_SUPPORTED_SNDCHAN <= iChannel <= MAX_SUPPORTED_SNDCHAN;
-}
-
-void CorrectSample(const char[] sOriginal, char[] sBuffer, int iBufferLen)
-{
-    int iWrite = 0;
-    for (int i = 0; iWrite < iBufferLen; i++)
-    {
-        if (!iWrite && IsSoundChar(sOriginal[i]))
-            continue;
-
-        if (IsCharAlpha(sOriginal[i]))
-            sBuffer[iWrite++] = CharToLower(sOriginal[i]);
-        else if (sOriginal[i] == '\\')
-            sBuffer[iWrite++] = '/';
-        else sBuffer[iWrite++] = sOriginal[i];
-
-        if (sOriginal[i] == '\0') return;
-    }
-}
-
-/******************
- * parse data file
- *****************/
 
 SMCResult SMC_OnEnterSound(SMCParser hParser, const char[] sName, bool bOptQuotes)
 {
