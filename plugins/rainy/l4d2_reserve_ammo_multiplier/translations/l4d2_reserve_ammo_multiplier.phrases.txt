@@ -7,18 +7,21 @@
     }
     "Ammo Setting"
     {
-        "en"        "The maximum reserve ammo capacity has been set to {lightgreen}%.2f{default}x.\nReset remaining ammo."
-        "ko"        "최대 예비 탄약 소지량이 {lightgreen}%.2f{default}배로 설정되었습니다.\n남은 탄약을 재설정합니다."
+        "#format"   "{1:.2f}"
+        "en"        "The maximum reserve ammo capacity has been set to {lightgreen}{1}{default}x.\nReset remaining ammo."
+        "ko"        "최대 예비 탄약 소지량이 {lightgreen}{1}{default}배로 설정되었습니다.\n남은 탄약을 재설정합니다."
     }
     "Ammo Setting Load"
     {
-        "en"        "The maximum reserve ammo capacity has been set to {lightgreen}%.2f{default} times."
-        "ko"        "최대 예비 탄약 소지량이 {lightgreen}%.2f{default}배로 설정되었습니다."
+        "#format"   "{1:.2f}"
+        "en"        "The maximum reserve ammo capacity has been set to {lightgreen}{1}{default} times."
+        "ko"        "최대 예비 탄약 소지량이 {lightgreen}{1}{default}배로 설정되었습니다."
     }
     "Current Multiplier"
     {
-        "en"        "Current reserve ammo multiplier: {lightgreen}%.2f{default}"
-        "ko"        "현재 예비 탄약 배수: {lightgreen}%.2f{default}"
+        "#format"   "{1:.2f}"
+        "en"        "Current reserve ammo multiplier: {lightgreen}{1}{default}"
+        "ko"        "현재 예비 탄약 배수: {lightgreen}{1}{default}"
     }
     "No Access"
     {

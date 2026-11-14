@@ -7,7 +7,8 @@
     }
     "Idle Message"
     {
-        "en"    "%N is now idle."
-        "ko"    "%N 님이 유휴 상태입니다."
+        "#format"   "{1:N}"
+        "en"        "{1} is now idle."
+        "ko"        "{1} 님이 유휴 상태입니다."
     }
 }

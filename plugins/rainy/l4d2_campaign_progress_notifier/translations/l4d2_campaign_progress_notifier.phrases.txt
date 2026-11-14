@@ -2,12 +2,14 @@
 {
     "Furthest Progress"
     {
-        "en"    "{green}Survivors have reached {lightgreen}%d%%{green}."
-        "ko"    "{green}생존자들이 {lightgreen}%d%%{green}까지 도달했습니다."
+        "#format"   "{1:d}"
+        "en"        "{green}Survivors have reached {lightgreen}{1}%%{green}."
+        "ko"        "{green}생존자들이 {lightgreen}{1}%%{green}까지 도달했습니다."
     }
     "Current Progress"
     {
-        "en"    "{green}%N{default}'s current progress: {lightgreen}%d%%"
-        "ko"    "{green}%N{default}님의 현재 진행률: {lightgreen}%d%%"
+        "#format"   "{1:N},{2:d}"
+        "en"        "{green}{1}{default}'s current progress: {lightgreen}{2}%%"
+        "ko"        "{green}{1}{default}님의 현재 진행률: {lightgreen}{2}%%"
     }
 }
