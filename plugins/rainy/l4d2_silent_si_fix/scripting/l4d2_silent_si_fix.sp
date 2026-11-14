@@ -9,6 +9,7 @@
 #define HUNTER_GROWL_INTERVAL 2.6    // 헌터는 idle 소리가 없고, 웅크리는 동안 growl을 낸다
 #define JOCKEY_IDLE_INTERVAL  1.7
 #define CHARGER_IDLE_INTERVAL 1.7
+#define JOCKEY_CUE_RANGE      510.0    // 자키가 이 거리 안에서 생존자를 보면 idle 소리를 즉시 낸다
 
 // 플러그인이 alert를 낸 뒤 이 시간 동안 엔진의 alert를 막는다 (가장 긴 alert가 약 3초)
 #define ALERT_BLOCK_TIME      3.0
@@ -288,7 +289,7 @@ public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float
     if (!IsInfected(client) || !IsPlayerAlive(client) || L4D_IsPlayerGhost(client))
         return;
 
-    // 헌터는 웅크릴 때 growl 소리를, 자키는 생존자가 보이기 시작할 때 idle 소리를 즉시 내고 타이머를 다시 시작한다
+    // 헌터는 웅크릴 때 growl 소리를, 자키는 가까운 생존자가 보이기 시작할 때 idle 소리를 즉시 내고 타이머를 다시 시작한다
     L4D2ZombieClassType zClass = L4D2_GetPlayerZombieClass(client);
     bool                cue;
     if (zClass == L4D2ZombieClass_Hunter)
@@ -315,7 +316,7 @@ public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float
     g_bIdleCue[client] = cue;
 }
 
-// 살아 있는 생존자 중 한 명이라도 눈과 눈 사이가 막혀 있지 않으면 true (바라보는 방향은 따지지 않는다)
+// 살아 있는 생존자 중 한 명이라도 JOCKEY_CUE_RANGE 안에 있고 눈과 눈 사이가 막혀 있지 않으면 true (바라보는 방향은 따지지 않는다)
 bool CanSeeSurvivor(int client)
 {
     float eye[3], target[3];
@@ -326,6 +327,9 @@ bool CanSeeSurvivor(int client)
             continue;
 
         GetClientEyePosition(i, target);
+        if (GetVectorDistance(eye, target, true) > JOCKEY_CUE_RANGE * JOCKEY_CUE_RANGE)
+            continue;
+
         TR_TraceRayFilter(eye, target, MASK_VISIBLE, RayType_EndPoint, TraceFilter_NoPlayers);
         if (!TR_DidHit())
             return true;
