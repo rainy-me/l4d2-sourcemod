@@ -59,80 +59,80 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 7. [l4d2_fast_map_transition](/plugins/rainy/l4d2_fast_map_transition/)  
    다음 챕터로 넘어가는 데 걸리는 시간을 줄여줍니다.
 
-8. [l4d2_fix_si_sound](/plugins/rainy/l4d2_fix_si_sound/)  
-   특수좀비의 무음 문제를 고칩니다.
-
-9. [l4d2_getup_damage_fix](/plugins/rainy/l4d2_getup_damage_fix/)  
+8. [l4d2_getup_damage_fix](/plugins/rainy/l4d2_getup_damage_fix/)  
    일어나는 애니메이션이 진행되는 동안의 무적 시간 불일치 문제를 고칩니다.
 
-10. [l4d2_hang_fall_death_defib_fix](/plugins/rainy/l4d2_hang_fall_death_defib_fix/)  
-    매달리는 중에 떨어져 사망한 생존자의 소생 불가 버그를 고칩니다.
+9. [l4d2_hang_fall_death_defib_fix](/plugins/rainy/l4d2_hang_fall_death_defib_fix/)  
+   매달리는 중에 떨어져 사망한 생존자의 소생 불가 버그를 고칩니다.
 
-11. [l4d2_hide_idle_message](/plugins/rainy/l4d2_hide_idle_message/)  
+10. [l4d2_hide_idle_message](/plugins/rainy/l4d2_hide_idle_message/)  
     유휴 상태 메시지를 채팅창에 표시하지 않도록 합니다.
 
-12. [l4d2_hunter_audio_feedback](/plugins/rainy/l4d2_hunter_audio_feedback/)  
+11. [l4d2_hunter_audio_feedback](/plugins/rainy/l4d2_hunter_audio_feedback/)  
     헌터가 도약할 때 항상 소리를 내도록 합니다.
 
-13. [l4d2_hunter_pounce_fix](/plugins/rainy/l4d2_hunter_pounce_fix/)  
+12. [l4d2_hunter_pounce_fix](/plugins/rainy/l4d2_hunter_pounce_fix/)  
     헌터가 생존자를 덮치는 동안 헌터의 위치와 속도를 생존자에 맞춰 어긋나 보이지 않게 합니다.
 
-14. [l4d2_idle_command_fix](/plugins/rainy/l4d2_idle_command_fix/)  
+13. [l4d2_idle_command_fix](/plugins/rainy/l4d2_idle_command_fix/)  
     유휴 명령 미인식 문제를 고칩니다.
 
-15. [l4d2_idle_reload_on_all_weapons](/plugins/rainy/l4d2_idle_reload_on_all_weapons/)  
+14. [l4d2_idle_reload_on_all_weapons](/plugins/rainy/l4d2_idle_reload_on_all_weapons/)  
     모든 무기에서 유휴 장전이 가능하도록 합니다.
 
-16. [l4d2_idle_state_fix](/plugins/rainy/l4d2_idle_state_fix/)  
+15. [l4d2_idle_state_fix](/plugins/rainy/l4d2_idle_state_fix/)  
     유휴 복귀 시 시야, 손전등, 아드레날린, 들고 있는 무기를 유휴 전 상태로 되돌립니다.
 
-17. [l4d2_item_thrower](/plugins/rainy/l4d2_item_thrower/)  
+16. [l4d2_item_thrower](/plugins/rainy/l4d2_item_thrower/)  
     들고 있는 무기/아이템을 앞으로 던집니다.
 
-18. [l4d2_jockey_shove_cap_block](/plugins/rainy/l4d2_jockey_shove_cap_block/)  
+17. [l4d2_jockey_shove_cap_block](/plugins/rainy/l4d2_jockey_shove_cap_block/)  
     생존자에게 밀쳐진 자키가 일정 시간 동안 생존자를 잡지 못하도록 합니다.
 
-19. [l4d2_motd_title](/plugins/rainy/l4d2_motd_title/)  
+18. [l4d2_motd_title](/plugins/rainy/l4d2_motd_title/)  
     MOTD 제목을 변경할 수 있도록 합니다.
 
-20. [l4d2_no_ci_melee_kill_collision](/plugins/rainy/l4d2_no_ci_melee_kill_collision/)  
+19. [l4d2_no_ci_melee_kill_collision](/plugins/rainy/l4d2_no_ci_melee_kill_collision/)  
     근접무기로 죽인 일반좀비와의 충돌을 제거합니다.
 
-21. [l4d2_no_close_ff](/plugins/rainy/l4d2_no_close_ff/)  
+20. [l4d2_no_close_ff](/plugins/rainy/l4d2_no_close_ff/)  
     팀원이 너무 가까이 있을 때 팀킬을 차단합니다.
 
-22. [l4d2_no_deathfall_cam](/plugins/rainy/l4d2_no_deathfall_cam/)  
+21. [l4d2_no_deathfall_cam](/plugins/rainy/l4d2_no_deathfall_cam/)  
     추락 시 카메라 시점 전환을 차단합니다.
 
-23. [l4d2_no_melee_ff](/plugins/rainy/l4d2_no_melee_ff/)  
+22. [l4d2_no_melee_ff](/plugins/rainy/l4d2_no_melee_ff/)  
     근접무기 팀킬을 차단합니다.
 
-24. [l4d2_no_saferoom_ff](/plugins/rainy/l4d2_no_saferoom_ff/)  
+23. [l4d2_no_saferoom_ff](/plugins/rainy/l4d2_no_saferoom_ff/)  
     은신처 안에 있는 생존자에 대한 팀킬을 차단합니다.
 
-25. [l4d2_no_si_fall_stagger_cancel](/plugins/rainy/l4d2_no_si_fall_stagger_cancel/)  
+24. [l4d2_no_si_fall_stagger_cancel](/plugins/rainy/l4d2_no_si_fall_stagger_cancel/)  
     특수좀비가 낙하로 스태거를 취소하지 못하도록 착지 시 다시 스태거를 겁니다.
 
-26. [l4d2_player_connect_notifier](/plugins/rainy/l4d2_player_connect_notifier/)  
+25. [l4d2_player_connect_notifier](/plugins/rainy/l4d2_player_connect_notifier/)  
     플레이어가 서버에 접속하면 채팅창에 알립니다.
 
-27. [l4d2_priority_sounds](/plugins/rainy/l4d2_priority_sounds/)  
+26. [l4d2_priority_sounds](/plugins/rainy/l4d2_priority_sounds/)  
     중단되지 않는 우선순위 사운드를 설정합니다.
 
-28. [l4d2_quick_healing](/plugins/rainy/l4d2_quick_healing/)  
+27. [l4d2_quick_healing](/plugins/rainy/l4d2_quick_healing/)  
     시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.
 
-29. [l4d2_ragdoll_remover](/plugins/rainy/l4d2_ragdoll_remover/)  
+28. [l4d2_ragdoll_remover](/plugins/rainy/l4d2_ragdoll_remover/)  
     일반좀비/특수좀비의 ragdoll을 즉시 제거합니다.
 
-30. [l4d2_rainy_server_assistant](/plugins/rainy/l4d2_rainy_server_assistant/)  
+29. [l4d2_rainy_server_assistant](/plugins/rainy/l4d2_rainy_server_assistant/)  
     Rainy 서버 운영을 자동화합니다.
 
-31. [l4d2_reserve_ammo_multiplier](/plugins/rainy/l4d2_reserve_ammo_multiplier/)  
+30. [l4d2_reserve_ammo_multiplier](/plugins/rainy/l4d2_reserve_ammo_multiplier/)  
     예비 탄약 소지량을 배율로 조정합니다.
 
-32. [l4d2_round_restart_delay](/plugins/rainy/l4d2_round_restart_delay/)  
+31. [l4d2_round_restart_delay](/plugins/rainy/l4d2_round_restart_delay/)  
     라운드 재시작 지연 시간을 조정합니다.
+
+32. [l4d2_silent_si_fix](/plugins/rainy/l4d2_silent_si_fix/)  
+    특수좀비의 무음 문제를 고칩니다.
 
 33. [l4d2_skip_outtro](/plugins/rainy/l4d2_skip_outtro/)  
     맵 클리어 시 아웃트로를 빠르게 건너뜁니다.
