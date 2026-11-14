@@ -505,7 +505,7 @@ Action Timer_ePlayerSpawn(Handle timer, int userid)
 
 	//PrintToChatAll("%d %d", Heartbeat_GetRevives(client), L4D_GetMaxReviveCount());
 	// still black & white (e.g. after map transition), keep the heal notice working even if glow is disabled
-	g_bBW[client] = Heartbeat_GetRevives(client) >= L4D_GetMaxReviveCount();
+	g_bBW[client] = L4D_GetMaxReviveCount() > 0 && Heartbeat_GetRevives(client) >= L4D_GetMaxReviveCount();
 	if(!bGlowEnabled)
 		return Plugin_Continue;
 		
