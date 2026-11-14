@@ -13,7 +13,7 @@ public Plugin myinfo =
     name        = "L4D2 Charger Carry FF Fix",
     author      = "Rainy",
     description = "차저에게 끌려가는 생존자에 대한 팀킬을 방지합니다.",
-    version     = "1.2.2",
+    version     = "1.2.3",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_charger_carry_ff_fix"
 };
 

@@ -19,7 +19,7 @@ public Plugin myinfo =
     name        = "L4D2 Hunter Audio Feedback",
     author      = "Rainy",
     description = "헌터가 도약할 때 항상 소리를 내도록 합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_hunter_audio_feedback"
 };
 

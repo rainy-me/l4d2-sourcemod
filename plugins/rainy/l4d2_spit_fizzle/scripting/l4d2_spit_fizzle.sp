@@ -23,7 +23,7 @@ public Plugin myinfo =
     name        = "L4D2 Spit Fizzle",
     author      = "Rainy",
     description = "스피터가 죽거나 비틀거리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_spit_fizzle"
 };
 

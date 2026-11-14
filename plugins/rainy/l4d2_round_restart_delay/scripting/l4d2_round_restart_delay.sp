@@ -20,7 +20,7 @@ public Plugin myinfo =
     name        = "L4D2 Round Restart Delay",
     author      = "Rainy",
     description = "라운드 재시작 지연 시간을 조정합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_round_restart_delay"
 };
 

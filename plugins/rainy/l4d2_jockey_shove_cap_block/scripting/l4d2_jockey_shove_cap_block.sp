@@ -17,7 +17,7 @@ public Plugin myinfo =
     name        = "L4D2 Jockey Shove Cap Block",
     author      = "Rainy",
     description = "생존자에게 밀쳐진 자키가 일정 시간 동안 생존자를 잡지 못하도록 합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_jockey_shove_cap_block"
 };
 

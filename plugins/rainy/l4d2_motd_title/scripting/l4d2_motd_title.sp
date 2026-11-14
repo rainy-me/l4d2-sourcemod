@@ -175,7 +175,7 @@ public Plugin myinfo =
     name        = "L4D2 MOTD Title",
     author      = "Rainy",
     description = "MOTD 제목을 변경할 수 있도록 합니다.",
-    version     = "1.0.1",
+    version     = "1.0.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_motd_title"
 };
 
