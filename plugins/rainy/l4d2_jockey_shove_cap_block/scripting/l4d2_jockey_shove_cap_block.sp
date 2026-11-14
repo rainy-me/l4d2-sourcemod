@@ -39,6 +39,7 @@ public void OnPluginStart()
         "l4d2_jockey_shove_cap_block_time", "2.0",
         "How long a shoved jockey is blocked from capping survivors (seconds)",
         _, true, 1.0, true, 10.0);
+    AutoExecConfig(true, "l4d2_jockey_shove_cap_block");
 
     HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
     HookEvent("player_shoved", Event_PlayerShoved);

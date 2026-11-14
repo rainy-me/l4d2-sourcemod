@@ -42,11 +42,14 @@ public void OnPluginStart()
         "hunters won't warn about their lunge if they're already lunging",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hConVarHonestWarn.AddChangeHook(ConVarChanged_Update);
+    AutoExecConfig(true, "l4d2_hunter_audio_feedback");
 
     ReadConVars();
 
     HookEvent("ability_use", Event_AbilityUse);
     g_iOffsetPounceSoundCooldown = FindSendPropInfo("CTerrorPlayer", "m_pounceStartPosition");
+    if (g_iOffsetPounceSoundCooldown <= 0)
+        SetFailState("Failed to find offset 'CTerrorPlayer::m_pounceStartPosition'.");
     g_iOffsetPounceSoundCooldown += 52;
 
     if (g_bLateLoad)

@@ -46,6 +46,7 @@ public void OnPluginStart()
         "When a spitter dies, should their spit projectile be deleted and their spit puddle's growth be stopped?",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hConVarFizzleOnDeath.AddChangeHook(ConVarChanged_Update);
+    AutoExecConfig(true, "l4d2_spit_fizzle");
 
     ReadConVars();
 

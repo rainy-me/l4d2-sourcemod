@@ -37,6 +37,7 @@ public void OnPluginStart()
         "override the delay between round restarts. vanilla is 7.0",
         FCVAR_NOTIFY, true, 0.0);
     g_hConVarDelay.AddChangeHook(ConVarChanged_Update);
+    AutoExecConfig(true, "l4d2_round_restart_delay");
     g_fDelay = g_hConVarDelay.FloatValue;
 
     if (g_bLateLoad && LibraryExists(HXLIB_LIBRARY))

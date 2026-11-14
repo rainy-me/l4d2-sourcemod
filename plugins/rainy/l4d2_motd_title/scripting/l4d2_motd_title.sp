@@ -199,6 +199,7 @@ public void OnPluginStart()
 
     g_hConVarMOTDTitleType.AddChangeHook(ConVarChanged_Read);
     g_hConVarMOTDTitle.AddChangeHook(ConVarChanged_Read);
+    AutoExecConfig(true, "l4d2_motd_title");
     ReadConVars();
 
     LoadTranslations("l4d2_motd_title.phrases");

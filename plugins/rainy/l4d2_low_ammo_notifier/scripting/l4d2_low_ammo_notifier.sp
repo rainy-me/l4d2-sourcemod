@@ -32,6 +32,7 @@ public void OnPluginStart()
         "l4d2_low_ammo_notifier_threshold", "2.0",
         "when reserve ammo is less than or equal to this * ClipSize, consider it as low ammo.",
         FCVAR_NOTIFY, true, 0.0);
+    AutoExecConfig(true, "l4d2_low_ammo_notifier");
 }
 
 // 늦게 로드된 경우에도 OnPluginStart 직후에 불린다
