@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <hxstocks>
 
-#define DATA_FILE "data/l4d2_priority_sounds.txt"
+#define DATA_FILE             "data/l4d2_priority_sounds.txt"
 
 #define MIN_SUPPORTED_SNDCHAN SNDCHAN_WEAPON    // 1
 #define MAX_SUPPORTED_SNDCHAN SNDCHAN_STREAM    // 5
@@ -60,7 +60,9 @@ enum struct PlayingSound
         if (this.timer
             && EntRefToEntIndex(this.entRef) != INVALID_ENT_REFERENCE
             && soundData.priority < this.priority)
+        {
             return Plugin_Handled;
+        }
 
         if (this.timer)
             delete this.timer;
@@ -119,12 +121,12 @@ enum struct SoundParser
         delete this.stateHistory;
     }
 
-    void SetState(ParserState state)
+    void SetState(ParserState newState)
     {
-        if (this.state == state)
+        if (this.state == newState)
             return;
 
-        switch (state)
+        switch (newState)
         {
             case ParserState_LookingForSound:
             {
@@ -143,7 +145,7 @@ enum struct SoundParser
             }
         }
 
-        this.state = state;
+        this.state = newState;
     }
 
     void OpenSound(const char[] name)
@@ -222,7 +224,7 @@ public void OnPluginStart()
 
     AddNormalSoundHook(SoundHook_Normal);
 
-    RegAdminCmd("sm_priority_si_sounds_reset", Cmd_Reset, ADMFLAG_ROOT);
+    RegAdminCmd("sm_priority_sounds_reset", Cmd_Reset, ADMFLAG_ROOT);
 }
 
 Action Cmd_Reset(int client, int args)

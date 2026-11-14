@@ -18,8 +18,8 @@ enum MOTDTitle
 
 // enum struct 메서드가 참조하므로 enum struct보다 앞에 둔다
 /** convars */
-ConVar g_hConVarMOTDTitleType;
-ConVar g_hConVarMOTDTitle;
+ConVar    g_hConVarMOTDTitleType;
+ConVar    g_hConVarMOTDTitle;
 
 MOTDTitle g_eMOTDTitleType;
 char      g_sMOTDTitle[MAX_MOTD_TITLE_LEN];

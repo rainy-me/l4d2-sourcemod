@@ -91,7 +91,9 @@ void EntityHook_RemoveAmmoPost(int client, int amount, AmmoType ammoType, bool h
         || ammoType >= Ammo_MAX
         || IsAmmoTypeInfinite(ammoType)
         || GetClientTeam(client) != Team_Survivor)
+    {
         return;
+    }
 
     int weapon = GetPlayerWeaponSlot(client, WeaponSlot_Primary);
     if (weapon == -1 || GetAmmoType(weapon) != ammoType)
