@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Rainy Server Assistant",
     author      = "Rainy",
     description = "Rainy 서버 운영을 자동화합니다.",
-    version     = "1.2.5",
+    version     = "1.2.6",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_rainy_server_assistant"
 };
 
@@ -53,10 +53,10 @@ public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
         KillBots();
 }
 
-// 대전(versus, teamversus, 대전 계열 변이)에서는 작동하지 않는다
+// 대전(versus, teamversus, 대전 계열 변이)과 스캐빈지에서는 작동하지 않는다
 bool IsEnabled()
 {
-    return g_hConVarEnable.BoolValue && L4D_GetGameModeType() != GAMEMODE_VERSUS;
+    return g_hConVarEnable.BoolValue && !(L4D_GetGameModeType() & (GAMEMODE_VERSUS | GAMEMODE_SCAVENGE));
 }
 
 Action Cmd_Killbots(int client, int args)
