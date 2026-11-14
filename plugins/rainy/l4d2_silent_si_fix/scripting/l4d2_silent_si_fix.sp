@@ -403,7 +403,7 @@ Action Timer_Idle(Handle timer, any client)
         case L4D2ZombieClass_Smoker:
             EmitRandom(client, g_sSmokerIdle, sizeof(g_sSmokerIdle), 85, 95, 105, 0.9);
         case L4D2ZombieClass_Hunter:
-            EmitRandom(client, g_sHunterGrowl, sizeof(g_sHunterGrowl), 85, 90, 105, 1.0, SNDCHAN_BODY);    // 원본 HunterZombie.Growl이 CHAN_BODY
+            EmitRandom(client, g_sHunterGrowl, sizeof(g_sHunterGrowl), 85, 90, 105);
         case L4D2ZombieClass_Jockey:
             EmitRandom(client, g_sJockeyIdle, sizeof(g_sJockeyIdle), 105, 100, 100);
         case L4D2ZombieClass_Charger:
