@@ -487,7 +487,7 @@ void ePlayerDeath(Event event, const char[] name, bool dontBroadcast)
 void ePlayerSpawn(Event event, const char[] name, bool dontBroadcast) 
 {
 	g_bBW[GetClientOfUserId(event.GetInt("userid"))] = false;
-	if(!bEnabled || !bGlowEnabled)
+	if(!bEnabled)
 		return;
 	
 	CreateTimer(0.1, Timer_ePlayerSpawn, event.GetInt("userid"), TIMER_FLAG_NO_MAPCHANGE);
@@ -504,6 +504,10 @@ Action Timer_ePlayerSpawn(Handle timer, int userid)
 		return Plugin_Continue;
 
 	//PrintToChatAll("%d %d", Heartbeat_GetRevives(client), L4D_GetMaxReviveCount());
+	// still black & white (e.g. after map transition), keep the heal notice working even if glow is disabled
+	g_bBW[client] = Heartbeat_GetRevives(client) >= L4D_GetMaxReviveCount();
+	if(!bGlowEnabled)
+		return Plugin_Continue;
 		
 	if(Heartbeat_GetRevives(client) < L4D_GetMaxReviveCount())
 	{
@@ -528,7 +532,6 @@ Action Timer_ePlayerSpawn(Handle timer, int userid)
 		return Plugin_Continue;
 	}
 	
-	g_bBW[client] = true;
 	g_bGlow[client] = true;
 	if(bLMC_Available)
 	{
