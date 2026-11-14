@@ -509,7 +509,7 @@ Action Timer_ePlayerSpawn(Handle timer, int userid)
 	if(!bGlowEnabled)
 		return Plugin_Continue;
 		
-	if(Heartbeat_GetRevives(client) < L4D_GetMaxReviveCount())
+	if(!g_bBW[client])
 	{
 		if(bLMC_Available)
 		{
