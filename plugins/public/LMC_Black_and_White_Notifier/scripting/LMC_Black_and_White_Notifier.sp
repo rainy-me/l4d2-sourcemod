@@ -191,7 +191,7 @@ void NextFrame_ReviveSuccess(int client)
 	if(!IsClientInGame(client) || !IsPlayerAlive(client))
 		return;
 
-	if(Heartbeat_GetRevives(client) < L4D_GetMaxReviveCount())
+	if(L4D_GetMaxReviveCount() <= 0 || Heartbeat_GetRevives(client) < L4D_GetMaxReviveCount())
 		return;
 	
 	int iEntity = -1;

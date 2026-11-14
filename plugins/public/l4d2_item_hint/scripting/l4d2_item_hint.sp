@@ -2063,16 +2063,6 @@ void CreateSpotMarker(int client, int clientAim, int iMarkerTeam)
 {
 	if (GetEngineTime() < g_fSpotMarkCoolDownTime[client]) return; // cool down not yet
 
-	// Delete client's previous mark first
-	if(g_bSpotMarkRemovePrevious)
-	{
-		// sprite
-		RemoveClientCreation(client, g_iClientMarkSpot_SpriteInfoTargetEntRef[client]);
-		// instructor hint
-		RemoveClientCreation(client, g_iClient_InfoTargetEntRef[client]);
-		RemoveClientCreation(client, g_iClient_InstructorHintEntRef[client]);
-	}
-
 	bool hit = false;
 	float vEndPos[3], vStartPos[3];
 	GetClientAbsOrigin(client, vStartPos);
@@ -2112,6 +2102,16 @@ void CreateSpotMarker(int client, int clientAim, int iMarkerTeam)
 
 	if (GetVectorDistance(vStartPos, vEndPos, true) > g_fSpotMarkUseRange * g_fSpotMarkUseRange) // over distance
 		return;
+
+	// Delete client's previous spot mark first
+	if(g_bSpotMarkRemovePrevious)
+	{
+		// sprite
+		RemoveClientCreation(client, g_iClientMarkSpot_SpriteInfoTargetEntRef[client]);
+		// instructor hint
+		RemoveClientCreation(client, g_iClient_InfoTargetEntRef[client]);
+		RemoveClientCreation(client, g_iClient_InstructorHintEntRef[client]);
+	}
 
 	if ( g_bL4D2Version && g_bSpotMarkInstructorHint )
 		CreateInstructorHint(client, vEndPos, "", 0, eSpotMarker, iMarkerTeam);
@@ -2775,7 +2775,6 @@ bool Create_info_target(int client, int iEntity, const float vOrigin[3], const c
 	SetVariantString("!activator");
 	AcceptEntityInput(info_target, "SetParent", iEntity); // We need parent the info_target to an entity, otherwise it won't follow moveable item such as gascan, pill and throwable
 
-	g_iClient_InfoTargetEntRef[client] = EntIndexToEntRef(info_target);
 	g_iEntCreator[info_target] = client;
 	g_iMarkerTeam[info_target] = iMarkerTeam;
 	SDKHook(info_target, SDKHook_SetTransmit, Hook_SetTransmit_info_target);
@@ -2794,6 +2793,9 @@ bool Create_info_target(int client, int iEntity, const float vOrigin[3], const c
 	}
 	else
 	{
+		// spot marker only (no parent entity): remembered so the next spot mark removes it
+		g_iClient_InfoTargetEntRef[client] = EntIndexToEntRef(info_target);
+
 		static char szBuffer[36];
 		FormatEx(szBuffer, sizeof(szBuffer), "OnUser1 !self:Kill::%f:-1", duration);
 
@@ -2844,7 +2846,7 @@ void Create_env_instructor_hint(int client, int iEntity, EHintType eType, const 
 	//偶而出現兩次提示，但hint_instance_type限制同一時間相同的"hint_name"只會有一個提示
 	AcceptEntityInput(env_instructor_hint, "ShowHint"); 
 	
-	g_iClient_InstructorHintEntRef[client] = EntIndexToEntRef(env_instructor_hint);
+	if (eType == eSpotMarker) g_iClient_InstructorHintEntRef[client] = EntIndexToEntRef(env_instructor_hint);
 	g_iEntCreator[env_instructor_hint] = client;
 
 	if (eType != eSpotMarker)

@@ -1377,7 +1377,7 @@ void OnDrop(int client, int item)
 // ====================================================================================================
 void Event_PlayerShoved(Event event, const char[] name, bool dontBroadcast)
 {
-	if( g_iCvarMethod == 2 ) // Reload key only
+	if( g_bRoundOver || !g_iCvarMethod || g_iCvarMethod == 2 ) // Off, or Reload key only
 		return;
 
 	int target = GetClientOfUserId(event.GetInt("userid"));
@@ -1451,7 +1451,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		}
 
 		// Validate client
-		if( !IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 2 )
+		if( !IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 2 || !IsPlayerAlive(client) )
 			return Plugin_Continue;
 
 		// Don't allow transfers while incapped/reviving

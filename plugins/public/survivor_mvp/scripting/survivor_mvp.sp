@@ -298,6 +298,12 @@ public OnClientPutInServer(client)
     // if previously stored name for same client is not the same, delete stats & overwrite name
     if (strcmp(tmpBuffer, sClientName[client], true) != 0)
     {
+        // keep totals in sync with the stats being dropped
+        iTotalKills -= iGotKills[client];
+        iTotalCommon -= iGotCommon[client];
+        iTotalDamageAll -= iDidDamageAll[client];
+        iTotalFF -= iDidFF[client];
+
         iGotKills[client] = 0;
         iGotCommon[client] = 0;
         iDidDamage[client] = 0;
@@ -305,8 +311,8 @@ public OnClientPutInServer(client)
         iDidDamageWitch[client] = 0;
         iDidDamageTank[client] = 0;
         iDidFF[client] = 0;
-        
-        
+
+
         //@todo detailed statistics - set to 0
         for (new siClass = ZC_SMOKER; siClass <= ZC_TANK; siClass++) {
             iDidDamageClass[client][siClass] = 0;
@@ -585,10 +591,13 @@ Action:PrintLosers(Handle:timer)
 
 void PrintLoserz(bool:bSolo, client)
 {
+    if (iBrevityFlags & BREV_RANK)
+        return;
+
     decl String:tmpBuffer[512];
     // also find the three non-mvp survivors and tell them they sucked
     // tell them they sucked with SI
-    if (iTotalDamageAll > 0)
+    if (iTotalDamageAll > 0 && !(iBrevityFlags & BREV_SI))
     {
         new mvp_SI = findMVPSI();
         new mvp_SI_losers[3];
@@ -618,7 +627,7 @@ void PrintLoserz(bool:bSolo, client)
     }
     
     // tell them they sucked with Common
-    if (iTotalCommon > 0)
+    if (iTotalCommon > 0 && !(iBrevityFlags & BREV_CI))
     {
         new mvp_CI = findMVPCommon();
         new mvp_CI_losers[3];
@@ -648,7 +657,7 @@ void PrintLoserz(bool:bSolo, client)
     }
     
     // tell them they were better with FF (I know, I know, losers = winners)
-    if (iTotalFF > 0)
+    if (iTotalFF > 0 && !(iBrevityFlags & BREV_FF))
     {
         new mvp_FF = findLVPFF();
         new mvp_FF_losers[3];
