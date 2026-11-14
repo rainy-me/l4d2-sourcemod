@@ -528,6 +528,7 @@ Action Timer_ePlayerSpawn(Handle timer, int userid)
 		return Plugin_Continue;
 	}
 	
+	g_bBW[client] = true;
 	g_bGlow[client] = true;
 	if(bLMC_Available)
 	{
