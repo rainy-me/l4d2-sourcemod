@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Campaign Progress Notifier",
     author      = "Rainy",
     description = "캠페인 진행 상황을 알립니다.",
-    version     = "1.2.0",
+    version     = "1.2.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_campaign_progress_notifier"
 };
 
@@ -54,9 +54,8 @@ public void OnMapEnd()
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-    char gameMode[16];
-    FindConVar("mp_gamemode").GetString(gameMode, sizeof(gameMode));
-    if (gameMode[0] != 's' && gameMode[0] != 'v' && gameMode[0] != 'h')
+    // 협동 계열(coop, realism, 협동 변이)에서만 알린다
+    if (L4D_GetGameModeType() == GAMEMODE_COOP)
     {
         for (int i = 0; i < 3; i++)
             g_bReachedPoint[i] = false;

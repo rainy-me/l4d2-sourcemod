@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <left4dhooks>
 #include <hxlib>
 
 ConVar g_hConVarEnable;
@@ -11,7 +12,7 @@ public Plugin myinfo =
     name        = "L4D2 Skip Outtro",
     author      = "Rainy",
     description = "맵 클리어 시 아웃트로를 빠르게 건너뜁니다.",
-    version     = "1.0.3",
+    version     = "1.0.4",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_skip_outtro"
 };
 
@@ -29,14 +30,20 @@ public void OnPluginStart()
 
 void Event_FinaleVehicleLeaving(Event event, const char[] name, bool dontBroadcast)
 {
-    if (g_hConVarEnable.BoolValue)
+    if (IsEnabled())
         SetTimescale(10.0);
 }
 
 void Event_FinaleWin(Event event, const char[] name, bool dontBroadcast)
 {
-    if (g_hConVarEnable.BoolValue)
+    if (IsEnabled())
         CreateTimer(0.1, Timer_OuttroStatsDone, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+}
+
+// 대전(versus, teamversus, 대전 계열 변이)에서는 작동하지 않는다
+bool IsEnabled()
+{
+    return g_hConVarEnable.BoolValue && L4D_GetGameModeType() != GAMEMODE_VERSUS;
 }
 
 Action Timer_OuttroStatsDone(Handle timer)

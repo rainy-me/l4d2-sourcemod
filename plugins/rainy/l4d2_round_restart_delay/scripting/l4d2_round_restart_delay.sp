@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <left4dhooks>
 #include <hxlib>
 
 enum
@@ -20,7 +21,7 @@ public Plugin myinfo =
     name        = "L4D2 Round Restart Delay",
     author      = "Rainy",
     description = "라운드 재시작 지연 시간을 조정합니다.",
-    version     = "1.0.1",
+    version     = "1.0.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_round_restart_delay"
 };
 
@@ -82,6 +83,10 @@ void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] new
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
     if (event.GetInt("reason") != REASON_DEFEAT)
+        return;
+
+    // 대전(versus, teamversus, 대전 계열 변이)에서는 작동하지 않는다
+    if (L4D_GetGameModeType() == GAMEMODE_VERSUS)
         return;
 
     HX_CountdownTimer timer = GetScenarioRestartTimer();

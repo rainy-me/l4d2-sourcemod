@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Idle Command Fix",
     author      = "Rainy",
     description = "유휴 명령 미인식 문제를 해결합니다.",
-    version     = "1.0.0",
+    version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_idle_command_fix"
 };
 
@@ -47,6 +47,10 @@ public void OnPluginStart()
 
 public void OnConfigsExecuted()
 {
+    // 대전(versus, teamversus, 대전 계열 변이)에서는 작동하지 않는다
+    if (L4D_GetGameModeType() == GAMEMODE_VERSUS)
+        return;
+
     FindConVar("allow_all_bot_survivor_team").SetInt(1);
     FindConVar("sb_all_bot_game").SetInt(1);
 }
@@ -69,6 +73,10 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 Action Cmd_ForceIdle(int client, int args)
 {
+    // 대전에서는 게임 기본 처리에 맡긴다
+    if (L4D_GetGameModeType() == GAMEMODE_VERSUS)
+        return Plugin_Continue;
+
     if (!IsClient(client) || !IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client))
         return Plugin_Handled;
     if (GetClientTeam(client) != L4D_TEAM_SURVIVOR)
