@@ -23,14 +23,14 @@ public void OnPluginStart()
     HookEvent("entity_shoved", Event_EntityShoved);
 }
 
-public void OnConfigsExecuted()
-{
-    MeleeRagdollEffect(g_bEnabled);
-}
-
 public void OnPluginEnd()
 {
     MeleeRagdollEffect(false);
+}
+
+public void OnConfigsExecuted()
+{
+    MeleeRagdollEffect(g_bEnabled);
 }
 
 void MeleeRagdollEffect(bool enabled)

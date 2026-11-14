@@ -8,9 +8,9 @@
 #define TEAM_INFECTED       3
 #define Z_TANK              8
 
-ConVar g_hGlowColor;
-ConVar g_hGlowRange;
-ConVar g_hFlashing;
+ConVar g_hConVarGlowColor;
+ConVar g_hConVarGlowRange;
+ConVar g_hConVarFlashing;
 
 public Plugin myinfo =
 {
@@ -23,15 +23,15 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hGlowColor = CreateConVar(
+    g_hConVarGlowColor = CreateConVar(
         "l4d2_tank_props_glow_color", "255 0 0",
         "Glow color (RGB) for props.",
         FCVAR_NOTIFY);
-    g_hGlowRange = CreateConVar(
+    g_hConVarGlowRange = CreateConVar(
         "l4d2_tank_props_glow_range", "700",
         "Glow range for props. (0=unlimited)",
         FCVAR_NOTIFY, true, 0.0);
-    g_hFlashing = CreateConVar(
+    g_hConVarFlashing = CreateConVar(
         "l4d2_tank_props_glow_flashing", "0",
         "Flashing glow effect for props. (0=OFF, 1=ON)",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -56,7 +56,7 @@ void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 
 void Event_TankKilled(Event event, const char[] name, bool dontBroadcast)
 {
-    RequestFrame(CheckTanksAndRemoveGlow);
+    RequestFrame(Frame_CheckTanksAndRemoveGlow);
 }
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -64,7 +64,7 @@ void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
     ToggleTankPropsGlow(false);
 }
 
-void CheckTanksAndRemoveGlow()
+void Frame_CheckTanksAndRemoveGlow()
 {
     if (!IsAnyTankAlive())
         ToggleTankPropsGlow(false);
@@ -95,8 +95,8 @@ void ToggleTankPropsGlow(bool enable)
 
             if (enable)
             {
-                L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hGlowRange.IntValue,
-                                   0, color, g_hFlashing.BoolValue);
+                L4D2_SetEntityGlow(entity, L4D2Glow_Constant, g_hConVarGlowRange.IntValue,
+                                   0, color, g_hConVarFlashing.BoolValue);
             }
             else
             {
@@ -106,12 +106,20 @@ void ToggleTankPropsGlow(bool enable)
     }
 }
 
+void GetColor(int color[3])
+{
+    char colorString[32];
+    g_hConVarGlowColor.GetString(colorString, sizeof(colorString));
+    if (!StringToColor(colorString, color))
+        SetFailState("Invalid color format.");
+}
+
 bool IsTankProp(int entity)
 {
     // 아틀라스 볼, 벽돌 팔레트, 쓰레기통, 지게차, 통나무, 나무
     static const char keywords[][] = { "atlas_ball", "brick_pallet", "dumpster", "forklift", "log", "tree" };
 
-    char              modelName[128];
+    char modelName[128];
     GetEntPropString(entity, Prop_Data, "m_ModelName", modelName, sizeof(modelName));
 
     // 자동차류 (트럭·밴 제외)
@@ -152,14 +160,6 @@ bool IsTank(int client)
 bool IsClient(int index)
 {
     return index > 0 && index <= MaxClients;
-}
-
-void GetColor(int color[3])
-{
-    char colorString[32];
-    g_hGlowColor.GetString(colorString, sizeof(colorString));
-    if (!StringToColor(colorString, color))
-        SetFailState("Invalid color format.");
 }
 
 bool StringToColor(const char[] str, int color[3])

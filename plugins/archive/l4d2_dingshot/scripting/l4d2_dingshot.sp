@@ -8,7 +8,7 @@
 #define HEADSHOT_SOUND "level/bell_normal.wav"
 #define VOLUME         0.85
 
-ConVar g_hEnabled;
+ConVar g_hConVarEnabled;
 
 public Plugin myinfo =
 {
@@ -21,23 +21,15 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hEnabled = CreateConVar(
-        "dingshot_enabled", "1",
+    g_hConVarEnabled = CreateConVar(
+        "l4d2_dingshot_enabled", "1",
         "0=OFF, 1=ON",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hEnabled.AddChangeHook(OnConVarChanged);
-    AutoExecConfig(true, "dingshot");
+    g_hConVarEnabled.AddChangeHook(ConVarChanged_Enabled);
+    AutoExecConfig(true, "l4d2_dingshot");
 
-    if (g_hEnabled.BoolValue)
+    if (g_hConVarEnabled.BoolValue)
         EnableDingshot();
-}
-
-void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-    if (g_hEnabled.BoolValue)
-        EnableDingshot();
-    else
-        DisableDingshot();
 }
 
 // 프리캐시 목록은 맵마다 초기화된다
@@ -46,19 +38,27 @@ public void OnMapStart()
     PrecacheSound(HEADSHOT_SOUND);
 }
 
+void ConVarChanged_Enabled(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+    if (g_hConVarEnabled.BoolValue)
+        EnableDingshot();
+    else
+        DisableDingshot();
+}
+
 void EnableDingshot()
 {
-    HookEvent("player_hurt", HeadshotHook, EventHookMode_Pre);
-    HookEvent("infected_hurt", HeadshotHook, EventHookMode_Pre);
+    HookEvent("player_hurt", Event_Hurt, EventHookMode_Pre);
+    HookEvent("infected_hurt", Event_Hurt, EventHookMode_Pre);
 }
 
 void DisableDingshot()
 {
-    UnhookEvent("player_hurt", HeadshotHook, EventHookMode_Pre);
-    UnhookEvent("infected_hurt", HeadshotHook, EventHookMode_Pre);
+    UnhookEvent("player_hurt", Event_Hurt, EventHookMode_Pre);
+    UnhookEvent("infected_hurt", Event_Hurt, EventHookMode_Pre);
 }
 
-void HeadshotHook(Event event, const char[] name, bool dontBroadcast)
+void Event_Hurt(Event event, const char[] name, bool dontBroadcast)
 {
     int attacker = GetClientOfUserId(event.GetInt("attacker"));
     int hitgroup = event.GetInt("hitgroup");

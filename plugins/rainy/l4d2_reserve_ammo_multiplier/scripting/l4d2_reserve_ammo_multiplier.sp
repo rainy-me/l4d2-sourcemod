@@ -32,7 +32,7 @@ static const int g_iCvarAmmoGunDefault[AMMO_COUNT] = {
     360     // assaultrifle
 };
 
-ConVar g_hAmmoCvars[AMMO_COUNT];
+ConVar g_hConVarAmmo[AMMO_COUNT];
 int    g_iPreAmmoStored[AMMO_COUNT];
 int    g_iAmmoStored[AMMO_COUNT];
 
@@ -52,9 +52,9 @@ public void OnPluginStart()
     // Init cvars and store defaults
     for (int i = 0; i < AMMO_COUNT; i++)
     {
-        g_hAmmoCvars[i]     = FindConVar(g_sCvarAmmoGunList[i]);
+        g_hConVarAmmo[i] = FindConVar(g_sCvarAmmoGunList[i]);
         // 리로드 시에는 이전 배율이 cvar에 남아 있으므로 현재 값을 기준으로 삼는다
-        int current         = g_hAmmoCvars[i] != null ? g_hAmmoCvars[i].IntValue : g_iCvarAmmoGunDefault[i];
+        int current         = g_hConVarAmmo[i] != null ? g_hConVarAmmo[i].IntValue : g_iCvarAmmoGunDefault[i];
         g_iPreAmmoStored[i] = current;
         g_iAmmoStored[i]    = current;
     }
@@ -132,12 +132,12 @@ void SetCvarAmmo(int idx, int value)
     g_iPreAmmoStored[idx] = g_iAmmoStored[idx];
     g_iAmmoStored[idx]    = intAbs;
 
-    if (g_hAmmoCvars[idx] != null)
+    if (g_hConVarAmmo[idx] != null)
     {
-        int flags                  = g_hAmmoCvars[idx].Flags;
-        g_hAmmoCvars[idx].Flags    = flags & ~FCVAR_NOTIFY;
-        g_hAmmoCvars[idx].IntValue = intAbs;
-        g_hAmmoCvars[idx].Flags    = flags;
+        int flags                   = g_hConVarAmmo[idx].Flags;
+        g_hConVarAmmo[idx].Flags    = flags & ~FCVAR_NOTIFY;
+        g_hConVarAmmo[idx].IntValue = intAbs;
+        g_hConVarAmmo[idx].Flags    = flags;
     }
 }
 
@@ -162,20 +162,6 @@ void ReCalculateReserveAmmo()
         GivePlayerItem(client, "Ammo");
         SetEntProp(client, Prop_Send, "m_iAmmo", newAmmo, _, ammoType);
     }
-}
-
-int GetIdxByAmmoType(int ammoType)
-{
-    switch (ammoType)
-    {
-        case 5: return 0;     // smg
-        case 7: return 1;     // shotgun
-        case 8: return 2;     // autoshotgun
-        case 9: return 3;     // huntingrifle
-        case 10: return 4;    // sniperrifle
-        case 3: return 5;     // assaultrifle
-    }
-    return -1;
 }
 
 int ReCalcReserveAmmoByCvarIdx(int currentAmmo, int idx)
@@ -250,6 +236,20 @@ bool ReadMultiplierFromFile(float &multiplier)
 // ==========================================================================
 // HELPERS
 // ==========================================================================
+
+int GetIdxByAmmoType(int ammoType)
+{
+    switch (ammoType)
+    {
+        case 5: return 0;     // smg
+        case 7: return 1;     // shotgun
+        case 8: return 2;     // autoshotgun
+        case 9: return 3;     // huntingrifle
+        case 10: return 4;    // sniperrifle
+        case 3: return 5;     // assaultrifle
+    }
+    return -1;
+}
 
 bool IsListedInAdminsTxt(int client)
 {

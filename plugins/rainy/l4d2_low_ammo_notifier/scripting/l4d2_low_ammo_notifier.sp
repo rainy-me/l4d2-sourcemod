@@ -8,12 +8,12 @@
 
 #define WARNING_SOUND "ui/beepclear.wav"
 
-bool   g_bPluginStarted;
+bool g_bPluginStarted;
 
 ConVar g_hConVarThreshold;
 
 // 탄약 종류별로 이미 알렸는지 기억해서 부족한 동안 재장전할 때마다 다시 알리지 않는다
-bool   g_bLowAmmo[MAXPLAYERS_L4D2 + 1][Ammo_MAX];
+bool g_bLowAmmo[MAXPLAYERS_L4D2 + 1][Ammo_MAX];
 
 public Plugin myinfo =
 {
@@ -32,11 +32,6 @@ public void OnPluginStart()
         "l4d2_low_ammo_notifier_threshold", "2.0",
         "when reserve ammo is less than or equal to this * ClipSize, consider it as low ammo.",
         FCVAR_NOTIFY, true, 0.0);
-}
-
-public void OnMapStart()
-{
-    PrecacheSound(WARNING_SOUND);
 }
 
 // 늦게 로드된 경우에도 OnPluginStart 직후에 불린다
@@ -58,6 +53,17 @@ public void OnLibraryRemoved(const char[] name)
         g_bPluginStarted = false;
 }
 
+public void OnMapStart()
+{
+    PrecacheSound(WARNING_SOUND);
+}
+
+public void OnClientPutInServer(int client)
+{
+    if (g_bPluginStarted && !IsFakeClient(client))
+        HookClient(client);
+}
+
 void StartPlugin()
 {
     g_bPluginStarted = true;
@@ -69,21 +75,15 @@ void StartPlugin()
     }
 }
 
-public void OnClientPutInServer(int client)
-{
-    if (g_bPluginStarted && !IsFakeClient(client))
-        HookClient(client);
-}
-
 void HookClient(int client)
 {
     for (int i = 0; i < sizeof(g_bLowAmmo[]); i++)
         g_bLowAmmo[client][i] = false;
 
-    AddEntityHook(client, EntityHook_RemoveAmmo, EHook_Post, OnRemoveAmmo_Post);
+    AddEntityHook(client, EntityHook_RemoveAmmo, EHook_Post, EntityHook_RemoveAmmoPost);
 }
 
-void OnRemoveAmmo_Post(int client, int amount, AmmoType ammoType, bool handled)
+void EntityHook_RemoveAmmoPost(int client, int amount, AmmoType ammoType, bool handled)
 {
     if (handled
         || amount <= 0

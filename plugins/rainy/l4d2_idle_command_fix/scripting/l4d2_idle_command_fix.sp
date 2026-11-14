@@ -4,10 +4,10 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-ConVar g_hIdleSolo;
-ConVar g_hIdleMessage;
-ConVar g_hCooldownTime;
-ConVar g_hCooldownMessage;
+ConVar g_hConVarIdleSolo;
+ConVar g_hConVarIdleMessage;
+ConVar g_hConVarCooldownTime;
+ConVar g_hConVarCooldownMessage;
 float  g_fUseAllowTime[MAXPLAYERS + 1] = { 0.0, ... };
 
 public Plugin myinfo =
@@ -23,19 +23,19 @@ public void OnPluginStart()
 {
     LoadTranslations("l4d2_idle_command_fix.phrases");
 
-    g_hIdleSolo = CreateConVar(
+    g_hConVarIdleSolo = CreateConVar(
         "l4d2_idle_command_fix_idle_solo", "1",
         "ON/OFF idle command in solo. (1=ON, 0=OFF)",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hIdleMessage = CreateConVar(
+    g_hConVarIdleMessage = CreateConVar(
         "l4d2_idle_command_fix_idle_message", "0",
         "ON/OFF idle message. (1=ON, 0=OFF)",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hCooldownTime = CreateConVar(
+    g_hConVarCooldownTime = CreateConVar(
         "l4d2_idle_command_fix_cooldown_time", "0.0",
         "Cooldown time in seconds a player can use the idle command again.",
         FCVAR_NOTIFY, true, 0.0);
-    g_hCooldownMessage = CreateConVar(
+    g_hConVarCooldownMessage = CreateConVar(
         "l4d2_idle_command_fix_cooldown_message", "0",
         "ON/OFF cooldown message. (1=ON, 0=OFF)",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -73,21 +73,21 @@ Action Cmd_ForceIdle(int client, int args)
         return Plugin_Handled;
     if (GetClientTeam(client) != L4D_TEAM_SURVIVOR)
         return Plugin_Handled;
-    if (!g_hIdleSolo.BoolValue && GetAliveSurvivorCount() < 2)
+    if (!g_hConVarIdleSolo.BoolValue && GetAliveSurvivorCount() < 2)
         return Plugin_Handled;
 
     if (GetEngineTime() < g_fUseAllowTime[client])
     {
-        if (g_hCooldownMessage.BoolValue)
+        if (g_hConVarCooldownMessage.BoolValue)
             PrintToChat(client, "%t", "Cooldown Message");
         return Plugin_Handled;
     }
 
     if (!L4D_GoAwayFromKeyboard(client))
         return Plugin_Handled;
-    if (g_hIdleMessage.BoolValue)
+    if (g_hConVarIdleMessage.BoolValue)
         PrintToChatAll("%t", "Idle Message", client);
-    g_fUseAllowTime[client] = GetEngineTime() + g_hCooldownTime.FloatValue;
+    g_fUseAllowTime[client] = GetEngineTime() + g_hConVarCooldownTime.FloatValue;
     return Plugin_Handled;
 }
 

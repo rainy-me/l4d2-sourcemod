@@ -20,10 +20,10 @@ public void OnPluginStart()
     UserMsg msgId = GetUserMessageId("TextMsg");
     if (msgId == INVALID_MESSAGE_ID)
         SetFailState("TextMsg user message not found");
-    HookUserMessage(msgId, HideIdleMessage, true);
+    HookUserMessage(msgId, MsgHook_TextMsg, true);
 }
 
-Action HideIdleMessage(UserMsg msgId, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
+Action MsgHook_TextMsg(UserMsg msgId, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
 {
     char token[128];
     if (BfReadString(msg, token, sizeof(token)) < 0)

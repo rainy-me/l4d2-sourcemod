@@ -159,17 +159,17 @@ void ThrowItem(int client)
     }
 }
 
+void ZeroAngularVelocity(int entity)
+{
+    SetVariantString("self.ApplyLocalAngularVelocityImpulse(GetPhysAngularVelocity(self) * -1.0)");
+    AcceptEntityInput(entity, "RunScriptCode");
+}
+
 void GetRandomSpin(float angVel[3])
 {
     angVel[0] = float(GetRandomInt(-50, 50));
     angVel[1] = float(GetRandomInt(100, 200));
     angVel[2] = float(GetRandomInt(-20, 20));
-}
-
-void ZeroAngularVelocity(int entity)
-{
-    SetVariantString("self.ApplyLocalAngularVelocityImpulse(GetPhysAngularVelocity(self) * -1.0)");
-    AcceptEntityInput(entity, "RunScriptCode");
 }
 
 bool InClassList(const char[] weaponClass, const char[][] list, int size)

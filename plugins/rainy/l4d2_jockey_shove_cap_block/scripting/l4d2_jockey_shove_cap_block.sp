@@ -7,7 +7,7 @@
 #define GAMEDATA  "l4d2_si_ability"
 #define ZC_JOCKEY 5
 
-ConVar      g_hBlockTime;
+ConVar      g_hConVarBlockTime;
 DynamicHook g_hLeapOnTouch;
 int         g_iShovedUserId[MAXPLAYERS + 1];
 float       g_fBlockEndTime[MAXPLAYERS + 1];
@@ -35,7 +35,7 @@ public void OnPluginStart()
     g_hLeapOnTouch = new DynamicHook(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity);
     g_hLeapOnTouch.AddParam(HookParamType_CBaseEntity);
 
-    g_hBlockTime = CreateConVar(
+    g_hConVarBlockTime = CreateConVar(
         "l4d2_jockey_shove_cap_block_time", "2.0",
         "How long a shoved jockey is blocked from capping survivors (seconds)",
         _, true, 1.0, true, 10.0);
@@ -47,7 +47,7 @@ public void OnPluginStart()
 public void OnEntityCreated(int entity, const char[] classname)
 {
     if (strcmp(classname, "ability_leap") == 0)
-        g_hLeapOnTouch.HookEntity(Hook_Pre, entity, Leap_OnTouch);
+        g_hLeapOnTouch.HookEntity(Hook_Pre, entity, DHook_LeapOnTouch);
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -69,11 +69,11 @@ void Event_PlayerShoved(Event event, const char[] name, bool dontBroadcast)
     if (IsJockey(client))
     {
         g_iShovedUserId[client] = userid;
-        g_fBlockEndTime[client] = GetGameTime() + g_hBlockTime.FloatValue;
+        g_fBlockEndTime[client] = GetGameTime() + g_hConVarBlockTime.FloatValue;
     }
 }
 
-MRESReturn Leap_OnTouch(int ability, DHookParam params)
+MRESReturn DHook_LeapOnTouch(int ability, DHookParam params)
 {
     int jockey = GetEntPropEnt(ability, Prop_Send, "m_owner");
     if (!IsJockey(jockey) || !IsSurvivor(params.Get(1)))

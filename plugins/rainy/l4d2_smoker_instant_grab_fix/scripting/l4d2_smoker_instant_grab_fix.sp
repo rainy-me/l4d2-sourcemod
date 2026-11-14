@@ -29,7 +29,7 @@ public void OnPluginStart()
     if (gameData == null)
         SetFailState("Failed to load %s.txt gamedata.", GAMEDATA);
 
-    g_hPatchMask = CreatePatch(gameData, "CTongue::UpdateAirChoke::FixTraceMask");
+    g_hPatchMask           = CreatePatch(gameData, "CTongue::UpdateAirChoke::FixTraceMask");
     g_hPatchCollisionGroup = CreatePatch(gameData, "CTongue::UpdateAirChoke::FixTraceCollisionGroup");
 
     delete gameData;

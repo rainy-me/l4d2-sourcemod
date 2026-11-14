@@ -20,21 +20,21 @@ public void OnPluginStart()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
-            SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
+            SDKHook(i, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
     }
 }
 
 public void OnClientPutInServer(int client)
 {
-    SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+    SDKHook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
 public void OnClientDisconnect(int client)
 {
-    SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+    SDKUnhook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
     if (victim == attacker || !IsValidSurvivor(victim) || !IsValidSurvivor(attacker))
         return Plugin_Continue;

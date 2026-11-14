@@ -33,8 +33,8 @@ public Action OnPlayerRunCmd(int client, int &buttons)
     if (!IsFakeClient(client) || GetClientTeam(client) != 3 || !IsPlayerAlive(client))
         return Plugin_Continue;
 
-    int zClass = GetEntProp(client, Prop_Send, "m_zombieClass");
-    if (zClass == ZC_TANK)
+    int zombieClass = GetEntProp(client, Prop_Send, "m_zombieClass");
+    if (zombieClass == ZC_TANK)
         return Plugin_Continue;
 
     bool shouldBlock = false;
@@ -43,7 +43,7 @@ public Action OnPlayerRunCmd(int client, int &buttons)
     if (GetEntPropFloat(client, Prop_Send, "m_staggerTimer", 1) > -1.0)
         shouldBlock = true;
     // Check 2: hunter or jockey airborne (deadstop etc.)
-    if (!shouldBlock && !(GetEntityFlags(client) & FL_ONGROUND) && (zClass == ZC_HUNTER || zClass == ZC_JOCKEY))
+    if (!shouldBlock && !(GetEntityFlags(client) & FL_ONGROUND) && (zombieClass == ZC_HUNTER || zombieClass == ZC_JOCKEY))
         shouldBlock = true;
 
     if (shouldBlock)

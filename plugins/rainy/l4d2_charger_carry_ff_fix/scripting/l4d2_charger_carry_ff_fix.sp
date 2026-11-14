@@ -28,7 +28,7 @@ public void OnPluginStart()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
-            SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
+            SDKHook(i, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
     }
 }
 
@@ -36,14 +36,14 @@ public void OnClientPutInServer(int client)
 {
     g_bIsCarried[client]    = false;
     g_fProtectUntil[client] = 0.0;
-    SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+    SDKHook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
 public void OnClientDisconnect(int client)
 {
     g_bIsCarried[client]    = false;
     g_fProtectUntil[client] = 0.0;
-    SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+    SDKUnhook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -72,7 +72,7 @@ void Event_ChargerCarryEnd(Event event, const char[] name, bool dontBroadcast)
     }
 }
 
-Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
     if (victim != attacker && IsValidSurvivor(victim) && IsValidSurvivor(attacker)
         && (g_bIsCarried[victim] || GetGameTime() < g_fProtectUntil[victim]))

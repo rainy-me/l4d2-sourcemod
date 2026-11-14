@@ -11,7 +11,7 @@
 
 #define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 
-ConVar    g_hHealPercent;
+ConVar    g_hConVarHealPercent;
 bool      g_bFastHealUsed[MAXPLAYERS + 1] = { false, ... };
 StringMap g_hUsedAuth;
 
@@ -28,7 +28,7 @@ public void OnPluginStart()
 {
     LoadTranslations("l4d2_quick_healing.phrases");
 
-    g_hHealPercent = FindConVar("first_aid_heal_percent");
+    g_hConVarHealPercent = FindConVar("first_aid_heal_percent");
 
     HookEvent("round_start", Event_RoundStart);
     HookEvent("heal_begin", Event_HealBegin);
@@ -93,7 +93,7 @@ void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
     if (!IsFakeClient(healee) && GetClientAuthId(healee, AuthId_Steam2, auth, sizeof(auth)))
         g_hUsedAuth.SetValue(auth, true);
     int rawHealth = GetClientHealth(healee);
-    int newHealth = RoundToFloor(float(rawHealth) + (100.0 - float(rawHealth)) * g_hHealPercent.FloatValue);
+    int newHealth = RoundToFloor(float(rawHealth) + (100.0 - float(rawHealth)) * g_hConVarHealPercent.FloatValue);
     SetEntityHealth(healee, newHealth);
     L4D_SetTempHealth(healee, 0.0);
     L4D_SetPlayerReviveCount(healee, 0);

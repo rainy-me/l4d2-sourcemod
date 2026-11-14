@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <hxlib>
 
-ConVar g_hEnable;
+ConVar g_hConVarEnable;
 
 public Plugin myinfo =
 {
@@ -17,7 +17,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hEnable = CreateConVar(
+    g_hConVarEnable = CreateConVar(
         "l4d2_skip_outtro_enable", "1",
         "Enable skipping the finale outtro (0 = off, 1 = on)",
         FCVAR_NONE, true, 0.0, true, 1.0);
@@ -29,13 +29,13 @@ public void OnPluginStart()
 
 void Event_FinaleVehicleLeaving(Event event, const char[] name, bool dontBroadcast)
 {
-    if (g_hEnable.BoolValue)
+    if (g_hConVarEnable.BoolValue)
         SetTimescale(10.0);
 }
 
 void Event_FinaleWin(Event event, const char[] name, bool dontBroadcast)
 {
-    if (g_hEnable.BoolValue)
+    if (g_hConVarEnable.BoolValue)
         CreateTimer(0.1, Timer_OuttroStatsDone, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 

@@ -27,10 +27,10 @@ public APLRes AskPluginLoad2(Handle plugin, bool late, char[] error, int errMax)
 
 public void OnPluginStart()
 {
-    HookEvent("pounce_stopped", OnAnimationsPlaying);
-    HookEvent("charger_pummel_end", OnAnimationsPlaying);
-    HookEvent("charger_carry_end", OnAnimationsPlaying);
-    HookEvent("round_end", OnRoundEnd, EventHookMode_PostNoCopy);
+    HookEvent("pounce_stopped", Event_AnimationsPlaying);
+    HookEvent("charger_pummel_end", Event_AnimationsPlaying);
+    HookEvent("charger_carry_end", Event_AnimationsPlaying);
+    HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
 
     if (g_bLateLoad)
     {
@@ -42,21 +42,30 @@ public void OnPluginStart()
     }
 }
 
+public void OnMapEnd()
+{
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        g_bDamageBlocked[i] = false;
+        SDKUnhook(i, SDKHook_PostThink, Hook_PostThink);
+    }
+}
+
 public void OnClientPutInServer(int client)
 {
-    SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-    SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+    SDKUnhook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
+    SDKHook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
     g_bDamageBlocked[client] = false;
 }
 
 public void OnClientDisconnect(int client)
 {
-    SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
-    SDKUnhook(client, SDKHook_PostThink, UnblockDamage);
+    SDKUnhook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
+    SDKUnhook(client, SDKHook_PostThink, Hook_PostThink);
     g_bDamageBlocked[client] = false;
 }
 
-Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
+Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
 {
     if (IsAliveSurvivor(victim) && g_bDamageBlocked[victim])
         return Plugin_Handled;
@@ -64,50 +73,41 @@ Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, in
     return Plugin_Continue;
 }
 
-void OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
     for (int i = 1; i <= MaxClients; i++)
     {
         g_bDamageBlocked[i] = false;
-        SDKUnhook(i, SDKHook_PostThink, UnblockDamage);
+        SDKUnhook(i, SDKHook_PostThink, Hook_PostThink);
     }
 }
 
-public void OnMapEnd()
-{
-    for (int i = 1; i <= MaxClients; i++)
-    {
-        g_bDamageBlocked[i] = false;
-        SDKUnhook(i, SDKHook_PostThink, UnblockDamage);
-    }
-}
-
-void OnAnimationsPlaying(Event event, const char[] name, bool dontBroadcast)
+void Event_AnimationsPlaying(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("victim"));
     if (!IsAliveSurvivor(client))
         return;
 
-    CreateTimer(0.2, BlockDamage, GetClientUserId(client));
+    CreateTimer(0.2, Timer_BlockDamage, GetClientUserId(client));
 }
 
-void BlockDamage(Handle timer, int userid)
+void Timer_BlockDamage(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
     if (!IsAliveSurvivor(client))
         return;
 
     g_bDamageBlocked[client] = true;
-    SDKUnhook(client, SDKHook_PostThink, UnblockDamage);
-    SDKHook(client, SDKHook_PostThink, UnblockDamage);
+    SDKUnhook(client, SDKHook_PostThink, Hook_PostThink);
+    SDKHook(client, SDKHook_PostThink, Hook_PostThink);
 }
 
-void UnblockDamage(int client)
+void Hook_PostThink(int client)
 {
     if (!IsPlayingGetUpAnim(client))
     {
         g_bDamageBlocked[client] = false;
-        SDKUnhook(client, SDKHook_PostThink, UnblockDamage);
+        SDKUnhook(client, SDKHook_PostThink, Hook_PostThink);
     }
 }
 

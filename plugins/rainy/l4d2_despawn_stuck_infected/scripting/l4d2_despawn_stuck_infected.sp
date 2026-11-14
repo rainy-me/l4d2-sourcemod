@@ -9,11 +9,11 @@
 #define CVAR_FLAGS FCVAR_NOTIFY
 
 // enum struct 메서드가 참조하므로 enum struct보다 앞에 둔다
-ConVar    g_hConVarZombieDiscardRangeDefault;
-float     g_fZombieDiscardRangeDefault;
+ConVar g_hConVarZombieDiscardRangeDefault;
+float  g_fZombieDiscardRangeDefault;
 
-ConVar    g_hConVarMaxStuckTime;
-float     g_fMaxStuckTime;
+ConVar g_hConVarMaxStuckTime;
+float  g_fMaxStuckTime;
 
 enum struct CandidateData
 {
@@ -141,7 +141,7 @@ StringMap g_hMapTargetBehaviors;
 
 public Plugin myinfo =
 {
-    name        = "L4D2 Despawn Stuck SI",
+    name        = "L4D2 Despawn Stuck Infected",
     author      = "Rainy",
     description = "끼인 좀비를 제거합니다.",
     version     = "1.0.0",
@@ -154,7 +154,7 @@ public void OnPluginStart()
     g_hConVarZombieDiscardRangeDefault.AddChangeHook(ConVarChanged_Update);
 
     g_hConVarMaxStuckTime = CreateConVar(
-        "despawn_max_stuck_time", "7.0",
+        "l4d2_despawn_stuck_infected_max_stuck_time", "7.0",
         "time in seconds an infected must be stuck to be a candidate " ... "for being despawned. -1.0 to disable stuck despawns",
         CVAR_FLAGS, true, -1.0);
     g_hConVarMaxStuckTime.AddChangeHook(ConVarChanged_Update);
@@ -198,18 +198,18 @@ public void OnActionCreated(BehaviorAction action, int actor, const char[] name,
     if (g_hMapTargetBehaviors.ContainsKey(name))
     {
         g_esDespawner.AddCandidate(actor);
-        action.OnStuckPost   = OnStuck;
-        action.OnUnStuckPost = OnUnStuck;
+        action.OnStuckPost   = ActionHook_OnStuck;
+        action.OnUnStuckPost = ActionHook_OnUnStuck;
     }
 }
 
-Action OnStuck(BehaviorAction action, int actor, ActionDesiredResult result)
+Action ActionHook_OnStuck(BehaviorAction action, int actor, ActionDesiredResult result)
 {
     g_esDespawner.SetStuck(actor, true);
     return Plugin_Continue;
 }
 
-Action OnUnStuck(BehaviorAction action, int actor, ActionDesiredResult result)
+Action ActionHook_OnUnStuck(BehaviorAction action, int actor, ActionDesiredResult result)
 {
     g_esDespawner.SetStuck(actor, false);
     return Plugin_Continue;

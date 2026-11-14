@@ -12,27 +12,27 @@
 
 PlayingSound g_esLastSound[MAXEDICTS + 1][MAX_SUPPORTED_SNDCHAN + 1];
 
-StringMap    g_hMapSounds;
-SoundParser  g_esSoundParser;
+StringMap   g_hMapSounds;
+SoundParser g_esSoundParser;
 
 /** prefix of sample names for networked messages. up to the first 2 characters can have these chars.
  * the client will process the sound using the name as it appears after these characters. */
 enum
 {
-    SndChar_Stream        = '*',    // indicates streaming wav data
-    SndChar_UserVOX       = '?',    // indicates user realtime voice data
-    SndChar_Sentence      = '!',    // indicates sentence wav
-    SndChar_DryMix        = '#',    // indicates wav bypasses dsp fx
-    SndChar_Doppler       = '>',    // indicates doppler encoded stereo wav: left wav (incomming) and right wav (outgoing).
-    SndChar_Directional   = '<',    // indicates stereo wav has direction cone: mix left wav (front facing) with right wav (rear facing) based on soundfacing direction
-    SndChar_DistVariant   = '^',    // indicates distance variant encoded stereo wav (left is close, right is far)
-    SndChar_Omni          = '@',    // indicates non-directional wav (default mono or stereo)
-    SndChar_HRTF          = '~',    // indicates wav should use HRTF spatialization for non-owners.
-    SndChar_Radio         = '+',    // indicates a 'radio' sound -- should be played without spatialization
-    SndChar_SpatialStereo = ')',    // indicates spatialized stereo wav
-    SndChar_DirStereo     = '(',    // indicates directional stereo wav (like doppler)
-    SndChar_FastPitch     = '}',    // forces low quality, non-interpolated pitch shift
-    SndChar_Subtitled     = '$'     // indicates the subtitles are forced
+    SNDCHAR_STREAM         = '*',    // indicates streaming wav data
+    SNDCHAR_USER_VOX       = '?',    // indicates user realtime voice data
+    SNDCHAR_SENTENCE       = '!',    // indicates sentence wav
+    SNDCHAR_DRY_MIX        = '#',    // indicates wav bypasses dsp fx
+    SNDCHAR_DOPPLER        = '>',    // indicates doppler encoded stereo wav: left wav (incomming) and right wav (outgoing).
+    SNDCHAR_DIRECTIONAL    = '<',    // indicates stereo wav has direction cone: mix left wav (front facing) with right wav (rear facing) based on soundfacing direction
+    SNDCHAR_DIST_VARIANT   = '^',    // indicates distance variant encoded stereo wav (left is close, right is far)
+    SNDCHAR_OMNI           = '@',    // indicates non-directional wav (default mono or stereo)
+    SNDCHAR_HRTF           = '~',    // indicates wav should use HRTF spatialization for non-owners.
+    SNDCHAR_RADIO          = '+',    // indicates a 'radio' sound -- should be played without spatialization
+    SNDCHAR_SPATIAL_STEREO = ')',    // indicates spatialized stereo wav
+    SNDCHAR_DIR_STEREO     = '(',    // indicates directional stereo wav (like doppler)
+    SNDCHAR_FAST_PITCH     = '}',    // forces low quality, non-interpolated pitch shift
+    SNDCHAR_SUBTITLED      = '$'     // indicates the subtitles are forced
 }
 
 /**********************
@@ -219,12 +219,12 @@ public void OnPluginStart()
             g_esLastSound[e][c].Init();
     }
 
-    AddNormalSoundHook(OnNormalSound);
+    AddNormalSoundHook(SoundHook_Normal);
 
-    RegAdminCmd("sm_priority_si_sounds_reset", Command_Reset, ADMFLAG_ROOT);
+    RegAdminCmd("sm_priority_si_sounds_reset", Cmd_Reset, ADMFLAG_ROOT);
 }
 
-Action Command_Reset(int client, int args)
+Action Cmd_Reset(int client, int args)
 {
     g_hMapSounds.Clear();
     g_esSoundParser.LoadSoundData();
@@ -237,8 +237,8 @@ void Timer_SoundFinish(Handle timer, PlayingSound sound)
     sound.timer = null;
 }
 
-Action OnNormalSound(int clients[64], int &numClients, char originalSample[PLATFORM_MAX_PATH], int &entity,
-                     int &originalChannel, float &volume, int &level, int &pitch, int &flags, char soundEntry[256], int &seed)
+Action SoundHook_Normal(int clients[64], int &numClients, char originalSample[PLATFORM_MAX_PATH], int &entity,
+                        int &originalChannel, float &volume, int &level, int &pitch, int &flags, char soundEntry[256], int &seed)
 {
     int channel = originalChannel;
     if (!IsValidEdict(entity) || !ProcessChannel(originalSample, channel))
@@ -277,13 +277,13 @@ SMCResult SMC_OnLeaveSection(SMCParser parser)
 
 bool IsSoundChar(char c)
 {
-    return c == SndChar_Stream || c == SndChar_UserVOX
-        || c == SndChar_Sentence || c == SndChar_DryMix
-        || c == SndChar_Doppler || c == SndChar_Directional
-        || c == SndChar_DistVariant || c == SndChar_Omni
-        || c == SndChar_HRTF || c == SndChar_Radio
-        || c == SndChar_SpatialStereo || c == SndChar_DirStereo
-        || c == SndChar_FastPitch || c == SndChar_Subtitled;
+    return c == SNDCHAR_STREAM || c == SNDCHAR_USER_VOX
+        || c == SNDCHAR_SENTENCE || c == SNDCHAR_DRY_MIX
+        || c == SNDCHAR_DOPPLER || c == SNDCHAR_DIRECTIONAL
+        || c == SNDCHAR_DIST_VARIANT || c == SNDCHAR_OMNI
+        || c == SNDCHAR_HRTF || c == SNDCHAR_RADIO
+        || c == SNDCHAR_SPATIAL_STEREO || c == SNDCHAR_DIR_STEREO
+        || c == SNDCHAR_FAST_PITCH || c == SNDCHAR_SUBTITLED;
 }
 
 bool HasSoundChar(const char[] sample, char c)
@@ -310,7 +310,7 @@ bool ProcessChannel(const char[] sample, int &channel)
         channel %= 8;
 
     if (channel != SNDCHAN_STREAM && channel != SNDCHAN_VOICE && channel != SNDCHAN_STATIC
-        && HasSoundChar(sample, SndChar_Stream))
+        && HasSoundChar(sample, SNDCHAR_STREAM))
     {
         channel = SNDCHAN_STREAM;
         return true;

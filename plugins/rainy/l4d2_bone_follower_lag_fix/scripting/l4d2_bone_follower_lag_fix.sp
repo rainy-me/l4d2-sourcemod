@@ -17,11 +17,11 @@ public void OnEntityCreated(int entity, const char[] classname)
 {
     // 모델은 생성 직후에 설정되므로 다음 프레임에 확인
     if (StrEqual(classname, "phys_bone_follower"))
-        RequestFrame(KillCharacterBone, EntIndexToEntRef(entity));
+        RequestFrame(Frame_KillCharacterBone, EntIndexToEntRef(entity));
 }
 
 // 감염자/생존자 모델을 장식용 prop_dynamic으로 쓰는 맵의 bone follower 제거
-void KillCharacterBone(int ref)
+void Frame_KillCharacterBone(int ref)
 {
     int entity = EntRefToEntIndex(ref);
     if (entity == INVALID_ENT_REFERENCE)

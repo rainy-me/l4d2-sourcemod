@@ -8,7 +8,7 @@
 
 Handle    g_hMyNextBotPointer;
 int       g_iFlaggedForUpdate;
-ConVar    g_hUpdateRate;
+ConVar    g_hConVarUpdateRate;
 ArrayList g_hWitches;
 
 public Plugin myinfo =
@@ -37,7 +37,7 @@ public void OnPluginStart()
     if (g_iFlaggedForUpdate == -1)
         SetFailState("Failed to get offset 'INextBot::m_isFlaggedForUpdate'.");
 
-    g_hUpdateRate = CreateConVar(
+    g_hConVarUpdateRate = CreateConVar(
         "l4d2_witch_update_rate", "30",
         "Witch NextBot updates per second (capped at server tickrate)",
         _, true, 10.0);
@@ -46,7 +46,7 @@ public void OnPluginStart()
     g_hWitches = new ArrayList();
 
     // Late load
-    int witch  = -1;
+    int witch = -1;
     while ((witch = FindEntityByClassname(witch, "witch")) != -1)
         g_hWitches.Push(witch);
 }
@@ -69,7 +69,7 @@ public void OnGameFrame()
     // 1초(tickrate틱)를 l4d2_witch_update_rate 값만큼의 구간으로 나누고, 새 구간이 시작되는 틱에만 플래그를 세운다.
     // tickcount 기준이라 설정값이 10의 배수면 NextBotManager의 0.1초 주기 틱과 항상 겹쳐 초당 횟수가 설정값과 정확히 같다.
     int tickrate = RoundToNearest(1.0 / GetTickInterval());
-    int rate     = g_hUpdateRate.IntValue;
+    int rate     = g_hConVarUpdateRate.IntValue;
     int tick     = GetGameTickCount();
     if ((tick % tickrate) * rate / tickrate == ((tick - 1) % tickrate) * rate / tickrate)
         return;

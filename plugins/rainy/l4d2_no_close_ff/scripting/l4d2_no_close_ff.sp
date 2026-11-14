@@ -6,8 +6,8 @@
 #include <sdktools>
 #include <left4dhooks>
 
-ConVar g_hRadius;
-ConVar g_hVertGap;
+ConVar g_hConVarRadius;
+ConVar g_hConVarVertGap;
 
 public Plugin myinfo =
 {
@@ -20,11 +20,11 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hRadius = CreateConVar(
+    g_hConVarRadius = CreateConVar(
         "l4d2_no_close_ff_radius", "30",
         "Block friendly fire damage when the attacker and victim are within this horizontal distance (units)",
         FCVAR_NOTIFY, true, 0.0);
-    g_hVertGap = CreateConVar(
+    g_hConVarVertGap = CreateConVar(
         "l4d2_no_close_ff_vgap", "70",
         "Only block when the vertical height difference between the two survivors is at or below this value (units)",
         FCVAR_NOTIFY, true, 0.0);
@@ -34,21 +34,21 @@ public void OnPluginStart()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
-            SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
+            SDKHook(i, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
     }
 }
 
 public void OnClientPutInServer(int client)
 {
-    SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+    SDKHook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
 public void OnClientDisconnect(int client)
 {
-    SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+    SDKUnhook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
     if (victim == attacker || !IsValidSurvivor(victim) || !IsValidSurvivor(attacker))
         return Plugin_Continue;
@@ -56,23 +56,23 @@ Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, in
     if (L4D_IsPlayerIncapacitated(victim))
         return Plugin_Continue;
 
-    float vPos[3];
-    float aPos[3];
-    GetClientAbsOrigin(victim, vPos);
-    GetClientAbsOrigin(attacker, aPos);
+    float victimPos[3];
+    float attackerPos[3];
+    GetClientAbsOrigin(victim, victimPos);
+    GetClientAbsOrigin(attacker, attackerPos);
 
     // 차이(delta) 계산
-    float dx      = aPos[0] - vPos[0];
-    float dy      = aPos[1] - vPos[1];
-    float dz      = aPos[2] - vPos[2];
+    float dx = attackerPos[0] - victimPos[0];
+    float dy = attackerPos[1] - victimPos[1];
+    float dz = attackerPos[2] - victimPos[2];
 
     // 수평 거리(제곱)와 수직 거리(절댓값) 분리 계산
     float horizSq = dx * dx + dy * dy;
     float vert    = FloatAbs(dz);
 
     // 원기둥 판정: 수평 거리 + 수직 높이 차 분리
-    float r       = g_hRadius.FloatValue;
-    if (horizSq <= r * r && vert <= g_hVertGap.FloatValue)
+    float r = g_hConVarRadius.FloatValue;
+    if (horizSq <= r * r && vert <= g_hConVarVertGap.FloatValue)
         return Plugin_Handled;
 
     return Plugin_Continue;

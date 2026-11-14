@@ -9,7 +9,7 @@
 #define SWITCH_WAIT_TICKS 50
 #define EF_DIMLIGHT       4
 
-ConVar g_hAdrenalineDuration;
+ConVar g_hConVarAdrenalineDuration;
 float  g_fIdleAngles[MAXPLAYERS + 1][3];
 int    g_iIdleBotUserId[MAXPLAYERS + 1]     = { 0, ... };    // 0이면 유휴 기록 없음
 int    g_iIdleWeapon[MAXPLAYERS + 1]        = { INVALID_ENT_REFERENCE, ... };
@@ -28,7 +28,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hAdrenalineDuration = FindConVar("adrenaline_duration");
+    g_hConVarAdrenalineDuration = FindConVar("adrenaline_duration");
 
     HookEvent("round_start", Event_RoundStart);
     HookEvent("player_bot_replace", Event_GoIdle);
@@ -38,16 +38,16 @@ public void OnPluginStart()
     HookEvent("player_death", Event_ResetState);
 }
 
+public void OnClientPutInServer(int client)
+{
+    ResetClient(client);
+}
+
 // 유휴 직전 상태를 매 틱 기록
 public void OnPlayerRunCmdPost(int client)
 {
     int weapon            = GetHeldWeapon(client);
     g_iHeldWeapon[client] = weapon != -1 ? EntIndexToEntRef(weapon) : INVALID_ENT_REFERENCE;
-}
-
-public void OnClientPutInServer(int client)
-{
-    ResetClient(client);
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -68,11 +68,11 @@ void Event_AdrenalineUsed(Event event, const char[] name, bool dontBroadcast)
     if (!IsValidAliveSurvivor(client))
         return;
 
-    float endTime                = GetGameTime() + g_hAdrenalineDuration.FloatValue;
+    float endTime                = GetGameTime() + g_hConVarAdrenalineDuration.FloatValue;
     g_fAdrenalineEndTime[client] = endTime;
 
     // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어에게도 기록
-    int idlePlayer               = GetIdlePlayer(client);
+    int idlePlayer = GetIdlePlayer(client);
     if (idlePlayer != 0)
         g_fAdrenalineEndTime[idlePlayer] = endTime;
 }
@@ -86,7 +86,7 @@ void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
     g_fAdrenalineEndTime[client] = 0.0;
 
     // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어 기록도 지움
-    int idlePlayer               = GetIdlePlayer(client);
+    int idlePlayer = GetIdlePlayer(client);
     if (idlePlayer == 0)
         return;
 

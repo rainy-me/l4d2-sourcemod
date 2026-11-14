@@ -15,7 +15,7 @@ enum
 int    g_iStage[MAXPLAYERS + 1];
 int    g_iSource[MAXPLAYERS + 1];      // 스태거 방향 기준 (공격자)
 float  g_fDeadline[MAXPLAYERS + 1];    // 이 시각이 지나면 재스태거 포기
-ConVar g_hMaxStagger;
+ConVar g_hConVarMaxStagger;
 int    g_iImpactCharger;    // 이번 틱에 벽에 충돌한 차저
 int    g_iImpactTick;
 bool   g_bReStaggering;    // 이 플러그인이 직접 거는 재스태거 중
@@ -31,8 +31,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hMaxStagger = FindConVar("z_max_stagger_duration");
-    if (g_hMaxStagger == null)
+    g_hConVarMaxStagger = FindConVar("z_max_stagger_duration");
+    if (g_hConVarMaxStagger == null)
         SetFailState("ConVar z_max_stagger_duration not found.");
 }
 
@@ -46,6 +46,59 @@ public void OnClientDisconnect(int client)
 {
     g_iStage[client]  = STAGE_IDLE;
     g_iSource[client] = 0;
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons)
+{
+    if (GetClientTeam(client) != 3 || !IsPlayerAlive(client))
+    {
+        g_iStage[client]  = STAGE_IDLE;
+        g_iSource[client] = 0;
+        return Plugin_Continue;
+    }
+
+    bool staggering = GetEntPropFloat(client, Prop_Send, "m_staggerTimer", 1) > -1.0;
+    bool onGround   = (GetEntityFlags(client) & FL_ONGROUND) != 0;
+
+    switch (g_iStage[client])
+    {
+        case STAGE_IDLE:
+        {
+            if (staggering)
+            {
+                g_iStage[client]    = STAGE_WATCH;
+                g_fDeadline[client] = GetGameTime() + g_hConVarMaxStagger.FloatValue;
+            }
+        }
+        case STAGE_WATCH:
+        {
+            if (!staggering)
+            {
+                g_iStage[client] = onGround ? STAGE_IDLE : STAGE_CANCELLED;
+                if (onGround)
+                    g_iSource[client] = 0;    // 스태거 정상 종료. 오래된 기준점이 다음 스태거에 쓰이지 않도록 초기화
+            }
+        }
+        case STAGE_CANCELLED:
+        {
+            if (staggering)
+            {
+                g_iStage[client] = STAGE_WATCH;
+            }
+            else if (GetGameTime() > g_fDeadline[client])
+            {
+                g_iStage[client]  = STAGE_IDLE;
+                g_iSource[client] = 0;
+            }
+            else if (onGround)
+            {
+                ReStagger(client);
+                g_iStage[client] = STAGE_WATCH;
+            }
+        }
+    }
+
+    return Plugin_Continue;
 }
 
 // 스태거 방향 기준점 기록
@@ -81,60 +134,7 @@ public void L4D2_OnStagger_Post(int client, int source)
 void RefreshDeadline(int client)
 {
     if (!g_bReStaggering && IsClient(client))
-        g_fDeadline[client] = GetGameTime() + g_hMaxStagger.FloatValue;
-}
-
-public Action OnPlayerRunCmd(int client, int &buttons)
-{
-    if (GetClientTeam(client) != 3 || !IsPlayerAlive(client))
-    {
-        g_iStage[client]  = STAGE_IDLE;
-        g_iSource[client] = 0;
-        return Plugin_Continue;
-    }
-
-    bool staggering = GetEntPropFloat(client, Prop_Send, "m_staggerTimer", 1) > -1.0;
-    bool onGround   = (GetEntityFlags(client) & FL_ONGROUND) != 0;
-
-    switch (g_iStage[client])
-    {
-        case STAGE_IDLE:
-        {
-            if (staggering)
-            {
-                g_iStage[client]    = STAGE_WATCH;
-                g_fDeadline[client] = GetGameTime() + g_hMaxStagger.FloatValue;
-            }
-        }
-        case STAGE_WATCH:
-        {
-            if (!staggering)
-            {
-                g_iStage[client] = onGround ? STAGE_IDLE : STAGE_CANCELLED;
-                if (onGround)
-                    g_iSource[client] = 0;    // 스태거 정상 종료. 오래된 기준점이 다음 스태거에 쓰이지 않도록 초기화
-            }
-        }
-        case STAGE_CANCELLED:
-        {
-            if (staggering)
-            {
-                g_iStage[client] = STAGE_WATCH;
-            }
-            else if (GetGameTime() > g_fDeadline[client])
-            {
-                g_iStage[client]  = STAGE_IDLE;
-                g_iSource[client] = 0;
-            }
-            else if (onGround)
-            {
-                ReStagger(client);
-                g_iStage[client] = STAGE_WATCH;
-            }
-        }
-    }
-
-    return Plugin_Continue;
+        g_fDeadline[client] = GetGameTime() + g_hConVarMaxStagger.FloatValue;
 }
 
 void ReStagger(int client)

@@ -19,7 +19,7 @@ static const char g_sDoorsTypeTracked[][ENTITY_MAX_NAME_LENGTH] = {
 };
 
 DoorsData g_esDoors[MAX_EDICTS];
-ConVar    g_hCvarDoorSpeed;
+ConVar    g_hConVarDoorSpeed;
 float     g_fDoorSpeed;
 
 public Plugin myinfo =
@@ -33,14 +33,14 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hCvarDoorSpeed = CreateConVar(
-        "door_speed_multiplier", "1.6",
+    g_hConVarDoorSpeed = CreateConVar(
+        "l4d2_tickrate_door_fix_speed_multiplier", "1.6",
         "Sets the speed of all prop_door entities on a map. 1.05 = 105% speed",
         FCVAR_NONE, true, 0.1);
-    g_hCvarDoorSpeed.AddChangeHook(Cvar_Changed);
+    g_hConVarDoorSpeed.AddChangeHook(ConVarChanged_Update);
     AutoExecConfig(true, "l4d2_tickrate_door_fix");
 
-    g_fDoorSpeed = g_hCvarDoorSpeed.FloatValue;
+    g_fDoorSpeed = g_hConVarDoorSpeed.FloatValue;
 
     Door_GetSettingsAll();
     Door_SetSettingsAll();
@@ -60,12 +60,12 @@ public void OnEntityCreated(int entity, const char[] className)
     {
         if (strcmp(className, g_sDoorsTypeTracked[i], false) != 0)
             continue;
-        SDKHook(entity, SDKHook_SpawnPost, Hook_DoorSpawnPost);
+        SDKHook(entity, SDKHook_SpawnPost, Hook_SpawnPost);
         break;
     }
 }
 
-void Hook_DoorSpawnPost(int entity)
+void Hook_SpawnPost(int entity)
 {
     if (!IsValidEntity(entity))
         return;
@@ -77,9 +77,9 @@ void Hook_DoorSpawnPost(int entity)
     Door_SetSettings(entity);
 }
 
-void Cvar_Changed(ConVar convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-    g_fDoorSpeed = g_hCvarDoorSpeed.FloatValue;
+    g_fDoorSpeed = g_hConVarDoorSpeed.FloatValue;
     Door_SetSettingsAll();
 }
 

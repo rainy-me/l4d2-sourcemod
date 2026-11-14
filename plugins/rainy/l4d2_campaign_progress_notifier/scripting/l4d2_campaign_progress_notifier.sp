@@ -5,8 +5,8 @@
 #include <multicolors>
 #include <left4dhooks>
 
-ConVar g_hSoundEnabled;
-ConVar g_hSoundVolume;
+ConVar g_hConVarSoundEnabled;
+ConVar g_hConVarSoundVolume;
 bool   g_bReachedPoint[3] = { false, ... };
 Handle g_hUpdateTimer     = null;
 
@@ -23,11 +23,11 @@ public void OnPluginStart()
 {
     LoadTranslations("l4d2_campaign_progress_notifier.phrases");
 
-    g_hSoundEnabled = CreateConVar(
+    g_hConVarSoundEnabled = CreateConVar(
         "l4d2_campaign_progress_notifier_sound_enabled", "0",
         "ON/OFF progress notification sound. (1=ON, 0=OFF)",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hSoundVolume = CreateConVar(
+    g_hConVarSoundVolume = CreateConVar(
         "l4d2_campaign_progress_notifier_sound_volume", "0.8",
         "Progress notification sound volume.",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -91,10 +91,10 @@ Action Timer_CheckProgress(Handle timer)
 void NotifyPlayerProgress(int progress)
 {
     CPrintToChatAll("%t", "Furthest Progress", progress);
-    if (g_hSoundEnabled.BoolValue)
+    if (g_hConVarSoundEnabled.BoolValue)
     {
         EmitSoundToAll("ui/survival_teamrec.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO,
-                       SNDLEVEL_NONE, SND_NOFLAGS, g_hSoundVolume.FloatValue);
+                       SNDLEVEL_NONE, SND_NOFLAGS, g_hConVarSoundVolume.FloatValue);
     }
 }
 

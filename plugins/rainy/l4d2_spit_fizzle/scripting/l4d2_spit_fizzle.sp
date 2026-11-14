@@ -7,16 +7,16 @@
 
 #define SPIT_MIN_FLAMES 2
 
-bool   g_bLateLoaded;
+bool g_bLateLoaded;
 
 ConVar g_hConVarFizzleOnStagger;
 ConVar g_hConVarFizzleOnDeath;
 
-bool   g_bConVarFizzleOnStagger;
-bool   g_bConVarFizzleOnDeath;
+bool g_bConVarFizzleOnStagger;
+bool g_bConVarFizzleOnDeath;
 
-int    g_iSpittersProjectile[MAXPLAYERS_L4D2 + 1] = { INVALID_ENT_REFERENCE, ... };
-int    g_iSpittersPuddle[MAXPLAYERS_L4D2 + 1]     = { INVALID_ENT_REFERENCE, ... };
+int g_iSpittersProjectile[MAXPLAYERS_L4D2 + 1] = { INVALID_ENT_REFERENCE, ... };
+int g_iSpittersPuddle[MAXPLAYERS_L4D2 + 1]     = { INVALID_ENT_REFERENCE, ... };
 
 public Plugin myinfo =
 {
@@ -36,13 +36,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 public void OnPluginStart()
 {
     g_hConVarFizzleOnStagger = CreateConVar(
-        "spit_fizzle_on_stagger", "1",
+        "l4d2_spit_fizzle_on_stagger", "1",
         "When a spitter staggers, should their spit projectile be deleted and their spit puddle's growth be stopped?",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hConVarFizzleOnStagger.AddChangeHook(ConVarChanged_Update);
 
     g_hConVarFizzleOnDeath = CreateConVar(
-        "spit_fizzle_on_death", "1",
+        "l4d2_spit_fizzle_on_death", "1",
         "When a spitter dies, should their spit projectile be deleted and their spit puddle's growth be stopped?",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hConVarFizzleOnDeath.AddChangeHook(ConVarChanged_Update);
@@ -56,6 +56,24 @@ public void OnPluginStart()
         HXLibRescanForwards();
 }
 
+public void OnClientPutInServer(int client)
+{
+    g_iSpittersProjectile[client] = INVALID_ENT_REFERENCE;
+    g_iSpittersPuddle[client]     = INVALID_ENT_REFERENCE;
+}
+
+public void OnClientDisconnect(int client)
+{
+    if (!g_bConVarFizzleOnDeath)
+        return;
+    if (!IsSpitter(client))
+        return;
+    if (!IsPlayerAlive(client))
+        return;
+
+    Fizzle(client);
+}
+
 void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     ReadConVars();
@@ -65,12 +83,6 @@ void ReadConVars()
 {
     g_bConVarFizzleOnStagger = g_hConVarFizzleOnStagger.BoolValue;
     g_bConVarFizzleOnDeath   = g_hConVarFizzleOnDeath.BoolValue;
-}
-
-public void OnClientPutInServer(int client)
-{
-    g_iSpittersProjectile[client] = INVALID_ENT_REFERENCE;
-    g_iSpittersPuddle[client]     = INVALID_ENT_REFERENCE;
 }
 
 /*********************************************
@@ -125,18 +137,6 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
         return;
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (!IsSpitter(client))
-        return;
-
-    Fizzle(client);
-}
-
-public void OnClientDisconnect(int client)
-{
-    if (!g_bConVarFizzleOnDeath)
-        return;
-    if (!IsSpitter(client))
-        return;
-    if (!IsPlayerAlive(client))
         return;
 
     Fizzle(client);

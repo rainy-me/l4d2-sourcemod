@@ -10,8 +10,8 @@
 
 enum EventState
 {
-    State_None,
-    State_Event1_Done,
+    EventState_None,
+    EventState_Event1Done,
 };
 
 Handle    g_hFinishReload          = null;
@@ -19,7 +19,7 @@ StringMap g_hIdleReloadableWeapons = null;
 
 int        g_iActiveWeapon[MAXPLAYERS + 1]        = { -1, ... };
 int        g_iReloadingWeaponSlot[MAXPLAYERS + 1] = { -1, ... };
-EventState g_eEventState[MAXPLAYERS + 1]          = { State_None, ... };
+EventState g_eEventState[MAXPLAYERS + 1]          = { EventState_None, ... };
 float      g_fStateTimeout[MAXPLAYERS + 1]        = { 0.0, ... };
 
 public Plugin myinfo =
@@ -113,8 +113,8 @@ void Event_WeaponReload(Event event, const char[] name, bool dontBroadcast)
     g_iReloadingWeaponSlot[client] = activeWeaponSlot;
 
     // 이벤트: 상태를 1단계 완료로 설정하고 타임아웃 시작
-    g_eEventState[client]          = State_Event1_Done;
-    g_fStateTimeout[client]        = GetGameTime() + RELOAD_TIMEOUT;
+    g_eEventState[client]   = EventState_Event1Done;
+    g_fStateTimeout[client] = GetGameTime() + RELOAD_TIMEOUT;
 }
 
 void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
@@ -127,7 +127,7 @@ void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
     }
 
     // 이전 상태가 1단계 완료이고, 타임아웃되지 않았는지 확인
-    if (g_eEventState[client] != State_Event1_Done || g_fStateTimeout[client] < GetGameTime())
+    if (g_eEventState[client] != EventState_Event1Done || g_fStateTimeout[client] < GetGameTime())
     {
         ResetState(client);
         return;
@@ -154,7 +154,7 @@ void ResetState(int client)
 {
     g_iActiveWeapon[client]        = -1;
     g_iReloadingWeaponSlot[client] = -1;
-    g_eEventState[client]          = State_None;
+    g_eEventState[client]          = EventState_None;
     g_fStateTimeout[client]        = 0.0;
 }
 

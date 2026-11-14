@@ -27,8 +27,8 @@ public void OnPluginStart()
     if (gameData == null)
         SetFailState("Failed to load %s.txt gamedata.", GAMEDATA);
 
-    g_hSetAbsOrigin        = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsOrigin");
-    g_hSetAbsVelocity      = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsVelocity");
+    g_hSetAbsOrigin   = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsOrigin");
+    g_hSetAbsVelocity = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsVelocity");
 
     g_hPatchSetAbsVelocity = MemoryPatch.CreateFromConf(gameData, "CTerrorPlayer::UpdatePounce::SkipSetAbsVelocity");
     delete gameData;
@@ -50,10 +50,10 @@ public void OnPluginStart()
 
 public void OnClientPutInServer(int client)
 {
-    SDKHook(client, SDKHook_PostThink, PostThink_Hunter);
+    SDKHook(client, SDKHook_PostThink, Hook_PostThink);
 }
 
-void PostThink_Hunter(int hunter)
+void Hook_PostThink(int hunter)
 {
     if (!IsPlayerAlive(hunter) || GetClientTeam(hunter) != 3)
         return;

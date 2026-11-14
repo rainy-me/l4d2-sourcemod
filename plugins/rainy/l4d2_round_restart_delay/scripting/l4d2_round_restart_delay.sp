@@ -6,7 +6,7 @@
 
 enum
 {
-    Reason_Defeat = 1
+    REASON_DEFEAT = 1
 };
 
 bool   g_bLateLoaded;
@@ -80,7 +80,7 @@ void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] new
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-    if (event.GetInt("reason") != Reason_Defeat)
+    if (event.GetInt("reason") != REASON_DEFEAT)
         return;
 
     HX_CountdownTimer timer = GetScenarioRestartTimer();

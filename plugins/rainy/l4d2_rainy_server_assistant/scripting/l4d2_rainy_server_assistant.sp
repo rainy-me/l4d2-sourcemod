@@ -8,7 +8,7 @@
 #define RESPAWN_DELAY 3.0
 #define KILL_DELAY    0.5
 
-ConVar g_hEnable;
+ConVar g_hConVarEnable;
 
 public Plugin myinfo =
 {
@@ -21,7 +21,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hEnable = CreateConVar(
+    g_hConVarEnable = CreateConVar(
         "l4d2_rainy_server_assistant_enable", "1",
         "1=ON, 0=OFF",
         FCVAR_NONE, true, 0.0, true, 1.0);
@@ -31,15 +31,9 @@ public void OnPluginStart()
     RegAdminCmd("sm_kb", Cmd_Killbots, ADMFLAG_ROOT, "Kill bot survivors");
 }
 
-Action Cmd_Killbots(int client, int args)
-{
-    KillBots();
-    return Plugin_Handled;
-}
-
 public void OnClientPutInServer(int client)
 {
-    if (!g_hEnable.BoolValue || !IsClientInGame(client) || IsFakeClient(client))
+    if (!g_hConVarEnable.BoolValue || !IsClientInGame(client) || IsFakeClient(client))
         return;
 
     CreateTimer(RESPAWN_DELAY, Timer_RespawnNewPlayer, GetClientUserId(client), TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
@@ -47,7 +41,7 @@ public void OnClientPutInServer(int client)
 
 public void OnClientDisconnect(int client)
 {
-    if (!g_hEnable.BoolValue || IsFakeClient(client))
+    if (!g_hConVarEnable.BoolValue || IsFakeClient(client))
         return;
 
     CreateTimer(KILL_DELAY, Timer_KillBots, _, TIMER_FLAG_NO_MAPCHANGE);
@@ -55,8 +49,14 @@ public void OnClientDisconnect(int client)
 
 public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
 {
-    if (g_hEnable.BoolValue)
+    if (g_hConVarEnable.BoolValue)
         KillBots();
+}
+
+Action Cmd_Killbots(int client, int args)
+{
+    KillBots();
+    return Plugin_Handled;
 }
 
 Action Timer_RespawnNewPlayer(Handle timer, int userid)

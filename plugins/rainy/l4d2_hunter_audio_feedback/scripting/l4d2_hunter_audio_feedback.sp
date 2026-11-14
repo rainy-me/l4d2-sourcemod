@@ -32,13 +32,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 public void OnPluginStart()
 {
     g_hConVarAlwaysShriek = CreateConVar(
-        "audio_feedback_hunter_always_shrieks", "1",
+        "l4d2_hunter_audio_feedback_always_shrieks", "1",
         "hunters will always shriek when they lunge",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hConVarAlwaysShriek.AddChangeHook(ConVarChanged_Update);
 
     g_hConVarHonestWarn = CreateConVar(
-        "audio_feedback_hunter_honest_warn", "1",
+        "l4d2_hunter_audio_feedback_honest_warn", "1",
         "hunters won't warn about their lunge if they're already lunging",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hConVarHonestWarn.AddChangeHook(ConVarChanged_Update);

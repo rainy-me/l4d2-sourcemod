@@ -5,13 +5,13 @@
 #include <sdktools>
 #include <sdkhooks>
 
-ConVar    g_hGravity;
+ConVar    g_hConVarGravity;
 ArrayList g_hProjectiles;
 
-float     g_fResumeTime[2049];
-float     g_fResumePos[2049][3];
-float     g_fResumeVel[2049][3];
-MoveType  g_eMoveType[2049];
+float    g_fResumeTime[2049];
+float    g_fResumePos[2049][3];
+float    g_fResumeVel[2049][3];
+MoveType g_eMoveType[2049];
 
 public Plugin myinfo =
 {
@@ -24,11 +24,11 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_hGravity     = FindConVar("sv_gravity");
-    g_hProjectiles = new ArrayList();
+    g_hConVarGravity = FindConVar("sv_gravity");
+    g_hProjectiles   = new ArrayList();
 
     // Late load
-    int entity     = -1;
+    int entity = -1;
     while ((entity = FindEntityByClassname(entity, "grenade_launcher_projectile")) != -1)
         Track(entity);
 }
@@ -37,12 +37,6 @@ public void OnEntityCreated(int entity, const char[] classname)
 {
     if (StrEqual(classname, "grenade_launcher_projectile"))
         Track(entity);
-}
-
-void Track(int entity)
-{
-    g_fResumeTime[entity] = 0.0;
-    g_hProjectiles.Push(EntIndexToEntRef(entity));
 }
 
 public void OnGameFrame()
@@ -60,6 +54,12 @@ public void OnGameFrame()
     }
 }
 
+void Track(int entity)
+{
+    g_fResumeTime[entity] = 0.0;
+    g_hProjectiles.Push(EntIndexToEntRef(entity));
+}
+
 void CheckSky(int entity)
 {
     float pos[3], vel[3];
@@ -69,7 +69,7 @@ void CheckSky(int entity)
         return;
 
     float gravity = GetEntityGravity(entity);
-    gravity       = (gravity == 0.0 ? 1.0 : gravity) * g_hGravity.FloatValue;
+    gravity       = (gravity == 0.0 ? 1.0 : gravity) * g_hConVarGravity.FloatValue;
     if (gravity <= 0.0)
         return;
 
@@ -82,7 +82,7 @@ void CheckSky(int entity)
     for (int i = 0; i < 3; i++)
         end[i] = pos[i] + vel[i] * lookahead;
 
-    TR_TraceHullFilter(pos, end, mins, maxs, MASK_SOLID, Filter_Self, entity);
+    TR_TraceHullFilter(pos, end, mins, maxs, MASK_SOLID, TraceFilter_Self, entity);
     if (!TR_DidHit() || !(TR_GetSurfaceFlags() & SURF_SKY))
         return;
 
@@ -96,10 +96,10 @@ void CheckSky(int entity)
     float hideTime = 2.0 * vel[2] / gravity;
 
     // 숨어 있는 동안의 수평 이동, 벽에 막히면 그 앞에서 떨어진다
-    end[0]         = pos[0] + vel[0] * hideTime;
-    end[1]         = pos[1] + vel[1] * hideTime;
-    end[2]         = pos[2];
-    TR_TraceHullFilter(pos, end, mins, maxs, MASK_SOLID, Filter_Self, entity);
+    end[0] = pos[0] + vel[0] * hideTime;
+    end[1] = pos[1] + vel[1] * hideTime;
+    end[2] = pos[2];
+    TR_TraceHullFilter(pos, end, mins, maxs, MASK_SOLID, TraceFilter_Self, entity);
     TR_GetEndPosition(g_fResumePos[entity]);
 
     g_fResumeVel[entity][0] = vel[0];
@@ -112,7 +112,7 @@ void CheckSky(int entity)
     SetEntityMoveType(entity, MOVETYPE_NONE);
 
     // 클라이언트가 연기 꼬리를 다시 만들어 내므로 전송을 끊어 엔티티째로 휴면시킨다
-    SDKHook(entity, SDKHook_SetTransmit, SetTransmit_Hidden);
+    SDKHook(entity, SDKHook_SetTransmit, Hook_SetTransmit);
 }
 
 void Resume(int entity)
@@ -125,16 +125,11 @@ void Resume(int entity)
     SetEntityMoveType(entity, g_eMoveType[entity]);
     TeleportEntity(entity, g_fResumePos[entity], ang, g_fResumeVel[entity]);
 
-    SDKUnhook(entity, SDKHook_SetTransmit, SetTransmit_Hidden);
+    SDKUnhook(entity, SDKHook_SetTransmit, Hook_SetTransmit);
 
     // 휴면이 풀린 꼬리는 밀린 연기를 한 점에 몰아 뿜으므로 끄고, 클라이언트가 새 꼬리를 만들게 한다
     // 숨길 때 끄면 이미 뿜어진 연기까지 즉시 지워져서 여기서 끈다
     StopParticles(entity);
-}
-
-Action SetTransmit_Hidden(int entity, int client)
-{
-    return Plugin_Handled;
 }
 
 void StopParticles(int entity)
@@ -159,7 +154,12 @@ void StopParticles(int entity)
     TE_SendToAll();
 }
 
-bool Filter_Self(int entity, int contentsMask, int self)
+Action Hook_SetTransmit(int entity, int client)
+{
+    return Plugin_Handled;
+}
+
+bool TraceFilter_Self(int entity, int contentsMask, int self)
 {
     return entity != self;
 }

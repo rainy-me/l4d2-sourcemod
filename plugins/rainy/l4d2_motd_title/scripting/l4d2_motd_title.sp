@@ -18,11 +18,11 @@ enum MOTDTitle
 
 // enum struct 메서드가 참조하므로 enum struct보다 앞에 둔다
 /** convars */
-ConVar     g_hConVarMOTDTitleType;
-ConVar     g_hConVarMOTDTitle;
+ConVar g_hConVarMOTDTitleType;
+ConVar g_hConVarMOTDTitle;
 
-MOTDTitle  g_eMOTDTitleType;
-char       g_sMOTDTitle[MAX_MOTD_TITLE_LEN];
+MOTDTitle g_eMOTDTitleType;
+char      g_sMOTDTitle[MAX_MOTD_TITLE_LEN];
 
 enum struct MOTDBuffer
 {
@@ -188,13 +188,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 public void OnPluginStart()
 {
     g_hConVarMOTDTitleType = CreateConVar(
-        "motd_title_type", "2",
+        "l4d2_motd_title_type", "2",
         "source of the title string. 0 = vanilla | 1 = convar | 2 = SM translation (sourcemod/translations/l4d2_motd_title.phrases.txt)",
         FCVAR_NOTIFY);
 
     g_hConVarMOTDTitle = CreateConVar(
-        "motd_title", "non-translated title",
-        "title text that displays above motd html. only used if motd_title_type is set to 1",
+        "l4d2_motd_title_text", "non-translated title",
+        "title text that displays above motd html. only used if l4d2_motd_title_type is set to 1",
         FCVAR_NOTIFY);
 
     g_hConVarMOTDTitleType.AddChangeHook(ConVarChanged_Read);
@@ -227,7 +227,7 @@ void ReadConVars()
  * UserMessage
  *************/
 
-Action MsgHook_VGUIMenu(UserMsg msg_id, BfRead bf, const int[] clients, int clientsNum, bool reliable, bool init)
+Action MsgHook_VGUIMenu(UserMsg msgId, BfRead bf, const int[] clients, int clientsNum, bool reliable, bool init)
 {
     static char line[MAX_MOTD_LINE_LEN];
 
@@ -242,7 +242,7 @@ Action MsgHook_VGUIMenu(UserMsg msg_id, BfRead bf, const int[] clients, int clie
         return Plugin_Continue;
 
     g_hQueue.PushArray(g_esMotd);
-    RequestFrame(SendNewMsg);
+    RequestFrame(Frame_SendNewMsg);
 
     return Plugin_Handled;
 }
@@ -251,7 +251,7 @@ Action MsgHook_VGUIMenu(UserMsg msg_id, BfRead bf, const int[] clients, int clie
  * record/send motd buffer
  ************************/
 
-void SendNewMsg()
+void Frame_SendNewMsg()
 {
     for (int i = 0; i < g_hQueue.Length; i++)
     {
