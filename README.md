@@ -89,82 +89,85 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 17. [l4d2_jockey_shove_cap_block](/plugins/rainy/l4d2_jockey_shove_cap_block/)  
     생존자에게 밀쳐진 자키가 일정 시간 동안 생존자를 잡지 못하도록 합니다.
 
-18. [l4d2_motd_title](/plugins/rainy/l4d2_motd_title/)  
+18. [l4d2_low_ammo_notifier](/plugins/rainy/l4d2_low_ammo_notifier/)  
+    예비 탄약이 부족해지면 감염자를 제외한 플레이어에게 소리와 채팅으로 알립니다.
+
+19. [l4d2_motd_title](/plugins/rainy/l4d2_motd_title/)  
     MOTD 제목을 변경할 수 있도록 합니다.
 
-19. [l4d2_no_ci_melee_kill_collision](/plugins/rainy/l4d2_no_ci_melee_kill_collision/)  
+20. [l4d2_no_ci_melee_kill_collision](/plugins/rainy/l4d2_no_ci_melee_kill_collision/)  
     근접무기로 죽인 일반좀비와의 충돌을 제거합니다.
 
-20. [l4d2_no_close_ff](/plugins/rainy/l4d2_no_close_ff/)  
+21. [l4d2_no_close_ff](/plugins/rainy/l4d2_no_close_ff/)  
     팀원이 너무 가까이 있을 때 팀킬을 차단합니다.
 
-21. [l4d2_no_deathfall_cam](/plugins/rainy/l4d2_no_deathfall_cam/)  
+22. [l4d2_no_deathfall_cam](/plugins/rainy/l4d2_no_deathfall_cam/)  
     추락 시 카메라 시점 전환을 차단합니다.
 
-22. [l4d2_no_melee_ff](/plugins/rainy/l4d2_no_melee_ff/)  
+23. [l4d2_no_melee_ff](/plugins/rainy/l4d2_no_melee_ff/)  
     근접무기 팀킬을 차단합니다.
 
-23. [l4d2_no_saferoom_ff](/plugins/rainy/l4d2_no_saferoom_ff/)  
+24. [l4d2_no_saferoom_ff](/plugins/rainy/l4d2_no_saferoom_ff/)  
     은신처 안에 있는 생존자에 대한 팀킬을 차단합니다.
 
-24. [l4d2_no_si_fall_stagger_cancel](/plugins/rainy/l4d2_no_si_fall_stagger_cancel/)  
+25. [l4d2_no_si_fall_stagger_cancel](/plugins/rainy/l4d2_no_si_fall_stagger_cancel/)  
     특수좀비가 낙하로 스태거를 취소하지 못하도록 착지 시 다시 스태거를 겁니다.
 
-25. [l4d2_player_connect_notifier](/plugins/rainy/l4d2_player_connect_notifier/)  
+26. [l4d2_player_connect_notifier](/plugins/rainy/l4d2_player_connect_notifier/)  
     플레이어가 서버에 접속하면 채팅창에 알립니다.
 
-26. [l4d2_priority_sounds](/plugins/rainy/l4d2_priority_sounds/)  
+27. [l4d2_priority_sounds](/plugins/rainy/l4d2_priority_sounds/)  
     우선순위가 높은 소리가 다른 소리에 끊기지 않게 합니다.
 
-27. [l4d2_quick_healing](/plugins/rainy/l4d2_quick_healing/)  
+28. [l4d2_quick_healing](/plugins/rainy/l4d2_quick_healing/)  
     시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.
 
-28. [l4d2_ragdoll_remover](/plugins/rainy/l4d2_ragdoll_remover/)  
+29. [l4d2_ragdoll_remover](/plugins/rainy/l4d2_ragdoll_remover/)  
     일반좀비/특수좀비의 ragdoll을 즉시 제거합니다.
 
-29. [l4d2_rainy_server_assistant](/plugins/rainy/l4d2_rainy_server_assistant/)  
+30. [l4d2_rainy_server_assistant](/plugins/rainy/l4d2_rainy_server_assistant/)  
     Rainy 서버 운영을 자동화합니다.
 
-30. [l4d2_reserve_ammo_multiplier](/plugins/rainy/l4d2_reserve_ammo_multiplier/)  
+31. [l4d2_reserve_ammo_multiplier](/plugins/rainy/l4d2_reserve_ammo_multiplier/)  
     예비 탄약 소지량을 배율로 조정합니다.
 
-31. [l4d2_round_restart_delay](/plugins/rainy/l4d2_round_restart_delay/)  
+32. [l4d2_round_restart_delay](/plugins/rainy/l4d2_round_restart_delay/)  
     라운드 재시작 지연 시간을 조정합니다.
 
-32. [l4d2_silent_si_fix](/plugins/rainy/l4d2_silent_si_fix/)  
+33. [l4d2_silent_si_fix](/plugins/rainy/l4d2_silent_si_fix/)  
     특수좀비의 무음 문제를 고칩니다.
 
-33. [l4d2_skip_outtro](/plugins/rainy/l4d2_skip_outtro/)  
+34. [l4d2_skip_outtro](/plugins/rainy/l4d2_skip_outtro/)  
     맵 클리어 시 아웃트로를 빠르게 건너뜁니다.
 
-34. [l4d2_smoker_instant_grab_fix](/plugins/rainy/l4d2_smoker_instant_grab_fix/)  
+35. [l4d2_smoker_instant_grab_fix](/plugins/rainy/l4d2_smoker_instant_grab_fix/)  
     특정 물체 위에 서 있을 때 스모커에게 잡히면 즉시 조작이 불가능한 버그를 고칩니다.
 
-35. [l4d2_spit_fizzle](/plugins/rainy/l4d2_spit_fizzle/)  
+36. [l4d2_spit_fizzle](/plugins/rainy/l4d2_spit_fizzle/)  
     스피터가 죽거나 스태거에 걸리면 스핏 투사체가 사라지고 스핏 웅덩이가 더 이상 커지지 않습니다.
 
-36. [l4d2_static_shotgun_spread](/plugins/rainy/l4d2_static_shotgun_spread/)  
+37. [l4d2_static_shotgun_spread](/plugins/rainy/l4d2_static_shotgun_spread/)  
     샷건 펠릿을 바닐라 위력에 맞춘 고정 링 패턴으로 발사합니다.
 
-37. [l4d2_suicide](/plugins/rainy/l4d2_suicide/)  
+38. [l4d2_suicide](/plugins/rainy/l4d2_suicide/)  
     어드민 권한 없이 !kill 또는 /kill 명령을 사용할 수 있도록 합니다.
 
-38. [l4d2_tank_props_glow](/plugins/rainy/l4d2_tank_props_glow/)  
+39. [l4d2_tank_props_glow](/plugins/rainy/l4d2_tank_props_glow/)  
     탱크가 날릴 수 있는 물체에 글로우 효과를 줍니다.
 
-39. [l4d2_tank_witch_spawn_notifier](/plugins/rainy/l4d2_tank_witch_spawn_notifier/)  
+40. [l4d2_tank_witch_spawn_notifier](/plugins/rainy/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-40. [l4d2_tickrate_door_fix](/plugins/rainy/l4d2_tickrate_door_fix/)  
+41. [l4d2_tickrate_door_fix](/plugins/rainy/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-41. [l4d2_unstuck](/plugins/rainy/l4d2_unstuck/)  
+42. [l4d2_unstuck](/plugins/rainy/l4d2_unstuck/)  
     끼인 플레이어가 스스로 탈출할 수 있는 명령을 제공합니다.
 
-42. [l4d2_witch_update_rate](/plugins/rainy/l4d2_witch_update_rate/)  
+43. [l4d2_witch_update_rate](/plugins/rainy/l4d2_witch_update_rate/)  
     nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.
 
-43. [l4d2_worker_bile_fix](/plugins/rainy/l4d2_worker_bile_fix/)  
+44. [l4d2_worker_bile_fix](/plugins/rainy/l4d2_worker_bile_fix/)  
     공사장 인부 좀비가 담즙 폭탄에 반응하도록 고칩니다.
 
 ### B. 자작 플러그인 (미사용)

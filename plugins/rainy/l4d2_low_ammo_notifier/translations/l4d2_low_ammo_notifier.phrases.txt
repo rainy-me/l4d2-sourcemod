@@ -1,0 +1,9 @@
+"Phrases"
+{
+    "Low Ammo"
+    {
+        "#format"   "{1:N},{2:d}"
+        "en"        "{green}{1}{default} is low on ammo ({lightgreen}{2}{default})."
+        "ko"        "{green}{1}{default} 님의 탄약({lightgreen}{2}{default})이 부족합니다."
+    }
+}
