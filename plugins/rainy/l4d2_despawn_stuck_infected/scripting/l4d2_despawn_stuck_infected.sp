@@ -154,7 +154,7 @@ public void OnPluginStart()
     g_hConVarZombieDiscardRangeDefault.AddChangeHook(ConVarChanged_Update);
 
     g_hConVarMaxStuckTime = CreateConVar(
-        "l4d2_despawn_stuck_infected_max_stuck_time", "7.0",
+        "l4d2_despawn_stuck_infected_max_stuck_time", "8.0",
         "time in seconds an infected must be stuck to be a candidate " ... "for being despawned. -1.0 to disable stuck despawns",
         CVAR_FLAGS, true, -1.0);
     g_hConVarMaxStuckTime.AddChangeHook(ConVarChanged_Update);
