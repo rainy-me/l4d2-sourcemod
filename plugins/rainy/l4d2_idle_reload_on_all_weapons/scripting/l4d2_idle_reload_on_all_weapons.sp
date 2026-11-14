@@ -60,6 +60,16 @@ public void OnPluginStart()
     HookEvent("weapon_fire", Event_ResetState);
 }
 
+void InitializeIdleReloadableWeapons()
+{
+    g_hIdleReloadableWeapons = new StringMap();
+    g_hIdleReloadableWeapons.SetValue("weapon_pistol", true);
+    g_hIdleReloadableWeapons.SetValue("weapon_pistol_magnum", true);
+    g_hIdleReloadableWeapons.SetValue("weapon_smg", true);
+    g_hIdleReloadableWeapons.SetValue("weapon_smg_silenced", true);
+    g_hIdleReloadableWeapons.SetValue("weapon_smg_mp5", true);
+}
+
 void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
@@ -158,20 +168,10 @@ void ResetState(int client)
     g_fStateTimeout[client]        = 0.0;
 }
 
-bool IsIdleReloadableWeapon(const char[] weaponClsname)
+bool IsIdleReloadableWeapon(const char[] weaponClass)
 {
     bool dummy;
-    return g_hIdleReloadableWeapons.GetValue(weaponClsname, dummy);
-}
-
-void InitializeIdleReloadableWeapons()
-{
-    g_hIdleReloadableWeapons = new StringMap();
-    g_hIdleReloadableWeapons.SetValue("weapon_pistol", true);
-    g_hIdleReloadableWeapons.SetValue("weapon_pistol_magnum", true);
-    g_hIdleReloadableWeapons.SetValue("weapon_smg", true);
-    g_hIdleReloadableWeapons.SetValue("weapon_smg_silenced", true);
-    g_hIdleReloadableWeapons.SetValue("weapon_smg_mp5", true);
+    return g_hIdleReloadableWeapons.GetValue(weaponClass, dummy);
 }
 
 bool IsClient(int index)

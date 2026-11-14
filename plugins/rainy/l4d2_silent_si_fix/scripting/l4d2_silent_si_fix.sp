@@ -180,6 +180,12 @@ public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float
     g_bIdleCue[client] = cue;
 }
 
+void PrecacheSounds(const char[][] sounds, int count)
+{
+    for (int i = 0; i < count; i++)
+        PrecacheSound(sounds[i], true);
+}
+
 bool TraceFilter_NoPlayers(int entity, int contentsMask)
 {
     return entity > MaxClients;
@@ -269,16 +275,16 @@ void Frame_Spawned(int userid)
 {
     int client = GetClientOfUserId(userid);
     if (IsInfected(client) && IsPlayerAlive(client) && !L4D_IsPlayerGhost(client))
-        OnSpawned(client);
+        HandleSpawned(client);
 }
 
 public void L4D_OnMaterializeFromGhost(int client)
 {
     if (IsInfected(client) && IsPlayerAlive(client))
-        OnSpawned(client);
+        HandleSpawned(client);
 }
 
-void OnSpawned(int client)
+void HandleSpawned(int client)
 {
     L4D2ZombieClassType zombieClass = L4D2_GetPlayerZombieClass(client);
 
@@ -372,12 +378,6 @@ Action Timer_Idle(Handle timer, any client)
         }
     }
     return Plugin_Continue;
-}
-
-void PrecacheSounds(const char[][] sounds, int count)
-{
-    for (int i = 0; i < count; i++)
-        PrecacheSound(sounds[i], true);
 }
 
 void EmitRandom(int client, const char[][] sounds, int count, int level, int pitchMin, int pitchMax, float volume = 1.0, int channel = SNDCHAN_VOICE)

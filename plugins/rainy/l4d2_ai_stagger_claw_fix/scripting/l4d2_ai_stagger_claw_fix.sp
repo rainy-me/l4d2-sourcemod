@@ -4,14 +4,14 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define ZC_HUNTER     3
-#define ZC_JOCKEY     5
-#define ZC_TANK       8
+#define ZC_HUNTER 3
+#define ZC_JOCKEY 5
+#define ZC_TANK   8
 
-// Delay before re-enabling attack after stagger ends
-#define RENABLE_DELAY 0.5
+// 스태거가 끝난 뒤 공격을 다시 허용하기까지의 지연
+#define REENABLE_DELAY 0.5
 
-// Per-client time when stagger/airborne state ended; 0.0 = not in cooldown
+// 클라이언트별 스태거/공중 상태 종료 시각. 0.0이면 쿨다운 아님
 float g_fBlockEndTime[MAXPLAYERS + 1] = { 0.0, ... };
 
 public Plugin myinfo =
@@ -39,22 +39,22 @@ public Action OnPlayerRunCmd(int client, int &buttons)
 
     bool shouldBlock = false;
 
-    // Check 1: currently staggering
+    // 조건 1: 스태거 중
     if (GetEntPropFloat(client, Prop_Send, "m_staggerTimer", 1) > -1.0)
         shouldBlock = true;
-    // Check 2: hunter or jockey airborne (deadstop etc.)
+    // 조건 2: 헌터·자키가 공중에 떠 있음 (데드스톱 등)
     if (!shouldBlock && !(GetEntityFlags(client) & FL_ONGROUND) && (zombieClass == ZC_HUNTER || zombieClass == ZC_JOCKEY))
         shouldBlock = true;
 
     if (shouldBlock)
     {
-        // Actively staggering/airborne — block attack and keep refreshing the end time
-        g_fBlockEndTime[client] = GetGameTime() + RENABLE_DELAY;
+        // 스태거/공중 상태인 동안 공격을 막고 종료 시각을 계속 갱신
+        g_fBlockEndTime[client] = GetGameTime() + REENABLE_DELAY;
         buttons &= ~IN_ATTACK2;
         return Plugin_Changed;
     }
 
-    // Still within the cooldown window after stagger ended
+    // 스태거가 끝난 뒤 쿨다운 구간
     if (g_fBlockEndTime[client] > GetGameTime())
     {
         buttons &= ~IN_ATTACK2;

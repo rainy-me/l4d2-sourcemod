@@ -11,8 +11,8 @@ bool   g_bAlwaysShriek;
 ConVar g_hConVarHonestWarn;
 bool   g_bHonestWarn;
 
-int    g_iOffsetPounceSoundCooldown;
-bool   g_bLateLoaded;
+int  g_iOffsetPounceSoundCooldown;
+bool g_bLateLoad;
 
 public Plugin myinfo =
 {
@@ -25,7 +25,7 @@ public Plugin myinfo =
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 {
-    g_bLateLoaded = late;
+    g_bLateLoad = late;
     return APLRes_Success;
 }
 
@@ -49,7 +49,7 @@ public void OnPluginStart()
     g_iOffsetPounceSoundCooldown = FindSendPropInfo("CTerrorPlayer", "m_pounceStartPosition");
     g_iOffsetPounceSoundCooldown += 52;
 
-    if (g_bLateLoaded)
+    if (g_bLateLoad)
         HXLibRescanForwards();
 }
 

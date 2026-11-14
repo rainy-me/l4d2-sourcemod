@@ -14,7 +14,7 @@
 
 // m_iAmmo offsets for each gun category
 // Index -> cvar name mapping
-static const char g_sCvarAmmoGunList[AMMO_COUNT][] = {
+static const char g_sConVarAmmoGunList[AMMO_COUNT][] = {
     "ammo_smg_max",
     "ammo_shotgun_max",
     "ammo_autoshotgun_max",
@@ -23,7 +23,7 @@ static const char g_sCvarAmmoGunList[AMMO_COUNT][] = {
     "ammo_assaultrifle_max"
 };
 
-static const int g_iCvarAmmoGunDefault[AMMO_COUNT] = {
+static const int g_iConVarAmmoGunDefault[AMMO_COUNT] = {
     650,    // smg
     72,     // shotgun
     90,     // autoshotgun
@@ -52,9 +52,9 @@ public void OnPluginStart()
     // Init cvars and store defaults
     for (int i = 0; i < AMMO_COUNT; i++)
     {
-        g_hConVarAmmo[i] = FindConVar(g_sCvarAmmoGunList[i]);
+        g_hConVarAmmo[i] = FindConVar(g_sConVarAmmoGunList[i]);
         // 리로드 시에는 이전 배율이 cvar에 남아 있으므로 현재 값을 기준으로 삼는다
-        int current         = g_hConVarAmmo[i] != null ? g_hConVarAmmo[i].IntValue : g_iCvarAmmoGunDefault[i];
+        int current         = g_hConVarAmmo[i] != null ? g_hConVarAmmo[i].IntValue : g_iConVarAmmoGunDefault[i];
         g_iPreAmmoStored[i] = current;
         g_iAmmoStored[i]    = current;
     }
@@ -70,7 +70,7 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
     if (!ReadMultiplierFromFile(multiplier))
     {
         for (int i = 0; i < AMMO_COUNT; i++)
-            SetCvarAmmo(i, g_iCvarAmmoGunDefault[i]);
+            SetConVarAmmo(i, g_iConVarAmmoGunDefault[i]);
         WriteMultiplierToFile(multiplier);
         return;
     }
@@ -78,7 +78,7 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
     if (multiplier > DEFAULT_MULTIPLIER)
     {
         for (int i = 0; i < AMMO_COUNT; i++)
-            SetCvarAmmo(i, RoundFloat(float(g_iCvarAmmoGunDefault[i]) * multiplier));
+            SetConVarAmmo(i, RoundFloat(float(g_iConVarAmmoGunDefault[i]) * multiplier));
         CPrintToChatAll("%t", "Ammo Setting Load", multiplier);
     }
 }
@@ -111,7 +111,7 @@ Action Cmd_AmmoMultiplier(int client, int args)
     multiplier = ClampFloat(StringToFloat(arg), MIN_MULTIPLIER, MAX_MULTIPLIER);
 
     for (int i = 0; i < AMMO_COUNT; i++)
-        SetCvarAmmo(i, RoundFloat(float(g_iCvarAmmoGunDefault[i]) * multiplier));
+        SetConVarAmmo(i, RoundFloat(float(g_iConVarAmmoGunDefault[i]) * multiplier));
     WriteMultiplierToFile(multiplier);
     ReCalculateReserveAmmo();
 
@@ -126,18 +126,18 @@ Action Cmd_AmmoMultiplier(int client, int args)
 // AMMO / CVAR MANAGEMENT
 // ==========================================================================
 
-void SetCvarAmmo(int idx, int value)
+void SetConVarAmmo(int index, int value)
 {
-    int intAbs            = (value < 0) ? -value : value;
-    g_iPreAmmoStored[idx] = g_iAmmoStored[idx];
-    g_iAmmoStored[idx]    = intAbs;
+    int intAbs              =(value < 0) ? -value : value;
+    g_iPreAmmoStored[index] = g_iAmmoStored[index];
+    g_iAmmoStored[index]    = intAbs;
 
-    if (g_hConVarAmmo[idx] != null)
+    if (g_hConVarAmmo[index] != null)
     {
-        int flags                   = g_hConVarAmmo[idx].Flags;
-        g_hConVarAmmo[idx].Flags    = flags & ~FCVAR_NOTIFY;
-        g_hConVarAmmo[idx].IntValue = intAbs;
-        g_hConVarAmmo[idx].Flags    = flags;
+        int flags                     = g_hConVarAmmo[index].Flags;
+        g_hConVarAmmo[index].Flags    = flags & ~FCVAR_NOTIFY;
+        g_hConVarAmmo[index].IntValue = intAbs;
+        g_hConVarAmmo[index].Flags    = flags;
     }
 }
 
@@ -153,23 +153,23 @@ void ReCalculateReserveAmmo()
             continue;
 
         int ammoType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
-        int idx      = GetIdxByAmmoType(ammoType);
-        if (idx == -1)
+        int index    = GetIndexByAmmoType(ammoType);
+        if (index == -1)
             continue;
 
         int currentAmmo = GetEntProp(client, Prop_Send, "m_iAmmo", _, ammoType);
-        int newAmmo     = ReCalcReserveAmmoByCvarIdx(currentAmmo, idx);
+        int newAmmo     = ReCalcReserveAmmoByConVarIndex(currentAmmo, index);
         GivePlayerItem(client, "Ammo");
         SetEntProp(client, Prop_Send, "m_iAmmo", newAmmo, _, ammoType);
     }
 }
 
-int ReCalcReserveAmmoByCvarIdx(int currentAmmo, int idx)
+int ReCalcReserveAmmoByConVarIndex(int currentAmmo, int index)
 {
-    if (g_iPreAmmoStored[idx] > 0)
+    if (g_iPreAmmoStored[index] > 0)
     {
-        float ratio = float(currentAmmo) / float(g_iPreAmmoStored[idx]);
-        return RoundFloat(float(g_iAmmoStored[idx]) * ratio);
+        float ratio = float(currentAmmo) / float(g_iPreAmmoStored[index]);
+        return RoundFloat(float(g_iAmmoStored[index]) * ratio);
     }
     return 0;
 }
@@ -237,7 +237,7 @@ bool ReadMultiplierFromFile(float &multiplier)
 // HELPERS
 // ==========================================================================
 
-int GetIdxByAmmoType(int ammoType)
+int GetIndexByAmmoType(int ammoType)
 {
     switch (ammoType)
     {

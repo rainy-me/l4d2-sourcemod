@@ -42,23 +42,23 @@ public void OnPluginStart()
 
     g_fDoorSpeed = g_hConVarDoorSpeed.FloatValue;
 
-    Door_GetSettingsAll();
-    Door_SetSettingsAll();
+    GetDoorSettingsAll();
+    SetDoorSettingsAll();
 }
 
 public void OnPluginEnd()
 {
-    Door_ResetSettingsAll();
+    ResetDoorSettingsAll();
 }
 
-public void OnEntityCreated(int entity, const char[] className)
+public void OnEntityCreated(int entity, const char[] classname)
 {
-    if (className[0] != 'p')
+    if (classname[0] != 'p')
         return;
 
     for (int i = 0; i < sizeof(g_sDoorsTypeTracked); i++)
     {
-        if (strcmp(className, g_sDoorsTypeTracked[i], false) != 0)
+        if (strcmp(classname, g_sDoorsTypeTracked[i], false) != 0)
             continue;
         SDKHook(entity, SDKHook_SpawnPost, Hook_SpawnPost);
         break;
@@ -71,70 +71,70 @@ void Hook_SpawnPost(int entity)
         return;
 
     // Save Original Settings.
-    Door_GetSettings(entity);
+    GetDoorSettings(entity);
 
     // Set Settings.
-    Door_SetSettings(entity);
+    SetDoorSettings(entity);
 }
 
 void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     g_fDoorSpeed = g_hConVarDoorSpeed.FloatValue;
-    Door_SetSettingsAll();
+    SetDoorSettingsAll();
 }
 
-void Door_SetSettingsAll()
+void SetDoorSettingsAll()
 {
     int entity = -1;
 
     for (int i = 0; i < sizeof(g_sDoorsTypeTracked); i++)
     {
         while ((entity = FindEntityByClassname(entity, g_sDoorsTypeTracked[i])) != INVALID_ENT_REFERENCE)
-            Door_SetSettings(entity);
+            SetDoorSettings(entity);
 
         entity = -1;
     }
 }
 
-void Door_SetSettings(int entity)
+void SetDoorSettings(int entity)
 {
     float speed = g_esDoors[entity].speed * g_fDoorSpeed;
     SetEntPropFloat(entity, Prop_Data, "m_flSpeed", speed);
 }
 
-void Door_ResetSettingsAll()
+void ResetDoorSettingsAll()
 {
     int entity = -1;
 
     for (int i = 0; i < sizeof(g_sDoorsTypeTracked); i++)
     {
         while ((entity = FindEntityByClassname(entity, g_sDoorsTypeTracked[i])) != INVALID_ENT_REFERENCE)
-            Door_ResetSettings(entity);
+            ResetDoorSettings(entity);
 
         entity = -1;
     }
 }
 
-void Door_ResetSettings(int entity)
+void ResetDoorSettings(int entity)
 {
     float speed = g_esDoors[entity].speed;
     SetEntPropFloat(entity, Prop_Data, "m_flSpeed", speed);
 }
 
-void Door_GetSettingsAll()
+void GetDoorSettingsAll()
 {
     int entity = -1;
 
     for (int i = 0; i < sizeof(g_sDoorsTypeTracked); i++)
     {
         while ((entity = FindEntityByClassname(entity, g_sDoorsTypeTracked[i])) != INVALID_ENT_REFERENCE)
-            Door_GetSettings(entity);
+            GetDoorSettings(entity);
 
         entity = -1;
     }
 }
 
-void Door_GetSettings(int entity)
+void GetDoorSettings(int entity)
 {
     g_esDoors[entity].speed = GetEntPropFloat(entity, Prop_Data, "m_flSpeed");
 }

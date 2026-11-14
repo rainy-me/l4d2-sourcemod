@@ -7,13 +7,13 @@
 
 #define SPIT_MIN_FLAMES 2
 
-bool g_bLateLoaded;
+bool g_bLateLoad;
 
 ConVar g_hConVarFizzleOnStagger;
 ConVar g_hConVarFizzleOnDeath;
 
-bool g_bConVarFizzleOnStagger;
-bool g_bConVarFizzleOnDeath;
+bool g_bFizzleOnStagger;
+bool g_bFizzleOnDeath;
 
 int g_iSpittersProjectile[MAXPLAYERS_L4D2 + 1] = { INVALID_ENT_REFERENCE, ... };
 int g_iSpittersPuddle[MAXPLAYERS_L4D2 + 1]     = { INVALID_ENT_REFERENCE, ... };
@@ -29,7 +29,7 @@ public Plugin myinfo =
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 {
-    g_bLateLoaded = late;
+    g_bLateLoad = late;
     return APLRes_Success;
 }
 
@@ -52,7 +52,7 @@ public void OnPluginStart()
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("spit_burst", Event_SpitBurst);
 
-    if (g_bLateLoaded)
+    if (g_bLateLoad)
         HXLibRescanForwards();
 }
 
@@ -64,7 +64,7 @@ public void OnClientPutInServer(int client)
 
 public void OnClientDisconnect(int client)
 {
-    if (!g_bConVarFizzleOnDeath)
+    if (!g_bFizzleOnDeath)
         return;
     if (!IsSpitter(client))
         return;
@@ -81,8 +81,8 @@ void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] new
 
 void ReadConVars()
 {
-    g_bConVarFizzleOnStagger = g_hConVarFizzleOnStagger.BoolValue;
-    g_bConVarFizzleOnDeath   = g_hConVarFizzleOnDeath.BoolValue;
+    g_bFizzleOnStagger = g_hConVarFizzleOnStagger.BoolValue;
+    g_bFizzleOnDeath   = g_hConVarFizzleOnDeath.BoolValue;
 }
 
 /*********************************************
@@ -113,17 +113,17 @@ void Event_SpitBurst(Event event, const char[] name, bool dontBroadcast)
  *****************/
 public void L4D2_OnStagger_Post(int client, int source)
 {
-    OnStagger(client);
+    HandleStagger(client);
 }
 
 public void L4D_OnShovedBySurvivor_Post(int client, int victim, const float dir[3])
 {
-    OnStagger(victim);
+    HandleStagger(victim);
 }
 
-void OnStagger(int client)
+void HandleStagger(int client)
 {
-    if (!g_bConVarFizzleOnStagger)
+    if (!g_bFizzleOnStagger)
         return;
     if (!IsSpitter(client))
         return;
@@ -133,7 +133,7 @@ void OnStagger(int client)
 
 void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-    if (!g_bConVarFizzleOnDeath)
+    if (!g_bFizzleOnDeath)
         return;
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (!IsSpitter(client))

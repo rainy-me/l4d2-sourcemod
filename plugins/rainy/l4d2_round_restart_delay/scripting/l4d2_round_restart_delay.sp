@@ -9,8 +9,8 @@ enum
     REASON_DEFEAT = 1
 };
 
-bool   g_bLateLoaded;
-bool   g_bPluginStarted;
+bool g_bLateLoad;
+bool g_bPluginStarted;
 
 ConVar g_hConVarDelay;
 float  g_fDelay;
@@ -26,7 +26,7 @@ public Plugin myinfo =
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 {
-    g_bLateLoaded = late;
+    g_bLateLoad = late;
     return APLRes_Success;
 }
 
@@ -39,7 +39,7 @@ public void OnPluginStart()
     g_hConVarDelay.AddChangeHook(ConVarChanged_Update);
     g_fDelay = g_hConVarDelay.FloatValue;
 
-    if (g_bLateLoaded && LibraryExists(HXLIB_LIBRARY))
+    if (g_bLateLoad && LibraryExists(HXLIB_LIBRARY))
         StartPlugin();
 }
 

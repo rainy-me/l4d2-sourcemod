@@ -10,11 +10,6 @@
 #define MIN_SUPPORTED_SNDCHAN SNDCHAN_WEAPON    // 1
 #define MAX_SUPPORTED_SNDCHAN SNDCHAN_STREAM    // 5
 
-PlayingSound g_esLastSound[MAXEDICTS + 1][MAX_SUPPORTED_SNDCHAN + 1];
-
-StringMap   g_hMapSounds;
-SoundParser g_esSoundParser;
-
 /** prefix of sample names for networked messages. up to the first 2 characters can have these chars.
  * the client will process the sound using the name as it appears after these characters. */
 enum
@@ -34,6 +29,9 @@ enum
     SNDCHAR_FAST_PITCH     = '}',    // forces low quality, non-interpolated pitch shift
     SNDCHAR_SUBTITLED      = '$'     // indicates the subtitles are forced
 }
+
+// enum struct 메서드가 참조하므로 enum struct보다 앞에 둔다
+StringMap g_hMapSounds;
 
 /**********************
  * track playing sounds
@@ -86,10 +84,10 @@ enum struct PlayingSound
 
 enum ParserState
 {
-    Parser_LookingForSound,
-    Parser_ReadingSound,
-    Parser_Skip
-};
+    ParserState_LookingForSound,
+    ParserState_ReadingSound,
+    ParserState_Skip
+}
 
 enum struct SoundParser
 {
@@ -112,7 +110,7 @@ enum struct SoundParser
         this.parser.OnKeyValue     = INVALID_FUNCTION;
         this.parser.OnLeaveSection = SMC_OnLeaveSection;
 
-        this.state                 = Parser_LookingForSound;
+        this.state                 = ParserState_LookingForSound;
         this.stateHistory          = new ArrayList();
 
         this.parser.ParseFile(path);
@@ -128,17 +126,17 @@ enum struct SoundParser
 
         switch (state)
         {
-            case Parser_LookingForSound:
+            case ParserState_LookingForSound:
             {
                 this.parser.OnEnterSection = SMC_OnEnterSound;
                 this.parser.OnKeyValue     = INVALID_FUNCTION;
             }
-            case Parser_ReadingSound:
+            case ParserState_ReadingSound:
             {
                 this.parser.OnEnterSection = SMC_OnSkipSection;
                 this.parser.OnKeyValue     = SMC_OnKeyValue;
             }
-            case Parser_Skip:
+            case ParserState_Skip:
             {
                 this.parser.OnEnterSection = SMC_OnSkipSection;
                 this.parser.OnKeyValue     = INVALID_FUNCTION;
@@ -174,7 +172,7 @@ enum struct SoundParser
         ParserState newState = this.stateHistory.Get(newSize);
         this.stateHistory.Resize(newSize);
 
-        if (this.state == Parser_ReadingSound)
+        if (this.state == ParserState_ReadingSound)
             this.CommitSound();
 
         this.SetState(newState);
@@ -198,6 +196,9 @@ enum struct SoundParser
         return SMCParse_Continue;
     }
 }
+
+PlayingSound g_esLastSound[MAXEDICTS + 1][MAX_SUPPORTED_SNDCHAN + 1];
+SoundParser  g_esSoundParser;
 
 public Plugin myinfo =
 {
@@ -257,12 +258,12 @@ Action SoundHook_Normal(int clients[64], int &numClients, char originalSample[PL
 SMCResult SMC_OnEnterSound(SMCParser parser, const char[] name, bool optQuotes)
 {
     g_esSoundParser.OpenSound(name);
-    return g_esSoundParser.EnterSection(Parser_ReadingSound);
+    return g_esSoundParser.EnterSection(ParserState_ReadingSound);
 }
 
 SMCResult SMC_OnSkipSection(SMCParser parser, const char[] name, bool optQuotes)
 {
-    return g_esSoundParser.EnterSection(Parser_Skip);
+    return g_esSoundParser.EnterSection(ParserState_Skip);
 }
 
 SMCResult SMC_OnKeyValue(SMCParser parser, const char[] key, const char[] value, bool keyQuotes, bool valueQuotes)
