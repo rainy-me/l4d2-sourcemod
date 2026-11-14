@@ -19,7 +19,7 @@ public void OnPluginStart()
     HookEvent("map_transition", Event_MapTransition, EventHookMode_PostNoCopy);
 }
 
-public void Event_MapTransition(Event event, const char[] name, bool dontBroadcast)
+void Event_MapTransition(Event event, const char[] name, bool dontBroadcast)
 {
     SetTimescale(10.0);
 }

@@ -13,25 +13,19 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_suicide"
 };
 
-public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
+public Action OnClientSayCommand(int client, const char[] command, const char[] args)
 {
     if (client <= 0 || !IsClientInGame(client))
-    {
         return Plugin_Continue;
-    }
 
     char text[16];
-    strcopy(text, sizeof(text), sArgs);
+    strcopy(text, sizeof(text), args);
     TrimString(text);
 
     if (!StrEqual(text, "!kill", false) && !StrEqual(text, "/kill", false))
-    {
         return Plugin_Continue;
-    }
 
     if (IsPlayerAlive(client))
-    {
         ForcePlayerSuicide(client);
-    }
     return Plugin_Handled;
 }

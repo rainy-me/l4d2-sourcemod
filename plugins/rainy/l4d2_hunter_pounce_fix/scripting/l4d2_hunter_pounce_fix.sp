@@ -23,15 +23,15 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    GameData hGameData = new GameData(GAMEDATA);
-    if (hGameData == null)
+    GameData gameData = new GameData(GAMEDATA);
+    if (gameData == null)
         SetFailState("Failed to load %s.txt gamedata.", GAMEDATA);
 
-    g_hSetAbsOrigin        = PrepSetAbsCall(hGameData, "CBaseEntity::SetAbsOrigin");
-    g_hSetAbsVelocity      = PrepSetAbsCall(hGameData, "CBaseEntity::SetAbsVelocity");
+    g_hSetAbsOrigin        = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsOrigin");
+    g_hSetAbsVelocity      = PrepSetAbsCall(gameData, "CBaseEntity::SetAbsVelocity");
 
-    g_hPatchSetAbsVelocity = MemoryPatch.CreateFromConf(hGameData, "CTerrorPlayer::UpdatePounce::SkipSetAbsVelocity");
-    delete hGameData;
+    g_hPatchSetAbsVelocity = MemoryPatch.CreateFromConf(gameData, "CTerrorPlayer::UpdatePounce::SkipSetAbsVelocity");
+    delete gameData;
 
     if (g_hPatchSetAbsVelocity == null)
         SetFailState("Failed to create patch \"CTerrorPlayer::UpdatePounce::SkipSetAbsVelocity\".");
@@ -46,19 +46,6 @@ public void OnPluginStart()
         if (IsClientInGame(i))
             OnClientPutInServer(i);
     }
-}
-
-Handle PrepSetAbsCall(GameData hGameData, const char[] sName)
-{
-    StartPrepSDKCall(SDKCall_Entity);
-    if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, sName))
-        SetFailState("Failed to find signature \"%s\".", sName);
-    PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
-
-    Handle hCall = EndPrepSDKCall();
-    if (hCall == null)
-        SetFailState("Failed to prep SDKCall \"%s\".", sName);
-    return hCall;
 }
 
 public void OnClientPutInServer(int client)
@@ -83,4 +70,17 @@ void PostThink_Hunter(int hunter)
     // TeleportEntity는 헌터 외곽선을 깜빡이게 하므로 직접 호출한다
     SDKCall(g_hSetAbsOrigin, hunter, origin);
     SDKCall(g_hSetAbsVelocity, hunter, velocity);
+}
+
+Handle PrepSetAbsCall(GameData gameData, const char[] name)
+{
+    StartPrepSDKCall(SDKCall_Entity);
+    if (!PrepSDKCall_SetFromConf(gameData, SDKConf_Signature, name))
+        SetFailState("Failed to find signature \"%s\".", name);
+    PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
+
+    Handle call = EndPrepSDKCall();
+    if (call == null)
+        SetFailState("Failed to prep SDKCall \"%s\".", name);
+    return call;
 }

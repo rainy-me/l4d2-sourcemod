@@ -28,9 +28,7 @@ public void OnPluginStart()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
-        {
             SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
-        }
     }
 }
 
@@ -61,9 +59,7 @@ void Event_ChargerCarryStart(Event event, const char[] name, bool dontBroadcast)
 {
     int victim = GetClientOfUserId(event.GetInt("victim"));
     if (IsValidSurvivor(victim))
-    {
         g_bIsCarried[victim] = true;
-    }
 }
 
 void Event_ChargerCarryEnd(Event event, const char[] name, bool dontBroadcast)

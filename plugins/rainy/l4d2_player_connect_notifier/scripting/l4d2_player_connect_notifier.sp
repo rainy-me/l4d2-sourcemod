@@ -22,9 +22,7 @@ void Event_PlayerConnect(Event event, const char[] name, bool dontBroadcast)
 {
     int isBot = event.GetInt("bot");
     if (isBot)
-    {
         return;
-    }
 
     char playerName[MAX_NAME_LENGTH];
     event.GetString("name", playerName, sizeof(playerName));

@@ -27,9 +27,9 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_spit_fizzle"
 };
 
-public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 {
-    g_bLateLoaded = bLate;
+    g_bLateLoaded = late;
     return APLRes_Success;
 }
 
@@ -52,10 +52,11 @@ public void OnPluginStart()
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("spit_burst", Event_SpitBurst);
 
-    if (g_bLateLoaded) HXLibRescanForwards();
+    if (g_bLateLoaded)
+        HXLibRescanForwards();
 }
 
-void ConVarChanged_Update(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     ReadConVars();
 }
@@ -66,89 +67,99 @@ void ReadConVars()
     g_bConVarFizzleOnDeath   = g_hConVarFizzleOnDeath.BoolValue;
 }
 
-public void OnClientPutInServer(int iClient)
+public void OnClientPutInServer(int client)
 {
-    g_iSpittersProjectile[iClient] = INVALID_ENT_REFERENCE;
-    g_iSpittersPuddle[iClient]     = INVALID_ENT_REFERENCE;
+    g_iSpittersProjectile[client] = INVALID_ENT_REFERENCE;
+    g_iSpittersPuddle[client]     = INVALID_ENT_REFERENCE;
 }
 
 /*********************************************
  * associate puddles/projectiles with spitters
  *********************************************/
-public void OnCreateSpitterProjectile_Post(int iSpitter, int iProjectile, const float vOrigin[3], const float vAngles[3], const float vVelocity[3], const float vRotation[3], bool bHandled)
+public void OnCreateSpitterProjectile_Post(int spitter, int projectile, const float origin[3], const float angles[3], const float velocity[3], const float rotation[3], bool handled)
 {
-    if (bHandled || !IsValidClient(iSpitter)) return;
-    g_iSpittersProjectile[iSpitter] = EntIndexToEntRef(iProjectile);
+    if (handled || !IsValidClient(spitter))
+        return;
+    g_iSpittersProjectile[spitter] = EntIndexToEntRef(projectile);
 }
 
-void Event_SpitBurst(Event hEvent, const char[] sName, bool bDontBroadcast)
+void Event_SpitBurst(Event event, const char[] name, bool dontBroadcast)
 {
-    int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
-    if (!IsValidClient(iClient)) return;
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (!IsValidClient(client))
+        return;
 
-    int iPuddle = hEvent.GetInt("subject", INVALID_ENT_REFERENCE);
-    if (!IsValidEdict(iPuddle)) return;
+    int puddle = event.GetInt("subject", INVALID_ENT_REFERENCE);
+    if (!IsValidEdict(puddle))
+        return;
 
-    g_iSpittersPuddle[iClient] = EntIndexToEntRef(iPuddle);
+    g_iSpittersPuddle[client] = EntIndexToEntRef(puddle);
 }
 
 /******************
  * trigger fizzle
  *****************/
-public void L4D2_OnStagger_Post(int iClient, int iSource)
+public void L4D2_OnStagger_Post(int client, int source)
 {
-    OnStagger(iClient);
+    OnStagger(client);
 }
 
-public void L4D_OnShovedBySurvivor_Post(int iClient, int iVictim, const float vDir[3])
+public void L4D_OnShovedBySurvivor_Post(int client, int victim, const float dir[3])
 {
-    OnStagger(iVictim);
+    OnStagger(victim);
 }
 
-void OnStagger(int iClient)
+void OnStagger(int client)
 {
-    if (!g_bConVarFizzleOnStagger) return;
-    if (!IsSpitter(iClient)) return;
+    if (!g_bConVarFizzleOnStagger)
+        return;
+    if (!IsSpitter(client))
+        return;
 
-    Fizzle(iClient);
+    Fizzle(client);
 }
 
-void Event_PlayerDeath(Event hEvent, const char[] sName, bool bDontBroadcast)
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-    if (!g_bConVarFizzleOnDeath) return;
-    int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
-    if (!IsSpitter(iClient)) return;
+    if (!g_bConVarFizzleOnDeath)
+        return;
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (!IsSpitter(client))
+        return;
 
-    Fizzle(iClient);
+    Fizzle(client);
 }
 
-public void OnClientDisconnect(int iClient)
+public void OnClientDisconnect(int client)
 {
-    if (!g_bConVarFizzleOnDeath) return;
-    if (!IsSpitter(iClient)) return;
-    if (!IsPlayerAlive(iClient)) return;
+    if (!g_bConVarFizzleOnDeath)
+        return;
+    if (!IsSpitter(client))
+        return;
+    if (!IsPlayerAlive(client))
+        return;
 
-    Fizzle(iClient);
+    Fizzle(client);
 }
 
-void Fizzle(int iClient)
+void Fizzle(int client)
 {
-    int iEntity = EntRefToEntIndex(g_iSpittersProjectile[iClient]);
-    if (iEntity != INVALID_ENT_REFERENCE)
-        RemoveEntity(iEntity);
+    int entity = EntRefToEntIndex(g_iSpittersProjectile[client]);
+    if (entity != INVALID_ENT_REFERENCE)
+        RemoveEntity(entity);
 
-    iEntity = EntRefToEntIndex(g_iSpittersPuddle[iClient]);
-    if (iEntity != INVALID_ENT_REFERENCE)
-        GetInferno(iEntity).maxFlames = SPIT_MIN_FLAMES;
+    entity = EntRefToEntIndex(g_iSpittersPuddle[client]);
+    if (entity != INVALID_ENT_REFERENCE)
+        GetInferno(entity).maxFlames = SPIT_MIN_FLAMES;
 }
 
 /*******
  * misc
  *******/
 
-bool IsSpitter(int iEntity)
+bool IsSpitter(int entity)
 {
-    return IsValidClient(iEntity)
-        && GetClientTeam(iEntity) == Team_Infected
-        && GetZombieClass(iEntity) == ZClass_Spitter;
+    return IsValidClient(entity)
+        && GetClientTeam(entity) == Team_Infected
+        && GetZombieClass(entity) == ZClass_Spitter;
 }

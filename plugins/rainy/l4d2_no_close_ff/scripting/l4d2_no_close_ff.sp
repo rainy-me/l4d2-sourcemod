@@ -34,9 +34,7 @@ public void OnPluginStart()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
-        {
             SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
-        }
     }
 }
 
@@ -75,9 +73,7 @@ Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, in
     // 원기둥 판정: 수평 거리 + 수직 높이 차 분리
     float r       = g_hRadius.FloatValue;
     if (horizSq <= r * r && vert <= g_hVertGap.FloatValue)
-    {
         return Plugin_Handled;
-    }
 
     return Plugin_Continue;
 }

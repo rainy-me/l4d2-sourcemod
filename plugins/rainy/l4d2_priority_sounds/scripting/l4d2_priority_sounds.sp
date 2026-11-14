@@ -1,5 +1,5 @@
-#pragma newdecls required
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
@@ -7,110 +7,13 @@
 
 #define DATA_FILE "data/l4d2_priority_sounds.txt"
 
-public Plugin myinfo =
-{
-    name        = "L4D2 Priority Sounds",
-    author      = "Rainy",
-    description = "우선순위가 높은 소리가 다른 소리에 끊기지 않게 합니다.",
-    version     = "1.0.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_priority_sounds"
-};
-
 #define MIN_SUPPORTED_SNDCHAN SNDCHAN_WEAPON    // 1
 #define MAX_SUPPORTED_SNDCHAN SNDCHAN_STREAM    // 5
 
-PlayingSound g_lastSound[MAXEDICTS + 1][MAX_SUPPORTED_SNDCHAN + 1];
+PlayingSound g_esLastSound[MAXEDICTS + 1][MAX_SUPPORTED_SNDCHAN + 1];
 
-StringMap    g_hMap_Sounds;
-SoundParser  g_soundParser;
-
-public void OnPluginStart()
-{
-    g_hMap_Sounds = new StringMap();
-    g_soundParser.LoadSoundData();
-
-    for (int e = 0; e < sizeof(g_lastSound); e++)
-    {
-        for (int c = MIN_SUPPORTED_SNDCHAN; c < sizeof(g_lastSound[]); c++)
-            g_lastSound[e][c].Init();
-    }
-
-    AddNormalSoundHook(OnNormalSound);
-
-    RegAdminCmd("sm_priority_si_sounds_reset", Command_Reset, ADMFLAG_ROOT);
-}
-
-Action Command_Reset(int iClient, int iArgs)
-{
-    g_hMap_Sounds.Clear();
-    g_soundParser.LoadSoundData();
-
-    return Plugin_Handled;
-}
-
-/**********************
- * track playing sounds
- **********************/
-
-enum struct Sound
-{
-    float duration;
-    int   priority;
-}
-
-enum struct PlayingSound
-{
-    int    entref;
-    Handle timer;
-    int    priority;
-
-    void   Init(){
-        this.entref = INVALID_ENT_REFERENCE;
-        this.timer  = null; }
-
-Action Play(int iEntity, Sound soundData)
-{
-    if (this.timer
-        && EntRefToEntIndex(this.entref) != INVALID_ENT_REFERENCE
-        && soundData.priority < this.priority)
-        return Plugin_Handled;
-
-    if (this.timer) delete this.timer;
-
-    if (soundData.priority)
-    {
-        this.priority = soundData.priority;
-        this.entref   = EntIndexToEntRef(iEntity);
-
-        if (soundData.duration >= 0.1)
-            this.timer = CreateTimer(soundData.duration, Timer_SoundFinish, this);
-    }
-
-    return Plugin_Continue;
-}
-}
-
-void Timer_SoundFinish(Handle hTimer, PlayingSound sound)
-{
-    sound.timer = null;
-}
-
-Action OnNormalSound(int iClients[64], int &iNumClients, char sOriginalSample[PLATFORM_MAX_PATH], int &iEntity,
-                     int &iOriginalChannel, float &fVolume, int &iLevel, int &iPitch, int &iFlags, char sSoundEntry[256], int &iSeed)
-{
-    int iChannel = iOriginalChannel;
-    if (!IsValidEdict(iEntity) || !ProcessChannel(sOriginalSample, iChannel))
-        return Plugin_Continue;
-
-    static char sSample[sizeof(sOriginalSample)];
-    Sound       soundData;
-
-    CorrectSample(sOriginalSample, sSample, sizeof(sSample));
-    if (!g_hMap_Sounds.GetArray(sSample, soundData, sizeof(soundData)))
-        soundData.priority = 0;
-
-    return g_lastSound[iEntity][iChannel].Play(iEntity, soundData);
-}
+StringMap    g_hMapSounds;
+SoundParser  g_esSoundParser;
 
 /** prefix of sample names for networked messages. up to the first 2 characters can have these chars.
  * the client will process the sound using the name as it appears after these characters. */
@@ -132,65 +35,48 @@ enum
     SndChar_Subtitled     = '$'     // indicates the subtitles are forced
 }
 
-bool
-    IsSoundChar(char c)
+/**********************
+ * track playing sounds
+ **********************/
+
+enum struct Sound
 {
-    return c == SndChar_Stream || c == SndChar_UserVOX
-        || c == SndChar_Sentence || c == SndChar_DryMix
-        || c == SndChar_Doppler || c == SndChar_Directional
-        || c == SndChar_DistVariant || c == SndChar_Omni
-        || c == SndChar_HRTF || c == SndChar_Radio
-        || c == SndChar_SpatialStereo || c == SndChar_DirStereo
-        || c == SndChar_FastPitch || c == SndChar_Subtitled;
+    float duration;
+    int   priority;
 }
 
-bool HasSoundChar(const char[] sSample, char c)
+enum struct PlayingSound
 {
-    for (int i = 0; i < PLATFORM_MAX_PATH; i++)
-    {
-        if (!IsSoundChar(sSample[i]))
-            break;
+    int    entRef;
+    Handle timer;
+    int    priority;
 
-        if (sSample[i] == c)
-            return true;
+    void Init()
+    {
+        this.entRef = INVALID_ENT_REFERENCE;
+        this.timer  = null;
     }
 
-    return false;
-}
-
-/**
- * correct channel to what it's expected to translate to client side.
- * returns true if this expected channel is targetted by the plugin.
- */
-bool ProcessChannel(const char[] sSample, int &iChannel)
-{
-    if (iChannel > 7) iChannel %= 8;
-
-    if (iChannel != SNDCHAN_STREAM && iChannel != SNDCHAN_VOICE && iChannel != SNDCHAN_STATIC
-        && HasSoundChar(sSample, SndChar_Stream))
+    Action Play(int entity, Sound soundData)
     {
-        iChannel = SNDCHAN_STREAM;
-        return true;
-    }
+        if (this.timer
+            && EntRefToEntIndex(this.entRef) != INVALID_ENT_REFERENCE
+            && soundData.priority < this.priority)
+            return Plugin_Handled;
 
-    return MIN_SUPPORTED_SNDCHAN <= iChannel <= MAX_SUPPORTED_SNDCHAN;
-}
+        if (this.timer)
+            delete this.timer;
 
-void CorrectSample(const char[] sOriginal, char[] sBuffer, int iBufferLen)
-{
-    int iWrite = 0;
-    for (int i = 0; iWrite < iBufferLen; i++)
-    {
-        if (!iWrite && IsSoundChar(sOriginal[i]))
-            continue;
+        if (soundData.priority)
+        {
+            this.priority = soundData.priority;
+            this.entRef   = EntIndexToEntRef(entity);
 
-        if (IsCharAlpha(sOriginal[i]))
-            sBuffer[iWrite++] = CharToLower(sOriginal[i]);
-        else if (sOriginal[i] == '\\')
-            sBuffer[iWrite++] = '/';
-        else sBuffer[iWrite++] = sOriginal[i];
+            if (soundData.duration >= 0.1)
+                this.timer = CreateTimer(soundData.duration, Timer_SoundFinish, this);
+        }
 
-        if (sOriginal[i] == '\0') return;
+        return Plugin_Continue;
     }
 }
 
@@ -214,10 +100,12 @@ enum struct SoundParser
     Sound       sound;
     char        soundName[PLATFORM_MAX_PATH];
 
-    void        LoadSoundData(){
-        char sPath[PLATFORM_MAX_PATH];
-        BuildPath(Path_SM, sPath, sizeof(sPath), DATA_FILE);
-        if (!FileExists(sPath)) return;
+    void LoadSoundData()
+    {
+        char path[PLATFORM_MAX_PATH];
+        BuildPath(Path_SM, path, sizeof(path), DATA_FILE);
+        if (!FileExists(path))
+            return;
 
         this.parser                = new SMCParser();
         this.parser.OnEnterSection = SMC_OnEnterSound;
@@ -227,105 +115,226 @@ enum struct SoundParser
         this.state                 = Parser_LookingForSound;
         this.stateHistory          = new ArrayList();
 
-        this.parser.ParseFile(sPath);
+        this.parser.ParseFile(path);
 
         delete this.parser;
-        delete this.stateHistory; }
-
-void SetState(ParserState state)
-{
-    if (this.state == state) return;
-
-    switch (state)
-    {
-        case Parser_LookingForSound:
-        {
-            this.parser.OnEnterSection = SMC_OnEnterSound;
-            this.parser.OnKeyValue     = INVALID_FUNCTION;
-        }
-        case Parser_ReadingSound:
-        {
-            this.parser.OnEnterSection = SMC_OnSkipSection;
-            this.parser.OnKeyValue     = SMC_OnKeyValue;
-        }
-        case Parser_Skip:
-        {
-            this.parser.OnEnterSection = SMC_OnSkipSection;
-            this.parser.OnKeyValue     = INVALID_FUNCTION;
-        }
+        delete this.stateHistory;
     }
 
-    this.state = state;
-}
-
-void OpenSound(const char[] sName)
-{
-    strcopy(this.soundName, sizeof(this.soundName), sName);
-    this.sound.duration = 0.0;
-    this.sound.priority = 0;
-}
-
-void CommitSound()
-{
-    g_hMap_Sounds.SetArray(this.soundName, this.sound, sizeof(this.sound));
-}
-
-SMCResult EnterSection(ParserState newState)
-{
-    this.stateHistory.Push(this.state);
-    this.SetState(newState);
-
-    return SMCParse_Continue;
-}
-
-SMCResult LeaveSection()
-{
-    int         iNewSize = this.stateHistory.Length - 1;
-    ParserState newState = this.stateHistory.Get(iNewSize);
-    this.stateHistory.Resize(iNewSize);
-
-    if (this.state == Parser_ReadingSound)
-        this.CommitSound();
-
-    this.SetState(newState);
-
-    return SMCParse_Continue;
-}
-
-SMCResult Read(const char[] sKey, const char[] sValue)
-{
-    if (strcmp(sKey, "duration") == 0)
+    void SetState(ParserState state)
     {
-        float fValue        = StringToFloat(sValue);
-        this.sound.duration = fValue;
-    }
-    else if (strcmp(sKey, "priority") == 0)
-    {
-        int iValue          = StringToInt(sValue);
-        this.sound.priority = iValue;
+        if (this.state == state)
+            return;
+
+        switch (state)
+        {
+            case Parser_LookingForSound:
+            {
+                this.parser.OnEnterSection = SMC_OnEnterSound;
+                this.parser.OnKeyValue     = INVALID_FUNCTION;
+            }
+            case Parser_ReadingSound:
+            {
+                this.parser.OnEnterSection = SMC_OnSkipSection;
+                this.parser.OnKeyValue     = SMC_OnKeyValue;
+            }
+            case Parser_Skip:
+            {
+                this.parser.OnEnterSection = SMC_OnSkipSection;
+                this.parser.OnKeyValue     = INVALID_FUNCTION;
+            }
+        }
+
+        this.state = state;
     }
 
-    return SMCParse_Continue;
-}
+    void OpenSound(const char[] name)
+    {
+        strcopy(this.soundName, sizeof(this.soundName), name);
+        this.sound.duration = 0.0;
+        this.sound.priority = 0;
+    }
+
+    void CommitSound()
+    {
+        g_hMapSounds.SetArray(this.soundName, this.sound, sizeof(this.sound));
+    }
+
+    SMCResult EnterSection(ParserState newState)
+    {
+        this.stateHistory.Push(this.state);
+        this.SetState(newState);
+
+        return SMCParse_Continue;
+    }
+
+    SMCResult LeaveSection()
+    {
+        int         newSize  = this.stateHistory.Length - 1;
+        ParserState newState = this.stateHistory.Get(newSize);
+        this.stateHistory.Resize(newSize);
+
+        if (this.state == Parser_ReadingSound)
+            this.CommitSound();
+
+        this.SetState(newState);
+
+        return SMCParse_Continue;
+    }
+
+    SMCResult Read(const char[] key, const char[] value)
+    {
+        if (strcmp(key, "duration") == 0)
+        {
+            float duration      = StringToFloat(value);
+            this.sound.duration = duration;
+        }
+        else if (strcmp(key, "priority") == 0)
+        {
+            int priority        = StringToInt(value);
+            this.sound.priority = priority;
+        }
+
+        return SMCParse_Continue;
+    }
 }
 
-SMCResult SMC_OnEnterSound(SMCParser hParser, const char[] sName, bool bOptQuotes)
+public Plugin myinfo =
 {
-    g_soundParser.OpenSound(sName);
-    return g_soundParser.EnterSection(Parser_ReadingSound);
+    name        = "L4D2 Priority Sounds",
+    author      = "Rainy",
+    description = "우선순위가 높은 소리가 다른 소리에 끊기지 않게 합니다.",
+    version     = "1.0.0",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_priority_sounds"
+};
+
+public void OnPluginStart()
+{
+    g_hMapSounds = new StringMap();
+    g_esSoundParser.LoadSoundData();
+
+    for (int e = 0; e < sizeof(g_esLastSound); e++)
+    {
+        for (int c = MIN_SUPPORTED_SNDCHAN; c < sizeof(g_esLastSound[]); c++)
+            g_esLastSound[e][c].Init();
+    }
+
+    AddNormalSoundHook(OnNormalSound);
+
+    RegAdminCmd("sm_priority_si_sounds_reset", Command_Reset, ADMFLAG_ROOT);
 }
 
-SMCResult SMC_OnSkipSection(SMCParser hParser, const char[] sName, bool bOptQuotes)
+Action Command_Reset(int client, int args)
 {
-    return g_soundParser.EnterSection(Parser_Skip);
+    g_hMapSounds.Clear();
+    g_esSoundParser.LoadSoundData();
+
+    return Plugin_Handled;
 }
 
-SMCResult SMC_OnKeyValue(SMCParser hParser, const char[] sKey, const char[] sValue, bool bKeyQuotes, bool bValueQuotes)
+void Timer_SoundFinish(Handle timer, PlayingSound sound)
 {
-    return g_soundParser.Read(sKey, sValue);
+    sound.timer = null;
 }
 
-SMCResult SMC_OnLeaveSection(SMCParser hParser)
+Action OnNormalSound(int clients[64], int &numClients, char originalSample[PLATFORM_MAX_PATH], int &entity,
+                     int &originalChannel, float &volume, int &level, int &pitch, int &flags, char soundEntry[256], int &seed)
 {
-    return g_soundParser.LeaveSection();
+    int channel = originalChannel;
+    if (!IsValidEdict(entity) || !ProcessChannel(originalSample, channel))
+        return Plugin_Continue;
+
+    static char sample[sizeof(originalSample)];
+    Sound       soundData;
+
+    CorrectSample(originalSample, sample, sizeof(sample));
+    if (!g_hMapSounds.GetArray(sample, soundData, sizeof(soundData)))
+        soundData.priority = 0;
+
+    return g_esLastSound[entity][channel].Play(entity, soundData);
+}
+
+SMCResult SMC_OnEnterSound(SMCParser parser, const char[] name, bool optQuotes)
+{
+    g_esSoundParser.OpenSound(name);
+    return g_esSoundParser.EnterSection(Parser_ReadingSound);
+}
+
+SMCResult SMC_OnSkipSection(SMCParser parser, const char[] name, bool optQuotes)
+{
+    return g_esSoundParser.EnterSection(Parser_Skip);
+}
+
+SMCResult SMC_OnKeyValue(SMCParser parser, const char[] key, const char[] value, bool keyQuotes, bool valueQuotes)
+{
+    return g_esSoundParser.Read(key, value);
+}
+
+SMCResult SMC_OnLeaveSection(SMCParser parser)
+{
+    return g_esSoundParser.LeaveSection();
+}
+
+bool IsSoundChar(char c)
+{
+    return c == SndChar_Stream || c == SndChar_UserVOX
+        || c == SndChar_Sentence || c == SndChar_DryMix
+        || c == SndChar_Doppler || c == SndChar_Directional
+        || c == SndChar_DistVariant || c == SndChar_Omni
+        || c == SndChar_HRTF || c == SndChar_Radio
+        || c == SndChar_SpatialStereo || c == SndChar_DirStereo
+        || c == SndChar_FastPitch || c == SndChar_Subtitled;
+}
+
+bool HasSoundChar(const char[] sample, char c)
+{
+    for (int i = 0; i < PLATFORM_MAX_PATH; i++)
+    {
+        if (!IsSoundChar(sample[i]))
+            break;
+
+        if (sample[i] == c)
+            return true;
+    }
+
+    return false;
+}
+
+/**
+ * correct channel to what it's expected to translate to client side.
+ * returns true if this expected channel is targetted by the plugin.
+ */
+bool ProcessChannel(const char[] sample, int &channel)
+{
+    if (channel > 7)
+        channel %= 8;
+
+    if (channel != SNDCHAN_STREAM && channel != SNDCHAN_VOICE && channel != SNDCHAN_STATIC
+        && HasSoundChar(sample, SndChar_Stream))
+    {
+        channel = SNDCHAN_STREAM;
+        return true;
+    }
+
+    return MIN_SUPPORTED_SNDCHAN <= channel <= MAX_SUPPORTED_SNDCHAN;
+}
+
+void CorrectSample(const char[] original, char[] buffer, int bufferLen)
+{
+    int write = 0;
+    for (int i = 0; write < bufferLen; i++)
+    {
+        if (!write && IsSoundChar(original[i]))
+            continue;
+
+        if (IsCharAlpha(original[i]))
+            buffer[write++] = CharToLower(original[i]);
+        else if (original[i] == '\\')
+            buffer[write++] = '/';
+        else
+            buffer[write++] = original[i];
+
+        if (original[i] == '\0')
+            return;
+    }
 }

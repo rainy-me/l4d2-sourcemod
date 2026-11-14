@@ -16,15 +16,14 @@ enum MOTDTitle
     MOTDTitle_Translation
 };
 
+// enum struct 메서드가 참조하므로 enum struct보다 앞에 둔다
 /** convars */
 ConVar     g_hConVarMOTDTitleType;
 ConVar     g_hConVarMOTDTitle;
 
-MOTDTitle  g_MOTDTitleType;
+MOTDTitle  g_eMOTDTitleType;
 char       g_sMOTDTitle[MAX_MOTD_TITLE_LEN];
 
-MOTDBuffer g_motd;
-ArrayList  g_hQueue;    // 같은 프레임에 여러 MOTD가 나가도 덮어쓰지 않도록 쌓아 둔다
 enum struct MOTDBuffer
 {
     int  flags;
@@ -37,124 +36,139 @@ enum struct MOTDBuffer
     bool overflow;
 
     /** returns false if the message does not fit; the caller must let the original through */
-    bool Record(BfRead hBuffer, const int[] iPlayers, int iPlayersNum, bool bReliable, bool bInit, char sLine[MAX_MOTD_LINE_LEN]){
+    bool Record(BfRead bf, const int[] clients, int clientsNum, bool reliable, bool init, char line[MAX_MOTD_LINE_LEN])
+    {
         this.bufferLen = 0;
         this.overflow  = false;
 
-        bool bTitleFound;
-        int  iTotalKVIndex;
+        bool titleFound;
+        int  totalKVIndex;
 
         this.AppendString("info");
-        this.AppendByte(hBuffer.ReadByte());                    // for formatting
-        iTotalKVIndex = this.AppendByte(hBuffer.ReadByte());    // total kayvalue pairs
+        this.AppendByte(bf.ReadByte());                   // for formatting
+        totalKVIndex = this.AppendByte(bf.ReadByte());    // total kayvalue pairs
 
         /** the remainder of the buffer are keyvalue pairs. it alternates, starting with a key, then a value */
-        bool bSkipKV;
-        for (bool bKey = true; hBuffer.BytesLeft; bKey = !bKey){
-            hBuffer.ReadString(sLine, sizeof(sLine), true);
-
-            if (bSkipKV){
-                /** bKey being true here means we're at the key of the pair after the key that set bSkipKV to true */
-                if (bKey) bSkipKV = false;
-                else continue; }
-
-if (bKey && strcmp(sLine, "title") == 0)
-{
-    bSkipKV     = true;
-    bTitleFound = true;
-    continue;
-}
-
-this.AppendString(sLine);
-}
-
-/** title key without value. value gets appended in post hook */
-this.AppendString("title");
-
-if (!bTitleFound)
-    this.buffer[iTotalKVIndex] = view_as<int>(this.buffer[iTotalKVIndex]) + 1;
-
-this.flags = USERMSG_BLOCKHOOKS;
-if (bReliable) this.flags |= USERMSG_RELIABLE;
-if (bInit) this.flags |= USERMSG_INITMSG;
-
-this.playersNum = iPlayersNum;
-
-for (int i = 0; i < iPlayersNum; i++)
-{
-    this.players[i]    = iPlayers[i];
-    this.playersRef[i] = EntIndexToEntRef(iPlayers[i]);
-}
-
-return !this.overflow;
-}
-
-void Send()
-{
-    if (g_MOTDTitleType == MOTDTitle_Vanilla)
-        return;
-
-    static char sTranslatedTitle[MAX_MOTD_TITLE_LEN];
-    int         iRecipient[1];
-
-    for (int p = 0; p < this.playersNum; p++)
-    {
-        if (EntIndexToEntRef(this.players[p]) != this.playersRef[p])
-            continue;
-
-        iRecipient[0] = this.players[p];
-
-        if (g_MOTDTitleType == MOTDTitle_Translation)
+        bool skipKV;
+        for (bool key = true; bf.BytesLeft; key = !key)
         {
-            FormatEx(sTranslatedTitle, sizeof(sTranslatedTitle), "%T", "#MOTD_Title", this.players[p]);
-            this.SendUserMessage(iRecipient, 1, sTranslatedTitle);
+            bf.ReadString(line, sizeof(line), true);
+
+            if (skipKV)
+            {
+                /** key being true here means we're at the key of the pair after the key that set skipKV to true */
+                if (key)
+                    skipKV = false;
+                else
+                    continue;
+            }
+
+            if (key && strcmp(line, "title") == 0)
+            {
+                skipKV     = true;
+                titleFound = true;
+                continue;
+            }
+
+            this.AppendString(line);
         }
-        else this.SendUserMessage(iRecipient, 1, g_sMOTDTitle);
+
+        /** title key without value. value gets appended in post hook */
+        this.AppendString("title");
+
+        if (!titleFound)
+            this.buffer[totalKVIndex] = view_as<int>(this.buffer[totalKVIndex]) + 1;
+
+        this.flags = USERMSG_BLOCKHOOKS;
+        if (reliable)
+            this.flags |= USERMSG_RELIABLE;
+        if (init)
+            this.flags |= USERMSG_INITMSG;
+
+        this.playersNum = clientsNum;
+
+        for (int i = 0; i < clientsNum; i++)
+        {
+            this.players[i]    = clients[i];
+            this.playersRef[i] = EntIndexToEntRef(clients[i]);
+        }
+
+        return !this.overflow;
     }
-}
 
-/**********
- * helpers
- **********/
-
-void AppendString(const char[] sString)
-{
-    for (int i = 0;; i++)
+    void Send()
     {
-        if (this.AppendByte(sString[i]) == -1 || sString[i] == '\0') break;
-    }
-}
+        if (g_eMOTDTitleType == MOTDTitle_Vanilla)
+            return;
 
-/** returns the index written to. -1 if the buffer is full */
-int AppendByte(int iByte)
-{
-    /** leave at least 1 byte for the title's terminator */
-    if (this.bufferLen >= MAX_USERMSG_LEN - 1)
+        static char translatedTitle[MAX_MOTD_TITLE_LEN];
+        int         recipient[1];
+
+        for (int p = 0; p < this.playersNum; p++)
+        {
+            if (EntIndexToEntRef(this.players[p]) != this.playersRef[p])
+                continue;
+
+            recipient[0] = this.players[p];
+
+            if (g_eMOTDTitleType == MOTDTitle_Translation)
+            {
+                FormatEx(translatedTitle, sizeof(translatedTitle), "%T", "#MOTD_Title", this.players[p]);
+                this.SendUserMessage(recipient, 1, translatedTitle);
+            }
+            else
+            {
+                this.SendUserMessage(recipient, 1, g_sMOTDTitle);
+            }
+        }
+    }
+
+    /**********
+     * helpers
+     **********/
+
+    void AppendString(const char[] str)
     {
-        this.overflow = true;
-        return -1;
+        for (int i = 0;; i++)
+        {
+            if (this.AppendByte(str[i]) == -1 || str[i] == '\0')
+                break;
+        }
     }
 
-    this.buffer[this.bufferLen++] = iByte;
-    return this.bufferLen - 1;
+    /** returns the index written to. -1 if the buffer is full */
+    int AppendByte(int value)
+    {
+        /** leave at least 1 byte for the title's terminator */
+        if (this.bufferLen >= MAX_USERMSG_LEN - 1)
+        {
+            this.overflow = true;
+            return -1;
+        }
+
+        this.buffer[this.bufferLen++] = value;
+        return this.bufferLen - 1;
+    }
+
+    void SendUserMessage(const int[] clients, int clientsNum, const char[] title)
+    {
+        BfWrite bf = view_as<BfWrite>(StartMessage("VGUIMenu", clients, clientsNum, this.flags));
+
+        for (int i = 0; i < this.bufferLen; i++)
+            bf.WriteByte(this.buffer[i]);
+
+        /** cut the title to what is left of the message */
+        char fit[MAX_MOTD_TITLE_LEN];
+        int  maxLen = MAX_USERMSG_LEN - this.bufferLen;
+        strcopy(fit, maxLen < sizeof(fit) ? maxLen : sizeof(fit), title);
+        bf.WriteString(fit);
+
+        EndMessage();
+    }
 }
 
-void SendUserMessage(const int[] iPlayers, int iPlayersNum, const char[] sTitle)
-{
-    BfWrite hBuffer = view_as<BfWrite>(StartMessage("VGUIMenu", iPlayers, iPlayersNum, this.flags));
-
-    for (int i = 0; i < this.bufferLen; i++)
-        hBuffer.WriteByte(this.buffer[i]);
-
-    /** cut the title to what is left of the message */
-    char sFit[MAX_MOTD_TITLE_LEN];
-    int  iMax = MAX_USERMSG_LEN - this.bufferLen;
-    strcopy(sFit, iMax < sizeof(sFit) ? iMax : sizeof(sFit), sTitle);
-    hBuffer.WriteString(sFit);
-
-    EndMessage();
-}
-}
+MOTDBuffer g_esMotd;
+ArrayList  g_hQueue;    // 같은 프레임에 여러 MOTD가 나가도 덮어쓰지 않도록 쌓아 둔다
 
 public Plugin myinfo =
 {
@@ -165,7 +179,7 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_motd_title"
 };
 
-public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 {
     RegPluginLibrary(MOTD_TITLE_LIBRARY);
     return APLRes_Success;
@@ -198,14 +212,14 @@ public void OnPluginStart()
  * ConVars
  *********/
 
-void ConVarChanged_Read(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_Read(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     ReadConVars();
 }
 
 void ReadConVars()
 {
-    g_MOTDTitleType = view_as<MOTDTitle>(g_hConVarMOTDTitleType.IntValue);
+    g_eMOTDTitleType = view_as<MOTDTitle>(g_hConVarMOTDTitleType.IntValue);
     g_hConVarMOTDTitle.GetString(g_sMOTDTitle, sizeof(g_sMOTDTitle));
 }
 
@@ -213,21 +227,21 @@ void ReadConVars()
  * UserMessage
  *************/
 
-Action MsgHook_VGUIMenu(UserMsg msg_id, BfRead hBuffer, const int[] iPlayers, int iPlayersNum, bool bReliable, bool bInit)
+Action MsgHook_VGUIMenu(UserMsg msg_id, BfRead bf, const int[] clients, int clientsNum, bool reliable, bool init)
 {
-    static char sLine[MAX_MOTD_LINE_LEN];
+    static char line[MAX_MOTD_LINE_LEN];
 
-    if (g_MOTDTitleType == MOTDTitle_Vanilla)
+    if (g_eMOTDTitleType == MOTDTitle_Vanilla)
         return Plugin_Continue;
 
-    hBuffer.ReadString(sLine, sizeof(sLine), true);
-    if (strcmp(sLine, "info") != 0)
+    bf.ReadString(line, sizeof(line), true);
+    if (strcmp(line, "info") != 0)
         return Plugin_Continue;
 
-    if (!g_motd.Record(hBuffer, iPlayers, iPlayersNum, bReliable, bInit, sLine))
+    if (!g_esMotd.Record(bf, clients, clientsNum, reliable, init, line))
         return Plugin_Continue;
 
-    g_hQueue.PushArray(g_motd);
+    g_hQueue.PushArray(g_esMotd);
     RequestFrame(SendNewMsg);
 
     return Plugin_Handled;
@@ -241,8 +255,8 @@ void SendNewMsg()
 {
     for (int i = 0; i < g_hQueue.Length; i++)
     {
-        g_hQueue.GetArray(i, g_motd);
-        g_motd.Send();
+        g_hQueue.GetArray(i, g_esMotd);
+        g_esMotd.Send();
     }
     g_hQueue.Clear();
 }

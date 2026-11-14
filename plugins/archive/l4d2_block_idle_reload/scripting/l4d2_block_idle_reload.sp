@@ -27,31 +27,23 @@ void Timer_UnReload(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
     if (!IsValidSurvivor(client))
-    {
         return;
-    }
 
     for (int slot = 0; slot < 5; slot++)
     {
         int weapon = GetPlayerWeaponSlot(client, slot);
         if (weapon == -1)
-        {
             continue;
-        }
 
         if (HasEntProp(weapon, Prop_Send, "m_bInReload"))
-        {
             SetEntProp(weapon, Prop_Send, "m_bInReload", 0);
-        }
 
         if (HasEntProp(weapon, Prop_Send, "m_reloadState"))
         {
             SetEntProp(weapon, Prop_Send, "m_reloadState", 0);
 
             if (GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon") == weapon)
-            {
                 SwitchAwayFrom(client, slot);
-            }
         }
     }
 }
@@ -64,15 +56,11 @@ void SwitchAwayFrom(int client, int activeSlot)
     {
         int slot = order[i];
         if (slot == activeSlot)
-        {
             continue;
-        }
 
         int weapon = GetPlayerWeaponSlot(client, slot);
         if (weapon == -1)
-        {
             continue;
-        }
 
         char classname[64];
         GetEntityClassname(weapon, classname, sizeof(classname));
@@ -89,9 +77,7 @@ void Timer_ClearActiveWeapon(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
     if (IsValidSurvivor(client) && GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon") != -1)
-    {
         SetEntPropEnt(client, Prop_Send, "m_hActiveWeapon", -1);
-    }
 }
 
 bool IsValidSurvivor(int client)

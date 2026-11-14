@@ -1,5 +1,5 @@
-#pragma newdecls required
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
@@ -7,6 +7,137 @@
 #include <hxlib>
 
 #define CVAR_FLAGS FCVAR_NOTIFY
+
+// enum struct 메서드가 참조하므로 enum struct보다 앞에 둔다
+ConVar    g_hConVarZombieDiscardRangeDefault;
+float     g_fZombieDiscardRangeDefault;
+
+ConVar    g_hConVarMaxStuckTime;
+float     g_fMaxStuckTime;
+
+enum struct CandidateData
+{
+    int   entRef;
+
+    bool  stuck;
+    float stuckTime;
+
+    void Init(int entityRef)
+    {
+        this.entRef = entityRef;
+        this.stuck  = false;
+    }
+
+    bool ShouldDespawn()
+    {
+        if (g_fMaxStuckTime >= 0.0 && this.stuck && (GetGameTime() - this.stuckTime) >= g_fMaxStuckTime)
+            return true;
+
+        return false;
+    }
+}
+
+enum struct Despawner
+{
+    ArrayList candidates;
+    Handle    updater;
+
+    void Init()
+    {
+        this.candidates = new ArrayList(sizeof(CandidateData));
+        this.updater    = null;
+    }
+
+    void AddCandidate(int candidate)
+    {
+        int           entityRef = EntIndexToEntRef(candidate);
+        CandidateData data;
+        int           index = this.GetCandidate(entityRef, data);
+
+        data.Init(entityRef);
+
+        if (index >= 0)
+            this.candidates.SetArray(index, data);
+        else
+            this.candidates.PushArray(data);
+
+        if (!this.updater)
+            this.updater = CreateTimer(0.5, Timer_DespawnerUpdate);
+    }
+
+    int GetCandidate(int entityRef, CandidateData data)
+    {
+        for (int i = 0; i < this.candidates.Length; i++)
+        {
+            this.candidates.GetArray(i, data);
+            if (entityRef == data.entRef)
+                return i;
+        }
+
+        return -1;
+    }
+
+    void SetStuck(int candidate, bool stuck)
+    {
+        CandidateData data;
+        int           index = this.GetCandidate(EntIndexToEntRef(candidate), data);
+
+        if (index >= 0 && data.stuck != stuck)
+        {
+            data.stuck = stuck;
+            if (stuck)
+                data.stuckTime = GetGameTime();
+
+            this.candidates.SetArray(index, data);
+        }
+    }
+
+    void Update()
+    {
+        CandidateData candidate;
+        int           entity;
+        int           i;
+
+        while (i < this.candidates.Length)
+        {
+            this.candidates.GetArray(i, candidate);
+            entity = EntRefToEntIndex(candidate.entRef);
+
+            if (entity == INVALID_ENT_REFERENCE)
+            {
+                this.candidates.Erase(i);
+                continue;
+            }
+
+            if (candidate.ShouldDespawn())
+            {
+                float pos[3];
+                GetCollisionCenter(entity, pos);
+                float despawnRange = GetScriptValueFloat("ZombieDiscardRange", g_fZombieDiscardRangeDefault);
+
+                if (!IsVisibleToTeam(Team_Survivor, pos, despawnRange, _, 0, false, true))
+                {
+                    // ForcePlayerSuicide는 클라이언트 전용이라 윗치·일반 좀비는 엔티티 제거
+                    if (entity <= MaxClients)
+                        ForcePlayerSuicide(entity);
+                    else
+                        RemoveEntity(entity);
+                    this.candidates.Erase(i);
+                    continue;
+                }
+            }
+
+            i++;
+        }
+
+        if (this.candidates.Length > 0)
+            this.updater = CreateTimer(0.5, Timer_DespawnerUpdate);
+    }
+}
+
+Despawner g_esDespawner;
+
+StringMap g_hMapTargetBehaviors;
 
 public Plugin myinfo =
 {
@@ -17,193 +148,69 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_despawn_stuck_si"
 };
 
-Despawner g_despawner;
-
-ConVar    g_hConVar_ZombieDiscardRangeDefault;
-float     g_fZombieDiscardRangeDefault;
-
-ConVar    g_hConVar_MaxStuckTime;
-float     g_fMaxStuckTime;
-
-StringMap g_hMap_TargetBehaviors;
-
-enum struct Despawner
-{
-    ArrayList candidates;
-    Handle    updater;
-
-    void      Init(){
-        this.candidates = new ArrayList(sizeof(CandidateData));
-        this.updater    = null; }
-
-void AddCandidate(int iCandidate)
-{
-    int           iEntRef = EntIndexToEntRef(iCandidate);
-    CandidateData data;
-    int           iIndex = this.GetCandidate(iEntRef, data);
-
-    data.Init(iEntRef);
-
-    if (iIndex >= 0)
-        this.candidates.SetArray(iIndex, data);
-    else this.candidates.PushArray(data);
-
-    if (!this.updater)
-        this.updater = CreateTimer(0.5, Timer_DespawnerUpdate);
-}
-
-int GetCandidate(int iEntRef, CandidateData data)
-{
-    for (int i = 0; i < this.candidates.Length; i++)
-    {
-        this.candidates.GetArray(i, data);
-        if (iEntRef == data.entref)
-            return i;
-    }
-
-    return -1;
-}
-
-void SetStuck(int iCandidate, bool bStuckStatus)
-{
-    CandidateData data;
-    int           iIndex = this.GetCandidate(EntIndexToEntRef(iCandidate), data);
-
-    if (iIndex >= 0 && data.stuck != bStuckStatus)
-    {
-        data.stuck = bStuckStatus;
-        if (bStuckStatus) data.stuckTime = GetGameTime();
-
-        this.candidates.SetArray(iIndex, data);
-    }
-}
-
-void Update()
-{
-    CandidateData candidate;
-    int           iEntIndex;
-    int           i;
-
-    while (i < this.candidates.Length)
-    {
-        this.candidates.GetArray(i, candidate);
-        iEntIndex = EntRefToEntIndex(candidate.entref);
-
-        if (iEntIndex == INVALID_ENT_REFERENCE)
-        {
-            this.candidates.Erase(i);
-            continue;
-        }
-
-        if (candidate.ShouldDespawn())
-        {
-            float vPos[3];
-            GetCollisionCenter(iEntIndex, vPos);
-            float fDespawnRange = GetScriptValueFloat("ZombieDiscardRange", g_fZombieDiscardRangeDefault);
-
-            if (!IsVisibleToTeam(Team_Survivor, vPos, fDespawnRange, _, 0, false, true))
-            {
-                // ForcePlayerSuicide는 클라이언트 전용이라 윗치·일반 좀비는 엔티티 제거
-                if (iEntIndex <= MaxClients)
-                    ForcePlayerSuicide(iEntIndex);
-                else
-                    RemoveEntity(iEntIndex);
-                this.candidates.Erase(i);
-                continue;
-            }
-        }
-
-        i++;
-    }
-
-    if (this.candidates.Length > 0)
-        this.updater = CreateTimer(0.5, Timer_DespawnerUpdate);
-}
-}
-
-enum struct CandidateData
-{
-    int   entref;
-
-    bool  stuck;
-    float stuckTime;
-
-    void  Init(int iEntRef){
-        this.entref = iEntRef;
-        this.stuck  = false; }
-
-bool ShouldDespawn()
-{
-    if (g_fMaxStuckTime >= 0.0 && this.stuck && (GetGameTime() - this.stuckTime) >= g_fMaxStuckTime)
-        return true;
-
-    return false;
-}
-}
-
 public void OnPluginStart()
 {
-    g_hConVar_ZombieDiscardRangeDefault = FindConVar("z_discard_range");
-    g_hConVar_ZombieDiscardRangeDefault.AddChangeHook(ConVarChanged_Update);
+    g_hConVarZombieDiscardRangeDefault = FindConVar("z_discard_range");
+    g_hConVarZombieDiscardRangeDefault.AddChangeHook(ConVarChanged_Update);
 
-    g_hConVar_MaxStuckTime = CreateConVar(
+    g_hConVarMaxStuckTime = CreateConVar(
         "despawn_max_stuck_time", "7.0",
         "time in seconds an infected must be stuck to be a candidate " ... "for being despawned. -1.0 to disable stuck despawns",
         CVAR_FLAGS, true, -1.0);
-    g_hConVar_MaxStuckTime.AddChangeHook(ConVarChanged_Update);
+    g_hConVarMaxStuckTime.AddChangeHook(ConVarChanged_Update);
     AutoExecConfig(true, "l4d2_despawn_stuck_si");
 
     ReadConVars();
 
-    g_hMap_TargetBehaviors = new StringMap();
-    g_hMap_TargetBehaviors.SetValue("SmokerBehavior", 0);
-    g_hMap_TargetBehaviors.SetValue("BoomerBehavior", 0);
-    g_hMap_TargetBehaviors.SetValue("HunterBehavior", 0);
-    g_hMap_TargetBehaviors.SetValue("SpitterBehavior", 0);
-    g_hMap_TargetBehaviors.SetValue("JockeyBehavior", 0);
-    g_hMap_TargetBehaviors.SetValue("ChargerBehavior", 0);
-    g_hMap_TargetBehaviors.SetValue("TankBehavior", 0);
-    g_hMap_TargetBehaviors.SetValue("WitchBehavior", 0);
-    g_hMap_TargetBehaviors.SetValue("InfectedBehavior", 0);
+    g_hMapTargetBehaviors = new StringMap();
+    g_hMapTargetBehaviors.SetValue("SmokerBehavior", 0);
+    g_hMapTargetBehaviors.SetValue("BoomerBehavior", 0);
+    g_hMapTargetBehaviors.SetValue("HunterBehavior", 0);
+    g_hMapTargetBehaviors.SetValue("SpitterBehavior", 0);
+    g_hMapTargetBehaviors.SetValue("JockeyBehavior", 0);
+    g_hMapTargetBehaviors.SetValue("ChargerBehavior", 0);
+    g_hMapTargetBehaviors.SetValue("TankBehavior", 0);
+    g_hMapTargetBehaviors.SetValue("WitchBehavior", 0);
+    g_hMapTargetBehaviors.SetValue("InfectedBehavior", 0);
 
-    g_despawner.Init();
+    g_esDespawner.Init();
 }
 
-void ConVarChanged_Update(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     ReadConVars();
 }
 
 void ReadConVars()
 {
-    g_fZombieDiscardRangeDefault = g_hConVar_ZombieDiscardRangeDefault.FloatValue;
-    g_fMaxStuckTime              = g_hConVar_MaxStuckTime.FloatValue;
+    g_fZombieDiscardRangeDefault = g_hConVarZombieDiscardRangeDefault.FloatValue;
+    g_fMaxStuckTime              = g_hConVarMaxStuckTime.FloatValue;
 }
 
-void Timer_DespawnerUpdate(Handle hTimer)
+void Timer_DespawnerUpdate(Handle timer)
 {
-    g_despawner.updater = null;
-    g_despawner.Update();
+    g_esDespawner.updater = null;
+    g_esDespawner.Update();
 }
 
-public void OnActionCreated(BehaviorAction action, int iActor, const char[] sName, ActionId id)
+public void OnActionCreated(BehaviorAction action, int actor, const char[] name, ActionId id)
 {
-    if (g_hMap_TargetBehaviors.ContainsKey(sName))
+    if (g_hMapTargetBehaviors.ContainsKey(name))
     {
-        g_despawner.AddCandidate(iActor);
+        g_esDespawner.AddCandidate(actor);
         action.OnStuckPost   = OnStuck;
         action.OnUnStuckPost = OnUnStuck;
     }
 }
 
-Action OnStuck(BehaviorAction action, int iActor, ActionDesiredResult result)
+Action OnStuck(BehaviorAction action, int actor, ActionDesiredResult result)
 {
-    g_despawner.SetStuck(iActor, true);
+    g_esDespawner.SetStuck(actor, true);
     return Plugin_Continue;
 }
 
-Action OnUnStuck(BehaviorAction action, int iActor, ActionDesiredResult result)
+Action OnUnStuck(BehaviorAction action, int actor, ActionDesiredResult result)
 {
-    g_despawner.SetStuck(iActor, false);
+    g_esDespawner.SetStuck(actor, false);
     return Plugin_Continue;
 }

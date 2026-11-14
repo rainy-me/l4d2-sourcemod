@@ -47,48 +47,40 @@ public void OnMapStart()
 public void OnMapEnd()
 {
     for (int i = 0; i < 3; i++)
-    {
         g_bReachedPoint[i] = false;
-    }
     if (g_hUpdateTimer != null)
-    {
         delete g_hUpdateTimer;
-    }
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-    char sGameMode[16];
-    FindConVar("mp_gamemode").GetString(sGameMode, sizeof(sGameMode));
-    if (sGameMode[0] != 's' && sGameMode[0] != 'v' && sGameMode[0] != 'h')
+    char gameMode[16];
+    FindConVar("mp_gamemode").GetString(gameMode, sizeof(gameMode));
+    if (gameMode[0] != 's' && gameMode[0] != 'v' && gameMode[0] != 'h')
     {
         for (int i = 0; i < 3; i++)
-        {
             g_bReachedPoint[i] = false;
-        }
         if (g_hUpdateTimer != null)
-        {
             delete g_hUpdateTimer;
-        }
         g_hUpdateTimer = CreateTimer(1.0, Timer_CheckProgress, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 
 Action Timer_CheckProgress(Handle timer)
 {
-    int iFurthestFlow = RoundToFloor(L4D2_GetFurthestSurvivorFlow() / L4D2Direct_GetMapMaxFlowDistance() * 100.0);
+    int furthestFlow = RoundToFloor(L4D2_GetFurthestSurvivorFlow() / L4D2Direct_GetMapMaxFlowDistance() * 100.0);
 
-    if (!g_bReachedPoint[0] && iFurthestFlow >= 25)
+    if (!g_bReachedPoint[0] && furthestFlow >= 25)
     {
         g_bReachedPoint[0] = true;
         NotifyPlayerProgress(25);
     }
-    else if (!g_bReachedPoint[1] && iFurthestFlow >= 50)
+    else if (!g_bReachedPoint[1] && furthestFlow >= 50)
     {
         g_bReachedPoint[1] = true;
         NotifyPlayerProgress(50);
     }
-    else if (!g_bReachedPoint[2] && iFurthestFlow >= 75)
+    else if (!g_bReachedPoint[2] && furthestFlow >= 75)
     {
         g_bReachedPoint[2] = true;
         NotifyPlayerProgress(75);
@@ -96,9 +88,9 @@ Action Timer_CheckProgress(Handle timer)
     return Plugin_Continue;
 }
 
-void NotifyPlayerProgress(int iProgress)
+void NotifyPlayerProgress(int progress)
 {
-    CPrintToChatAll("%t", "Furthest Progress", iProgress);
+    CPrintToChatAll("%t", "Furthest Progress", progress);
     if (g_hSoundEnabled.BoolValue)
     {
         EmitSoundToAll("ui/survival_teamrec.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO,
@@ -109,12 +101,10 @@ void NotifyPlayerProgress(int iProgress)
 Action Cmd_Progress(int client, int args)
 {
     if (!IsClient(client) || !IsClientInGame(client) || IsFakeClient(client))
-    {
         return Plugin_Handled;
-    }
 
-    int iCurrentFlow = RoundFloat(L4D2Direct_GetFlowDistance(client) / L4D2Direct_GetMapMaxFlowDistance() * 100.0);
-    CPrintToChatAll("%t", "Current Progress", client, iCurrentFlow);
+    int currentFlow = RoundFloat(L4D2Direct_GetFlowDistance(client) / L4D2Direct_GetMapMaxFlowDistance() * 100.0);
+    CPrintToChatAll("%t", "Current Progress", client, currentFlow);
     return Plugin_Handled;
 }
 

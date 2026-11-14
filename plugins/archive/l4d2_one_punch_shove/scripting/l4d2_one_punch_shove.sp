@@ -61,13 +61,9 @@ void Event_PlayerShoved(Event event, const char[] name, bool dontBroadcast)
     int victim = GetClientOfUserId(event.GetInt("userid"));
 
     if (!g_bEnabled || !IsClient(client) || !IsClientInGame(client) || GetClientTeam(client) != 2 || !IsPlayerAlive(client))
-    {
         return;
-    }
     if (!IsClient(victim) || !IsClientInGame(victim) || GetClientTeam(victim) != 3 || !IsPlayerAlive(victim))
-    {
         return;
-    }
 
     // One punch kill for SI
     // Apply damage twice for the tank ragdoll effect.
@@ -81,21 +77,15 @@ void Event_EntityShoved(Event event, const char[] name, bool dontBroadcast)
     int entity = event.GetInt("entityid");
 
     if (!g_bEnabled || !IsClient(client) || !IsClientInGame(client) || GetClientTeam(client) != 2 || !IsPlayerAlive(client))
-    {
         return;
-    }
     if (!IsValidEntity(entity))
-    {
         return;
-    }
 
     // One punch kill for CI and Witch
     char classname[64];
     GetEntityClassname(entity, classname, sizeof(classname));
     if (StrEqual(classname, "infected") || StrEqual(classname, "witch"))
-    {
         SDKHooks_TakeDamage(entity, client, client, 100000.0, DMG_CLUB);
-    }
 }
 
 bool IsClient(int index)

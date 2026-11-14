@@ -20,9 +20,7 @@ public void OnPluginStart()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
-        {
             SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
-        }
     }
 }
 
@@ -39,23 +37,17 @@ public void OnClientDisconnect(int client)
 Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
     if (victim == attacker || !IsValidSurvivor(victim) || !IsValidSurvivor(attacker))
-    {
         return Plugin_Continue;
-    }
 
     // 근접무기/전기톱 피해는 inflictor가 무기 엔티티
     if (inflictor <= MaxClients || !IsValidEntity(inflictor))
-    {
         return Plugin_Continue;
-    }
 
     char classname[32];
     GetEntityClassname(inflictor, classname, sizeof(classname));
     // 전기톱도 막으려면 || StrEqual(classname, "weapon_chainsaw") 추가
     if (StrEqual(classname, "weapon_melee"))
-    {
         return Plugin_Handled;
-    }
 
     return Plugin_Continue;
 }

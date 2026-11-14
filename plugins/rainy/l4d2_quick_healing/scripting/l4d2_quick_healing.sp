@@ -56,9 +56,7 @@ public void OnClientDisconnect(int client)
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     for (int i = 0; i < sizeof(g_bFastHealUsed); i++)
-    {
         g_bFastHealUsed[i] = false;
-    }
     g_hUsedAuth.Clear();
 }
 
@@ -68,9 +66,7 @@ void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
     int player = GetClientOfUserId(event.GetInt("player"));
     int bot    = GetClientOfUserId(event.GetInt("bot"));
     if (IsValidClient(player) && IsValidClient(bot) && HasUsed(player))
-    {
         g_bFastHealUsed[bot] = true;
-    }
 }
 
 void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
@@ -78,16 +74,7 @@ void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
     int player = GetClientOfUserId(event.GetInt("player"));
     int bot    = GetClientOfUserId(event.GetInt("bot"));
     if (IsValidClient(player) && IsValidClient(bot) && g_bFastHealUsed[bot])
-    {
         g_bFastHealUsed[player] = true;
-    }
-}
-
-bool HasUsed(int client)
-{
-    char auth[32];
-    return g_bFastHealUsed[client]
-        || (!IsFakeClient(client) && GetClientAuthId(client, AuthId_Steam2, auth, sizeof(auth)) && g_hUsedAuth.ContainsKey(auth));
 }
 
 void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
@@ -95,22 +82,16 @@ void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
     int healer = GetClientOfUserId(event.GetInt("userid"));
     int healee = GetClientOfUserId(event.GetInt("subject"));
     if (!IsValidClient(healer) || !IsValidClient(healee))
-    {
         return;
-    }
 
     if (HasUsed(healee) || !L4D_IsInFirstCheckpoint(healee))
-    {
         return;
-    }
 
     // Use quick healing
     g_bFastHealUsed[healee] = true;
     char auth[32];
     if (!IsFakeClient(healee) && GetClientAuthId(healee, AuthId_Steam2, auth, sizeof(auth)))
-    {
         g_hUsedAuth.SetValue(auth, true);
-    }
     int rawHealth = GetClientHealth(healee);
     int newHealth = RoundToFloor(float(rawHealth) + (100.0 - float(rawHealth)) * g_hHealPercent.FloatValue);
     SetEntityHealth(healee, newHealth);
@@ -151,18 +132,21 @@ void Event_HealBegin(Event event, const char[] name, bool dontBroadcast)
     // Remove the healer's first aid kit.
     int weapon = GetPlayerWeaponSlot(healer, 3);
     if (weapon != -1)
-    {
         RemovePlayerItem(healer, weapon);
-    }
 }
 
 void Timer_CancelStagger(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
     if (IsValidClient(client))
-    {
         L4D_CancelStagger(client);
-    }
+}
+
+bool HasUsed(int client)
+{
+    char auth[32];
+    return g_bFastHealUsed[client]
+        || (!IsFakeClient(client) && GetClientAuthId(client, AuthId_Steam2, auth, sizeof(auth)) && g_hUsedAuth.ContainsKey(auth));
 }
 
 bool IsValidClient(int index)

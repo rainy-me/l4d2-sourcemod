@@ -55,9 +55,7 @@ public void OnMapStart()
 Action Cmd_Throw(int client, int args)
 {
     if (client <= 0 || !IsClientInGame(client) || GetClientTeam(client) != 2 || !IsPlayerAlive(client))
-    {
         return Plugin_Handled;
-    }
 
     ThrowItem(client);
     return Plugin_Handled;
@@ -67,16 +65,12 @@ void ThrowItem(int client)
 {
     int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
     if (weapon == -1 || GetEntProp(client, Prop_Send, "m_isIncapacitated") != 0)
-    {
         return;
-    }
 
     char weaponClass[64];
     GetEntityClassname(weapon, weaponClass, sizeof(weaponClass));
     if (StrEqual(weaponClass, "weapon_csbase_gun"))
-    {
         return;
-    }
 
     // 던질 위치/방향/속도 계산: 눈 위치에서 시선 방향으로 THROW_SPEED u/s + 플레이어 속도
     float pos[3], angles[3], fwd[3], velocity[3];
@@ -116,17 +110,13 @@ void ThrowItem(int client)
     {
         // 투척류: 던지는 모션 중(m_bRedraw)에는 버릴 수 없음
         if (GetEntProp(weapon, Prop_Send, "m_bRedraw") != 0)
-        {
             return;
-        }
     }
     else if (InClassList(weaponClass, g_sMisc, sizeof(g_sMisc)))
     {
         // 사용형 아이템: 사용 중(m_bPerformingAction)에는 버릴 수 없음
         if (GetEntProp(weapon, Prop_Send, "m_bPerformingAction") != 0)
-        {
             return;
-        }
     }
     else if (InClassList(weaponClass, g_sCarryables, sizeof(g_sCarryables)))
     {
@@ -139,9 +129,7 @@ void ThrowItem(int client)
 
     // 드랍된 제세동기의 월드 모델이 보이지 않는 문제를 보정합니다.
     if (StrEqual(weaponClass, "weapon_defibrillator") && g_iDefibModelIndex != -1)
-    {
         SetEntProp(weapon, Prop_Send, "m_iWorldModelIndex", g_iDefibModelIndex);
-    }
 
     // 근접 무기는 몸통 요(yaw) 기준으로 롤을 무작위로 틉니다.
     if (StrEqual(weaponClass, "weapon_melee"))
@@ -189,9 +177,7 @@ bool InClassList(const char[] weaponClass, const char[][] list, int size)
     for (int i = 0; i < size; i++)
     {
         if (StrEqual(weaponClass, list[i]))
-        {
             return true;
-        }
     }
     return false;
 }

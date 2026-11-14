@@ -37,9 +37,7 @@ public void OnPluginStart()
         for (int i = 1; i <= MaxClients; i++)
         {
             if (IsClientInGame(i))
-            {
                 OnClientPutInServer(i);
-            }
         }
     }
 }
@@ -61,9 +59,7 @@ public void OnClientDisconnect(int client)
 Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
 {
     if (IsAliveSurvivor(victim) && g_bDamageBlocked[victim])
-    {
         return Plugin_Handled;
-    }
 
     return Plugin_Continue;
 }
@@ -90,9 +86,7 @@ void OnAnimationsPlaying(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("victim"));
     if (!IsAliveSurvivor(client))
-    {
         return;
-    }
 
     CreateTimer(0.2, BlockDamage, GetClientUserId(client));
 }
@@ -101,9 +95,7 @@ void BlockDamage(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
     if (!IsAliveSurvivor(client))
-    {
         return;
-    }
 
     g_bDamageBlocked[client] = true;
     SDKUnhook(client, SDKHook_PostThink, UnblockDamage);
@@ -131,36 +123,20 @@ bool IsPlayingGetUpAnim(int client)
     GetClientModel(client, model, sizeof(model));
 
     if (StrEqual(model, "models/survivors/survivor_gambler.mdl", false))
-    {
         return (sequence == 620 || sequence == 667 || sequence == 671 || sequence == 672 || sequence == 629);
-    }
     else if (StrEqual(model, "models/survivors/survivor_producer.mdl", false))
-    {
         return (sequence == 629 || sequence == 674 || sequence == 678 || sequence == 679 || sequence == 637);
-    }
     else if (StrEqual(model, "models/survivors/survivor_coach.mdl", false))
-    {
         return (sequence == 621 || sequence == 656 || sequence == 660 || sequence == 661 || sequence == 629);
-    }
     else if (StrEqual(model, "models/survivors/survivor_mechanic.mdl", false))
-    {
         return (sequence == 625 || sequence == 671 || sequence == 675 || sequence == 676 || sequence == 634);
-    }
     else if (StrEqual(model, "models/survivors/survivor_namvet.mdl", false))
-    {
         return (sequence == 528 || sequence == 759 || sequence == 763 || sequence == 764 || sequence == 537);
-    }
     else if (StrEqual(model, "models/survivors/survivor_teenangst.mdl", false))
-    {
         return (sequence == 537 || sequence == 819 || sequence == 823 || sequence == 824 || sequence == 546);
-    }
     else if (StrEqual(model, "models/survivors/survivor_manager.mdl", false))
-    {
         return (sequence == 528 || sequence == 759 || sequence == 763 || sequence == 764 || sequence == 537);
-    }
     else if (StrEqual(model, "models/survivors/survivor_biker.mdl", false))
-    {
         return (sequence == 531 || sequence == 762 || sequence == 766 || sequence == 767 || sequence == 540);
-    }
     return false;
 }

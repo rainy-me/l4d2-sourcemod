@@ -31,9 +31,7 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
             static char classname[64];
             GetEntityClassname(entity, classname, sizeof(classname));
             if (StrEqual(classname, "infected"))
-            {
                 RemoveEntity(entity);
-            }
         }
     }
     else
@@ -44,9 +42,7 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
         {
             int ragdoll = GetEntPropEnt(client, Prop_Send, "m_hRagdoll");
             if (ragdoll > MaxClients && IsValidEntity(ragdoll))
-            {
                 RemoveEntity(ragdoll);
-            }
         }
     }
 }

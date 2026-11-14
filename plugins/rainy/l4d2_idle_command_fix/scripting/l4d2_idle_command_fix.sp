@@ -64,43 +64,29 @@ public void OnClientDisconnect(int client)
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     for (int i = 0; i <= MAXPLAYERS; i++)
-    {
         g_fUseAllowTime[i] = 0.0;
-    }
 }
 
 Action Cmd_ForceIdle(int client, int args)
 {
     if (!IsClient(client) || !IsClientInGame(client) || IsFakeClient(client) || !IsPlayerAlive(client))
-    {
         return Plugin_Handled;
-    }
     if (GetClientTeam(client) != L4D_TEAM_SURVIVOR)
-    {
         return Plugin_Handled;
-    }
     if (!g_hIdleSolo.BoolValue && GetAliveSurvivorCount() < 2)
-    {
         return Plugin_Handled;
-    }
 
     if (GetEngineTime() < g_fUseAllowTime[client])
     {
         if (g_hCooldownMessage.BoolValue)
-        {
             PrintToChat(client, "%t", "Cooldown Message");
-        }
         return Plugin_Handled;
     }
 
     if (!L4D_GoAwayFromKeyboard(client))
-    {
         return Plugin_Handled;
-    }
     if (g_hIdleMessage.BoolValue)
-    {
         PrintToChatAll("%t", "Idle Message", client);
-    }
     g_fUseAllowTime[client] = GetEngineTime() + g_hCooldownTime.FloatValue;
     return Plugin_Handled;
 }
@@ -111,9 +97,7 @@ int GetAliveSurvivorCount()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i) && !IsFakeClient(i) && IsPlayerAlive(i) && GetClientTeam(i) == L4D_TEAM_SURVIVOR)
-        {
             count++;
-        }
     }
     return count;
 }

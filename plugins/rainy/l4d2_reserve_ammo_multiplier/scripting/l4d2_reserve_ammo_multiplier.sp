@@ -70,9 +70,7 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
     if (!ReadMultiplierFromFile(multiplier))
     {
         for (int i = 0; i < AMMO_COUNT; i++)
-        {
             SetCvarAmmo(i, g_iCvarAmmoGunDefault[i]);
-        }
         WriteMultiplierToFile(multiplier);
         return;
     }
@@ -80,9 +78,7 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
     if (multiplier > DEFAULT_MULTIPLIER)
     {
         for (int i = 0; i < AMMO_COUNT; i++)
-        {
             SetCvarAmmo(i, RoundFloat(float(g_iCvarAmmoGunDefault[i]) * multiplier));
-        }
         CPrintToChatAll("%t", "Ammo Setting Load", multiplier);
     }
 }
@@ -98,9 +94,9 @@ Action Cmd_AmmoMultiplier(int client, int args)
         return Plugin_Handled;
     }
 
-    char sArg[8];
-    GetCmdArg(1, sArg, sizeof(sArg));
-    if (args != 1 || !IsCharNumeric(sArg[0]))
+    char arg[8];
+    GetCmdArg(1, arg, sizeof(arg));
+    if (args != 1 || !IsCharNumeric(arg[0]))
     {
         CReplyToCommand(client, "%t", "Help");
         return Plugin_Handled;
@@ -112,23 +108,17 @@ Action Cmd_AmmoMultiplier(int client, int args)
         return Plugin_Handled;
     }
 
-    multiplier = ClampFloat(StringToFloat(sArg), MIN_MULTIPLIER, MAX_MULTIPLIER);
+    multiplier = ClampFloat(StringToFloat(arg), MIN_MULTIPLIER, MAX_MULTIPLIER);
 
     for (int i = 0; i < AMMO_COUNT; i++)
-    {
         SetCvarAmmo(i, RoundFloat(float(g_iCvarAmmoGunDefault[i]) * multiplier));
-    }
     WriteMultiplierToFile(multiplier);
     ReCalculateReserveAmmo();
 
     if (multiplier == DEFAULT_MULTIPLIER)
-    {
         CPrintToChatAll("%t", "Ammo Reset");
-    }
     else
-    {
         CPrintToChatAll("%t", "Ammo Setting", multiplier);
-    }
     return Plugin_Handled;
 }
 
@@ -156,22 +146,16 @@ void ReCalculateReserveAmmo()
     for (int client = 1; client <= MaxClients; client++)
     {
         if (!IsClientInGame(client) || GetClientTeam(client) != 2 || !IsPlayerAlive(client))
-        {
             continue;
-        }
 
         int weapon = GetPlayerWeaponSlot(client, 0);    // slot0 = primary
         if (weapon == -1 || !IsValidEntity(weapon))
-        {
             continue;
-        }
 
         int ammoType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
         int idx      = GetIdxByAmmoType(ammoType);
         if (idx == -1)
-        {
             continue;
-        }
 
         int currentAmmo = GetEntProp(client, Prop_Send, "m_iAmmo", _, ammoType);
         int newAmmo     = ReCalcReserveAmmoByCvarIdx(currentAmmo, idx);
@@ -210,17 +194,17 @@ int ReCalcReserveAmmoByCvarIdx(int currentAmmo, int idx)
 
 bool WriteMultiplierToFile(float multiplier)
 {
-    char sPath[PLATFORM_MAX_PATH];
-    BuildPath(Path_SM, sPath, sizeof(sPath), "data/%s", STORED_FILE);
-    File file = OpenFile(sPath, "w");
+    char path[PLATFORM_MAX_PATH];
+    BuildPath(Path_SM, path, sizeof(path), "data/%s", STORED_FILE);
+    File file = OpenFile(path, "w");
     if (file == null)
     {
-        LogError("Failed to open %s for writing", sPath);
+        LogError("Failed to open %s for writing", path);
         return false;
     }
     if (!file.WriteLine("%.2f", multiplier))
     {
-        LogError("Failed to write to %s", sPath);
+        LogError("Failed to write to %s", path);
         delete file;
         return false;
     }
@@ -230,24 +214,22 @@ bool WriteMultiplierToFile(float multiplier)
 
 bool ReadMultiplierFromFile(float &multiplier)
 {
-    char sPath[PLATFORM_MAX_PATH];
-    BuildPath(Path_SM, sPath, sizeof(sPath), "data/%s", STORED_FILE);
-    if (!FileExists(sPath))
-    {
+    char path[PLATFORM_MAX_PATH];
+    BuildPath(Path_SM, path, sizeof(path), "data/%s", STORED_FILE);
+    if (!FileExists(path))
         return false;
-    }
 
-    File file = OpenFile(sPath, "r");
+    File file = OpenFile(path, "r");
     if (file == null)
     {
-        LogError("Failed to open %s for reading", sPath);
+        LogError("Failed to open %s for reading", path);
         return false;
     }
 
     char buffer[8];
     if (!file.ReadLine(buffer, sizeof(buffer)))
     {
-        LogError("Failed to read from %s", sPath);
+        LogError("Failed to read from %s", path);
         delete file;
         return false;
     }
@@ -257,7 +239,7 @@ bool ReadMultiplierFromFile(float &multiplier)
     float value = StringToFloat(buffer);
     if (value < MIN_MULTIPLIER || value > MAX_MULTIPLIER)
     {
-        LogError("Invalid value in %s: %s", sPath, buffer);
+        LogError("Invalid value in %s: %s", path, buffer);
         return false;
     }
 
@@ -273,15 +255,11 @@ bool IsListedInAdminsTxt(int client)
 {
     char auth[32];
     if (client == 0 || !GetClientAuthId(client, AuthId_Steam2, auth, sizeof(auth)))
-    {
         return false;
-    }
 
     File file = OpenFile(ADMINS_FILE, "r");
     if (file == null)
-    {
         return false;
-    }
 
     char line[256];
     bool found;
@@ -289,9 +267,7 @@ bool IsListedInAdminsTxt(int client)
     {
         int comment = StrContains(line, "//");
         if (comment != -1)
-        {
             line[comment] = '\0';
-        }
         TrimString(line);
         // GetClientAuthId는 STEAM_1 형식을 반환하므로 STEAM_0 표기를 맞춰줌
         ReplaceString(line, sizeof(line), "STEAM_0", "STEAM_1");

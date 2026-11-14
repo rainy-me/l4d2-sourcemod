@@ -53,9 +53,7 @@ public void OnClientPutInServer(int client)
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     for (int i = 0; i <= MAXPLAYERS; i++)
-    {
         ResetClient(i);
-    }
 }
 
 void ResetClient(int client)
@@ -68,9 +66,7 @@ void Event_AdrenalineUsed(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (!IsValidAliveSurvivor(client))
-    {
         return;
-    }
 
     float endTime                = GetGameTime() + g_hAdrenalineDuration.FloatValue;
     g_fAdrenalineEndTime[client] = endTime;
@@ -78,35 +74,27 @@ void Event_AdrenalineUsed(Event event, const char[] name, bool dontBroadcast)
     // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어에게도 기록
     int idlePlayer               = GetIdlePlayer(client);
     if (idlePlayer != 0)
-    {
         g_fAdrenalineEndTime[idlePlayer] = endTime;
-    }
 }
 
 void Event_ResetState(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
     if (!IsClient(client))
-    {
         return;
-    }
 
     g_fAdrenalineEndTime[client] = 0.0;
 
     // 유휴 중에는 봇 기준으로 이벤트가 오므로 유휴 플레이어 기록도 지움
     int idlePlayer               = GetIdlePlayer(client);
     if (idlePlayer == 0)
-    {
         return;
-    }
 
     g_fAdrenalineEndTime[idlePlayer] = 0.0;
 
     // 유휴 중 봇이 죽으면 나중에 다른 봇을 넘겨받을 때 예전 시야/손전등을 되돌리지 않도록 유휴 기록도 지움
     if (StrEqual(name, "player_death"))
-    {
         g_iIdleBotUserId[idlePlayer] = 0;
-    }
 }
 
 void Event_GoIdle(Event event, const char[] name, bool dontBroadcast)
@@ -125,32 +113,24 @@ void Event_ReturnFromIdle(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("player"));
     if (!IsValidAliveSurvivor(client))
-    {
         return;
-    }
 
     // 유휴 기록이 없는 봇 인수(라운드 시작 시 합류 등)와
     // 관전/팀 이동 후 다른 봇을 넘겨받은 경우에는 예전 상태를 되돌리지 않음
     int idleBot              = g_iIdleBotUserId[client];
     g_iIdleBotUserId[client] = 0;
     if (idleBot == 0 || event.GetInt("bot") != idleBot)
-    {
         return;
-    }
 
     float remaining = g_fAdrenalineEndTime[client] - GetGameTime();
     if (remaining > 0.0)
-    {
         L4D2_UseAdrenaline(client, remaining, false, false);
-    }
 
     RequestFrame(Frame_RestoreIdleState, GetClientUserId(client));
 
     int weapon = EntRefToEntIndex(g_iIdleWeapon[client]);
     if (weapon != INVALID_ENT_REFERENCE)
-    {
         RedeployWeapon(client, weapon);
-    }
 }
 
 void Frame_RestoreIdleState(int userid)
@@ -171,17 +151,13 @@ void RedeployWeapon(int client, int weapon)
 {
     int currentSlot = GetGunSlot(client, weapon);
     if (currentSlot == -1)
-    {
         return;
-    }
 
     int otherSlot = -1;
     for (int i = 0; i < MAX_WEAPON_SLOTS && otherSlot == -1; i++)
     {
         if (i != currentSlot && GetPlayerWeaponSlot(client, i) != -1)
-        {
             otherSlot = i;
-        }
     }
 
     // 봇이 다른 무기로 바꿔 들고 있었으면 원래 무기를 바로 꺼냄
@@ -192,9 +168,7 @@ void RedeployWeapon(int client, int weapon)
     }
 
     if (otherSlot == -1 || !IsMagnum(weapon))
-    {
         return;
-    }
 
     // 매그넘을 그대로 들고 있으면 다른 슬롯으로 먼저 바꿈
     ClientCommand(client, "slot%d", otherSlot + 1);
@@ -238,15 +212,11 @@ void Frame_SwitchBack(DataPack pack)
 int GetHeldWeapon(int client)
 {
     if (!IsValidAliveSurvivor(client))
-    {
         return -1;
-    }
 
     int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
     if (weapon <= 0)
-    {
         return -1;
-    }
 
     return GetGunSlot(client, weapon) != -1 ? weapon : -1;
 }
@@ -255,17 +225,11 @@ int GetHeldWeapon(int client)
 int GetGunSlot(int client, int weapon)
 {
     if (weapon == GetPlayerWeaponSlot(client, 0))
-    {
         return 0;
-    }
     else if (weapon == GetPlayerWeaponSlot(client, 1))
-    {
         return 1;
-    }
     else
-    {
         return -1;
-    }
 }
 
 bool IsMagnum(int weapon)
@@ -278,9 +242,7 @@ bool IsMagnum(int weapon)
 int GetIdlePlayer(int client)
 {
     if (!IsFakeClient(client))
-    {
         return 0;
-    }
     int idlePlayer = L4D_GetIdlePlayerOfBot(client);
     return IsClient(idlePlayer) ? idlePlayer : 0;
 }

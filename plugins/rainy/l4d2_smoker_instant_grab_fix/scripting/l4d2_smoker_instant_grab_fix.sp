@@ -20,19 +20,19 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    char sPath[PLATFORM_MAX_PATH];
-    BuildPath(Path_SM, sPath, sizeof(sPath), "gamedata/%s.txt", GAMEDATA);
-    if (FileExists(sPath) == false)
-        SetFailState("Missing required file: %s", sPath);
+    char path[PLATFORM_MAX_PATH];
+    BuildPath(Path_SM, path, sizeof(path), "gamedata/%s.txt", GAMEDATA);
+    if (FileExists(path) == false)
+        SetFailState("Missing required file: %s", path);
 
-    GameData hGameData = new GameData(GAMEDATA);
-    if (hGameData == null)
+    GameData gameData = new GameData(GAMEDATA);
+    if (gameData == null)
         SetFailState("Failed to load %s.txt gamedata.", GAMEDATA);
 
-    g_hPatchMask = CreatePatch(hGameData, "CTongue::UpdateAirChoke::FixTraceMask");
-    g_hPatchCollisionGroup = CreatePatch(hGameData, "CTongue::UpdateAirChoke::FixTraceCollisionGroup");
+    g_hPatchMask = CreatePatch(gameData, "CTongue::UpdateAirChoke::FixTraceMask");
+    g_hPatchCollisionGroup = CreatePatch(gameData, "CTongue::UpdateAirChoke::FixTraceCollisionGroup");
 
-    delete hGameData;
+    delete gameData;
 
     // 둘 다 검증된 뒤에만 적용해서 한쪽만 패치된 상태를 막는다
     if (!g_hPatchMask.Enable())
@@ -41,12 +41,12 @@ public void OnPluginStart()
         SetFailState("Failed to enable patch \"CTongue::UpdateAirChoke::FixTraceCollisionGroup\".");
 }
 
-MemoryPatch CreatePatch(GameData hGameData, const char[] sName)
+MemoryPatch CreatePatch(GameData gameData, const char[] name)
 {
-    MemoryPatch hPatch = MemoryPatch.CreateFromConf(hGameData, sName);
-    if (hPatch == null)
-        SetFailState("Failed to create patch \"%s\".", sName);
-    if (!hPatch.Validate())
-        SetFailState("Patch \"%s\" verify failed. Gamedata is outdated.", sName);
-    return hPatch;
+    MemoryPatch patch = MemoryPatch.CreateFromConf(gameData, name);
+    if (patch == null)
+        SetFailState("Failed to create patch \"%s\".", name);
+    if (!patch.Validate())
+        SetFailState("Patch \"%s\" verify failed. Gamedata is outdated.", name);
+    return patch;
 }

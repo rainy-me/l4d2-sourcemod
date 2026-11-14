@@ -37,34 +37,30 @@ void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 public void L4D2_VomitJar_Detonate_Post(int entity, int client)
 {
     DataPack pack = new DataPack();
-    float    vPos[3];
-    GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", vPos);
-    pack.WriteFloatArray(vPos, 3);
+    float    pos[3];
+    GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", pos);
+    pack.WriteFloatArray(pos, 3);
     // 추적 목표 엔티티는 폭발 처리 뒤에 생성되므로 한 프레임 미룬다
     RequestFrame(Frame_CollectGoals, pack);
 }
 
 void Frame_CollectGoals(DataPack pack)
 {
-    float vBile[3], vGoal[3];
+    float bilePos[3], goalPos[3];
     pack.Reset();
-    pack.ReadFloatArray(vBile, 3);
+    pack.ReadFloatArray(bilePos, 3);
     delete pack;
 
     int ent = -1;
     while ((ent = FindEntityByClassname(ent, "info_goal_infected_chase")) != -1)
     {
-        GetEntPropVector(ent, Prop_Data, "m_vecAbsOrigin", vGoal);
-        if (GetVectorDistance(vBile, vGoal) <= GOAL_SPAWN_RANGE)
-        {
+        GetEntPropVector(ent, Prop_Data, "m_vecAbsOrigin", goalPos);
+        if (GetVectorDistance(bilePos, goalPos) <= GOAL_SPAWN_RANGE)
             g_hGoals.Push(EntIndexToEntRef(ent));
-        }
     }
 
     if (g_hGoals.Length > 0 && g_hTimer == null)
-    {
         g_hTimer = CreateTimer(COMMAND_INTERVAL, Timer_CommandWorkers, _, TIMER_REPEAT);
-    }
 }
 
 Action Timer_CommandWorkers(Handle timer)
@@ -72,9 +68,7 @@ Action Timer_CommandWorkers(Handle timer)
     for (int i = g_hGoals.Length - 1; i >= 0; i--)
     {
         if (EntRefToEntIndex(g_hGoals.Get(i)) == INVALID_ENT_REFERENCE)
-        {
             g_hGoals.Erase(i);
-        }
     }
 
     if (g_hGoals.Length == 0)
@@ -84,25 +78,21 @@ Action Timer_CommandWorkers(Handle timer)
     }
 
     if (IsAnyoneBiled())
-    {
         return Plugin_Continue;
-    }
 
-    float vGoal[3], vCommon[3];
+    float goalPos[3], commonPos[3];
     int   common = -1;
     while ((common = FindEntityByClassname(common, "infected")) != -1)
     {
         if (GetEntProp(common, Prop_Send, "m_Gender") != GENDER_WORKER)
-        {
             continue;
-        }
 
-        GetEntPropVector(common, Prop_Data, "m_vecAbsOrigin", vCommon);
+        GetEntPropVector(common, Prop_Data, "m_vecAbsOrigin", commonPos);
         for (int i = g_hGoals.Length - 1; i >= 0; i--)
         {
             int goal = EntRefToEntIndex(g_hGoals.Get(i));
-            GetEntPropVector(goal, Prop_Data, "m_vecAbsOrigin", vGoal);
-            if (GetVectorDistance(vCommon, vGoal) <= GOAL_CHASE_RANGE)
+            GetEntPropVector(goal, Prop_Data, "m_vecAbsOrigin", goalPos);
+            if (GetVectorDistance(commonPos, goalPos) <= GOAL_CHASE_RANGE)
             {
                 L4D2_CommandABot(common, goal, BOT_CMD_ATTACK);
                 break;
@@ -118,9 +108,7 @@ bool IsAnyoneBiled()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i) && IsPlayerAlive(i) && GetEntPropFloat(i, Prop_Send, "m_itTimer", 1) > now)
-        {
             return true;
-        }
     }
     return false;
 }

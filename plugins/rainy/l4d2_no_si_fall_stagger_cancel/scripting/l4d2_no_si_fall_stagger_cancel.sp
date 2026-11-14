@@ -15,10 +15,11 @@ enum
 int    g_iStage[MAXPLAYERS + 1];
 int    g_iSource[MAXPLAYERS + 1];      // 스태거 방향 기준 (공격자)
 float  g_fDeadline[MAXPLAYERS + 1];    // 이 시각이 지나면 재스태거 포기
-ConVar g_cvMaxStagger;
+ConVar g_hMaxStagger;
 int    g_iImpactCharger;    // 이번 틱에 벽에 충돌한 차저
 int    g_iImpactTick;
 bool   g_bReStaggering;    // 이 플러그인이 직접 거는 재스태거 중
+
 public Plugin myinfo =
 {
     name        = "L4D2 No SI Fall Stagger Cancel",
@@ -30,11 +31,9 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    g_cvMaxStagger = FindConVar("z_max_stagger_duration");
-    if (g_cvMaxStagger == null)
-    {
+    g_hMaxStagger = FindConVar("z_max_stagger_duration");
+    if (g_hMaxStagger == null)
         SetFailState("ConVar z_max_stagger_duration not found.");
-    }
 }
 
 public void OnClientPutInServer(int client)
@@ -50,7 +49,7 @@ public void OnClientDisconnect(int client)
 }
 
 // 스태거 방향 기준점 기록
-public void L4D_OnShovedBySurvivor_Post(int client, int victim, const float vecDir[3])
+public void L4D_OnShovedBySurvivor_Post(int client, int victim, const float dir[3])
 {
     if (IsClient(victim))
     {
@@ -72,13 +71,9 @@ public void L4D2_OnStagger_Post(int client, int source)
 
     // 부머 폭발은 부머, 파이프·프로판은 던지거나 쏜 생존자, 차저 충돌은 -1로 온다.
     if (IsClient(source))
-    {
         g_iSource[client] = source;
-    }
     else if (source == -1 && g_iImpactTick == GetGameTickCount())
-    {
         g_iSource[client] = g_iImpactCharger;    // 주변 SI는 차저 기준. 차저 본인은 자기 자신 기준(고정 방향)
-    }
 }
 
 // 낙하로 끊긴 상태에서 새 스태거를 받으면 시한을 그 스태거 기준으로 다시 잡는다.
@@ -86,9 +81,7 @@ public void L4D2_OnStagger_Post(int client, int source)
 void RefreshDeadline(int client)
 {
     if (!g_bReStaggering && IsClient(client))
-    {
-        g_fDeadline[client] = GetGameTime() + g_cvMaxStagger.FloatValue;
-    }
+        g_fDeadline[client] = GetGameTime() + g_hMaxStagger.FloatValue;
 }
 
 public Action OnPlayerRunCmd(int client, int &buttons)
@@ -100,33 +93,31 @@ public Action OnPlayerRunCmd(int client, int &buttons)
         return Plugin_Continue;
     }
 
-    bool bStaggering = GetEntPropFloat(client, Prop_Send, "m_staggerTimer", 1) > -1.0;
-    bool bOnGround   = (GetEntityFlags(client) & FL_ONGROUND) != 0;
+    bool staggering = GetEntPropFloat(client, Prop_Send, "m_staggerTimer", 1) > -1.0;
+    bool onGround   = (GetEntityFlags(client) & FL_ONGROUND) != 0;
 
     switch (g_iStage[client])
     {
         case STAGE_IDLE:
         {
-            if (bStaggering)
+            if (staggering)
             {
                 g_iStage[client]    = STAGE_WATCH;
-                g_fDeadline[client] = GetGameTime() + g_cvMaxStagger.FloatValue;
+                g_fDeadline[client] = GetGameTime() + g_hMaxStagger.FloatValue;
             }
         }
         case STAGE_WATCH:
         {
-            if (!bStaggering)
+            if (!staggering)
             {
-                g_iStage[client] = bOnGround ? STAGE_IDLE : STAGE_CANCELLED;
-                if (bOnGround)
-                {
+                g_iStage[client] = onGround ? STAGE_IDLE : STAGE_CANCELLED;
+                if (onGround)
                     g_iSource[client] = 0;    // 스태거 정상 종료. 오래된 기준점이 다음 스태거에 쓰이지 않도록 초기화
-                }
             }
         }
         case STAGE_CANCELLED:
         {
-            if (bStaggering)
+            if (staggering)
             {
                 g_iStage[client] = STAGE_WATCH;
             }
@@ -135,7 +126,7 @@ public Action OnPlayerRunCmd(int client, int &buttons)
                 g_iStage[client]  = STAGE_IDLE;
                 g_iSource[client] = 0;
             }
-            else if (bOnGround)
+            else if (onGround)
             {
                 ReStagger(client);
                 g_iStage[client] = STAGE_WATCH;
@@ -150,14 +141,10 @@ void ReStagger(int client)
 {
     int source = g_iSource[client];
     if (!IsClient(source) || !IsClientInGame(source))
-    {
         source = GetClosestSurvivor(client);
-    }
     // 살아있는 생존자가 없음
     if (source <= 0)
-    {
         return;
-    }
     g_bReStaggering = true;
     L4D_StaggerPlayer(client, source, NULL_VECTOR);
     g_bReStaggering = false;
@@ -165,19 +152,17 @@ void ReStagger(int client)
 
 int GetClosestSurvivor(int client)
 {
-    float vOrigin[3], vPos[3];
-    GetClientAbsOrigin(client, vOrigin);
+    float origin[3], pos[3];
+    GetClientAbsOrigin(client, origin);
 
     int   best     = 0;
     float bestDist = 0.0;
     for (int i = 1; i <= MaxClients; i++)
     {
         if (!IsClientInGame(i) || GetClientTeam(i) != 2 || !IsPlayerAlive(i))
-        {
             continue;
-        }
-        GetClientAbsOrigin(i, vPos);
-        float dist = GetVectorDistance(vOrigin, vPos, true);
+        GetClientAbsOrigin(i, pos);
+        float dist = GetVectorDistance(origin, pos, true);
         if (best == 0 || dist < bestDist)
         {
             best     = i;

@@ -20,9 +20,7 @@ public void OnPluginStart()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
-        {
             SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
-        }
     }
 }
 
@@ -39,14 +37,10 @@ public void OnClientDisconnect(int client)
 Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
     if (victim == attacker || !IsValidSurvivor(victim) || !IsValidSurvivor(attacker))
-    {
         return Plugin_Continue;
-    }
 
     if (L4D_IsInFirstCheckpoint(victim) || L4D_IsInLastCheckpoint(victim))
-    {
         return Plugin_Handled;
-    }
 
     return Plugin_Continue;
 }

@@ -120,12 +120,12 @@ public void OnConfigsExecuted()
         return;
 
     // 리눅스 전용 서버에는 두 cvar가 없음
-    ConVar snd_max_same_sounds   = FindConVar("snd_max_same_sounds");
-    ConVar sv_multiplayer_sounds = FindConVar("sv_multiplayer_sounds");
-    if (snd_max_same_sounds != null)
-        snd_max_same_sounds.IntValue = 8;
-    if (sv_multiplayer_sounds != null)
-        sv_multiplayer_sounds.IntValue = 40;
+    ConVar maxSameSounds     = FindConVar("snd_max_same_sounds");
+    ConVar multiplayerSounds = FindConVar("sv_multiplayer_sounds");
+    if (maxSameSounds != null)
+        maxSameSounds.IntValue = 8;
+    if (multiplayerSounds != null)
+        multiplayerSounds.IntValue = 40;
 }
 
 public void OnMapStart()
@@ -146,12 +146,6 @@ public void OnMapStart()
         // 게임 시간이 맵마다 0부터 다시 시작한다
         g_fAlertTime[i] = 0.0;
     }
-}
-
-void PrecacheSounds(const char[][] sounds, int count)
-{
-    for (int i = 0; i < count; i++)
-        PrecacheSound(sounds[i], true);
 }
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -427,4 +421,10 @@ void EmitRandom(int client, const char[][] sounds, int count, int level, int pit
 bool IsInfected(int client)
 {
     return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == L4D_TEAM_INFECTED;
+}
+
+void PrecacheSounds(const char[][] sounds, int count)
+{
+    for (int i = 0; i < count; i++)
+        PrecacheSound(sounds[i], true);
 }

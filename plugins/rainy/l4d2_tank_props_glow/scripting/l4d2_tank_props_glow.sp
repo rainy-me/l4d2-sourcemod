@@ -67,17 +67,13 @@ void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 void CheckTanksAndRemoveGlow()
 {
     if (!IsAnyTankAlive())
-    {
         ToggleTankPropsGlow(false);
-    }
 }
 
 Action Timer_CheckTanks(Handle timer)
 {
     if (IsAnyTankAlive())
-    {
         return Plugin_Continue;
-    }
     ToggleTankPropsGlow(false);
     return Plugin_Stop;
 }
@@ -86,9 +82,7 @@ void ToggleTankPropsGlow(bool enable)
 {
     int color[3];
     if (enable)
-    {
         GetColor(color);
-    }
 
     static const char classnames[][] = { "prop_physics", "prop_car_alarm" };
     for (int i = 0; i < sizeof(classnames); i++)
@@ -97,9 +91,7 @@ void ToggleTankPropsGlow(bool enable)
         while ((entity = FindEntityByClassname(entity, classnames[i])) != -1)
         {
             if (!IsTankProp(entity))
-            {
                 continue;
-            }
 
             if (enable)
             {
@@ -124,18 +116,14 @@ bool IsTankProp(int entity)
 
     // 자동차류 (트럭·밴 제외)
     if (StrContains(modelName, "vehicle", false) != -1 && StrContains(modelName, "car", false) != -1)
-    {
         return true;
-    }
 
     // 폴더명(props_street 등) 오탐 방지: 파일명만 비교
     int fileStart = FindCharInString(modelName, '/', true) + 1;
     for (int i = 0; i < sizeof(keywords); i++)
     {
         if (StrContains(modelName[fileStart], keywords[i], false) != -1)
-        {
             return true;
-        }
     }
 
     return false;
@@ -146,9 +134,7 @@ bool IsAnyTankAlive()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsAliveTank(i))
-        {
             return true;
-        }
     }
     return false;
 }
@@ -170,25 +156,21 @@ bool IsClient(int index)
 
 void GetColor(int color[3])
 {
-    char sColor[32];
-    g_hGlowColor.GetString(sColor, sizeof(sColor));
-    if (!StringToColor(sColor, color))
-    {
+    char colorString[32];
+    g_hGlowColor.GetString(colorString, sizeof(colorString));
+    if (!StringToColor(colorString, color))
         SetFailState("Invalid color format.");
-    }
 }
 
 bool StringToColor(const char[] str, int color[3])
 {
-    char sColor[3][8];
-    if (ExplodeString(str, " ", sColor, sizeof(sColor), sizeof(sColor[])) != 3)
-    {
+    char parts[3][8];
+    if (ExplodeString(str, " ", parts, sizeof(parts), sizeof(parts[])) != 3)
         return false;
-    }
 
-    for (int i = 0; i < sizeof(sColor); i++)
+    for (int i = 0; i < sizeof(parts); i++)
     {
-        if (!StringToIntEx(sColor[i], color[i]) || color[i] < 0 || color[i] > 255)
+        if (!StringToIntEx(parts[i], color[i]) || color[i] < 0 || color[i] > 255)
             return false;
     }
     return true;

@@ -31,30 +31,22 @@ public void OnClientDisconnect(int client)
 public Action OnPlayerRunCmd(int client, int &buttons)
 {
     if (!IsFakeClient(client) || GetClientTeam(client) != 3 || !IsPlayerAlive(client))
-    {
         return Plugin_Continue;
-    }
 
     int zClass = GetEntProp(client, Prop_Send, "m_zombieClass");
     if (zClass == ZC_TANK)
-    {
         return Plugin_Continue;
-    }
 
-    bool bShouldBlock = false;
+    bool shouldBlock = false;
 
     // Check 1: currently staggering
     if (GetEntPropFloat(client, Prop_Send, "m_staggerTimer", 1) > -1.0)
-    {
-        bShouldBlock = true;
-    }
+        shouldBlock = true;
     // Check 2: hunter or jockey airborne (deadstop etc.)
-    if (!bShouldBlock && !(GetEntityFlags(client) & FL_ONGROUND) && (zClass == ZC_HUNTER || zClass == ZC_JOCKEY))
-    {
-        bShouldBlock = true;
-    }
+    if (!shouldBlock && !(GetEntityFlags(client) & FL_ONGROUND) && (zClass == ZC_HUNTER || zClass == ZC_JOCKEY))
+        shouldBlock = true;
 
-    if (bShouldBlock)
+    if (shouldBlock)
     {
         // Actively staggering/airborne — block attack and keep refreshing the end time
         g_fBlockEndTime[client] = GetGameTime() + RENABLE_DELAY;

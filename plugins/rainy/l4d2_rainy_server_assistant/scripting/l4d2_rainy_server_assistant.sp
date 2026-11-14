@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Rainy Server Assistant",
     author      = "Rainy",
-    description = "Rainy 서버 자동화 플러그인",
+    description = "Rainy 서버 운영을 자동화합니다.",
     version     = "1.2.4",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_rainy_server_assistant"
 };
@@ -40,9 +40,7 @@ Action Cmd_Killbots(int client, int args)
 public void OnClientPutInServer(int client)
 {
     if (!g_hEnable.BoolValue || !IsClientInGame(client) || IsFakeClient(client))
-    {
         return;
-    }
 
     CreateTimer(RESPAWN_DELAY, Timer_RespawnNewPlayer, GetClientUserId(client), TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -50,9 +48,7 @@ public void OnClientPutInServer(int client)
 public void OnClientDisconnect(int client)
 {
     if (!g_hEnable.BoolValue || IsFakeClient(client))
-    {
         return;
-    }
 
     CreateTimer(KILL_DELAY, Timer_KillBots, _, TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -60,23 +56,17 @@ public void OnClientDisconnect(int client)
 public void L4D_OnFirstSurvivorLeftSafeArea_Post(int client)
 {
     if (g_hEnable.BoolValue)
-    {
         KillBots();
-    }
 }
 
 Action Timer_RespawnNewPlayer(Handle timer, int userid)
 {
     int client = GetClientOfUserId(userid);
     if (!IsValidClient(client))
-    {
         return Plugin_Stop;
-    }
     // 로딩이 느리면 아직 생존자 팀에 들어오지 않았을 수 있으므로 들어올 때까지 다시 확인
     if (GetClientTeam(client) != 2)
-    {
         return Plugin_Continue;
-    }
 
     RespawnNewPlayer(client);
     return Plugin_Stop;
@@ -85,9 +75,7 @@ Action Timer_RespawnNewPlayer(Handle timer, int userid)
 void Timer_KillBots(Handle timer)
 {
     if (L4D_HasAnySurvivorLeftSafeArea())
-    {
         KillBots();
-    }
 }
 
 // Methods
@@ -97,13 +85,9 @@ void KillBots()
     for (int i = 1; i <= MaxClients; i++)
     {
         if (!IsClientInGame(i) || !IsFakeClient(i) || !IsPlayerAlive(i) || GetClientTeam(i) != 2)
-        {
             continue;
-        }
         if (IsIdlePlayer(i))
-        {
             continue;
-        }
 
         ForcePlayerSuicide(i);
     }
@@ -112,9 +96,7 @@ void KillBots()
 void RespawnNewPlayer(int client)
 {
     if (!IsValidClient(client) || IsFakeClient(client) || IsPlayerAlive(client) || GetClientTeam(client) != 2)
-    {
         return;
-    }
 
     L4D_RespawnPlayer(client);
     GivePlayerItem(client, "weapon_smg_silenced");
@@ -140,9 +122,7 @@ int GetLowestFlowSurvivor(int exclude)
     for (int i = 1; i <= MaxClients; i++)
     {
         if (i == exclude || !IsClientInGame(i) || !IsPlayerAlive(i) || GetClientTeam(i) != 2)
-        {
             continue;
-        }
 
         float flow = L4D2Direct_GetFlowDistance(i);
         if (best == -1 || flow < bestFlow)

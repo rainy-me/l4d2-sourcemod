@@ -12,7 +12,7 @@ enum
 bool   g_bLateLoaded;
 bool   g_bPluginStarted;
 
-ConVar g_hConVar_Delay;
+ConVar g_hConVarDelay;
 float  g_fDelay;
 
 public Plugin myinfo =
@@ -24,20 +24,20 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_round_restart_delay"
 };
 
-public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 {
-    g_bLateLoaded = bLate;
+    g_bLateLoaded = late;
     return APLRes_Success;
 }
 
 public void OnPluginStart()
 {
-    g_hConVar_Delay = CreateConVar(
+    g_hConVarDelay = CreateConVar(
         "l4d2_round_restart_delay", "0.5",
         "override the delay between round restarts. vanilla is 7.0",
         FCVAR_NOTIFY, true, 0.0);
-    g_hConVar_Delay.AddChangeHook(ConVarChanged_Update);
-    g_fDelay = g_hConVar_Delay.FloatValue;
+    g_hConVarDelay.AddChangeHook(ConVarChanged_Update);
+    g_fDelay = g_hConVarDelay.FloatValue;
 
     if (g_bLateLoaded && LibraryExists(HXLIB_LIBRARY))
         StartPlugin();
@@ -49,15 +49,15 @@ public void OnAllPluginsLoaded()
         StartPlugin();
 }
 
-public void OnLibraryAdded(const char[] sName)
+public void OnLibraryAdded(const char[] name)
 {
-    if (!g_bPluginStarted && strcmp(sName, HXLIB_LIBRARY) == 0)
+    if (!g_bPluginStarted && strcmp(name, HXLIB_LIBRARY) == 0)
         StartPlugin();
 }
 
-public void OnLibraryRemoved(const char[] sName)
+public void OnLibraryRemoved(const char[] name)
 {
-    if (strcmp(sName, HXLIB_LIBRARY) == 0)
+    if (strcmp(name, HXLIB_LIBRARY) == 0)
         StopPlugin();
 }
 
@@ -73,19 +73,19 @@ void StopPlugin()
     UnhookEvent("round_end", Event_RoundEnd);
 }
 
-void ConVarChanged_Update(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-    g_fDelay = g_hConVar_Delay.FloatValue;
+    g_fDelay = g_hConVarDelay.FloatValue;
 }
 
-void Event_RoundEnd(Event hEvent, const char[] sName, bool bDontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-    if (hEvent.GetInt("reason") != Reason_Defeat)
+    if (event.GetInt("reason") != Reason_Defeat)
         return;
 
-    HX_CountdownTimer hTimer = GetScenarioRestartTimer();
-    if (hTimer.GetRemainingTime() <= 0.0)
+    HX_CountdownTimer timer = GetScenarioRestartTimer();
+    if (timer.GetRemainingTime() <= 0.0)
         return;
 
-    hTimer.Start(g_fDelay);
+    timer.Start(g_fDelay);
 }

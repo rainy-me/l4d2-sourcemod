@@ -29,21 +29,15 @@ public void OnPluginStart()
     AutoExecConfig(true, "dingshot");
 
     if (g_hEnabled.BoolValue)
-    {
         EnableDingshot();
-    }
 }
 
 void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     if (g_hEnabled.BoolValue)
-    {
         EnableDingshot();
-    }
     else
-    {
         DisableDingshot();
-    }
 }
 
 // 프리캐시 목록은 맵마다 초기화된다

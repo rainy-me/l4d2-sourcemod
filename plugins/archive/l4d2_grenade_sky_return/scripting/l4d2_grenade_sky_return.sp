@@ -9,9 +9,9 @@ ConVar    g_hGravity;
 ArrayList g_hProjectiles;
 
 float     g_fResumeTime[2049];
-float     g_vecResumePos[2049][3];
-float     g_vecResumeVel[2049][3];
-MoveType  g_iMoveType[2049];
+float     g_fResumePos[2049][3];
+float     g_fResumeVel[2049][3];
+MoveType  g_eMoveType[2049];
 
 public Plugin myinfo =
 {
@@ -100,13 +100,13 @@ void CheckSky(int entity)
     end[1]         = pos[1] + vel[1] * hideTime;
     end[2]         = pos[2];
     TR_TraceHullFilter(pos, end, mins, maxs, MASK_SOLID, Filter_Self, entity);
-    TR_GetEndPosition(g_vecResumePos[entity]);
+    TR_GetEndPosition(g_fResumePos[entity]);
 
-    g_vecResumeVel[entity][0] = vel[0];
-    g_vecResumeVel[entity][1] = vel[1];
-    g_vecResumeVel[entity][2] = -vel[2];
-    g_iMoveType[entity]       = GetEntityMoveType(entity);
-    g_fResumeTime[entity]     = GetGameTime() + hideTime;
+    g_fResumeVel[entity][0] = vel[0];
+    g_fResumeVel[entity][1] = vel[1];
+    g_fResumeVel[entity][2] = -vel[2];
+    g_eMoveType[entity]     = GetEntityMoveType(entity);
+    g_fResumeTime[entity]   = GetGameTime() + hideTime;
 
     TeleportEntity(entity, NULL_VECTOR, NULL_VECTOR, view_as<float>({ 0.0, 0.0, 0.0 }));
     SetEntityMoveType(entity, MOVETYPE_NONE);
@@ -120,10 +120,10 @@ void Resume(int entity)
     g_fResumeTime[entity] = 0.0;
 
     float ang[3];
-    GetVectorAngles(g_vecResumeVel[entity], ang);
+    GetVectorAngles(g_fResumeVel[entity], ang);
 
-    SetEntityMoveType(entity, g_iMoveType[entity]);
-    TeleportEntity(entity, g_vecResumePos[entity], ang, g_vecResumeVel[entity]);
+    SetEntityMoveType(entity, g_eMoveType[entity]);
+    TeleportEntity(entity, g_fResumePos[entity], ang, g_fResumeVel[entity]);
 
     SDKUnhook(entity, SDKHook_SetTransmit, SetTransmit_Hidden);
 

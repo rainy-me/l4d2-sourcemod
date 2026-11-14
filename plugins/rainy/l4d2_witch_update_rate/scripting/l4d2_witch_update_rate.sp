@@ -22,26 +22,20 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    GameData hGameData = new GameData(GAMEDATA);
-    if (hGameData == null)
-    {
+    GameData gameData = new GameData(GAMEDATA);
+    if (gameData == null)
         SetFailState("Failed to load %s.txt gamedata.", GAMEDATA);
-    }
 
     StartPrepSDKCall(SDKCall_Entity);
-    if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseEntity::MyNextBotPointer"))
-    {
+    if (!PrepSDKCall_SetFromConf(gameData, SDKConf_Virtual, "CBaseEntity::MyNextBotPointer"))
         SetFailState("Failed to get offset 'CBaseEntity::MyNextBotPointer'.");
-    }
     PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
     g_hMyNextBotPointer = EndPrepSDKCall();
 
-    g_iFlaggedForUpdate = hGameData.GetOffset("INextBot::m_isFlaggedForUpdate");
-    delete hGameData;
+    g_iFlaggedForUpdate = gameData.GetOffset("INextBot::m_isFlaggedForUpdate");
+    delete gameData;
     if (g_iFlaggedForUpdate == -1)
-    {
         SetFailState("Failed to get offset 'INextBot::m_isFlaggedForUpdate'.");
-    }
 
     g_hUpdateRate = CreateConVar(
         "l4d2_witch_update_rate", "30",
@@ -54,26 +48,20 @@ public void OnPluginStart()
     // Late load
     int witch  = -1;
     while ((witch = FindEntityByClassname(witch, "witch")) != -1)
-    {
         g_hWitches.Push(witch);
-    }
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
 {
     if (strcmp(classname, "witch") == 0)
-    {
         g_hWitches.Push(entity);
-    }
 }
 
 public void OnEntityDestroyed(int entity)
 {
     int index = g_hWitches.FindValue(entity);
     if (index != -1)
-    {
         g_hWitches.Erase(index);
-    }
 }
 
 public void OnGameFrame()
@@ -84,17 +72,13 @@ public void OnGameFrame()
     int rate     = g_hUpdateRate.IntValue;
     int tick     = GetGameTickCount();
     if ((tick % tickrate) * rate / tickrate == ((tick - 1) % tickrate) * rate / tickrate)
-    {
         return;
-    }
 
     // NextBotManager가 nb_update_frequency 주기에만 세우는 플래그를 윗치에게 직접 세운다.
     for (int i = 0; i < g_hWitches.Length; i++)
     {
         Address nb = SDKCall(g_hMyNextBotPointer, g_hWitches.Get(i));
         if (nb != Address_Null)
-        {
             StoreToAddress(nb + view_as<Address>(g_iFlaggedForUpdate), 1, NumberType_Int8, false);
-        }
     }
 }

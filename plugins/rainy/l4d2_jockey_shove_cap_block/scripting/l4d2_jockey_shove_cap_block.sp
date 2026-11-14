@@ -23,20 +23,16 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    GameData hGameData = new GameData(GAMEDATA);
-    if (hGameData == null)
-    {
+    GameData gameData = new GameData(GAMEDATA);
+    if (gameData == null)
         SetFailState("Failed to load %s.txt gamedata.", GAMEDATA);
-    }
 
-    int iOffset = hGameData.GetOffset("CBaseAbility::OnTouch");
-    delete hGameData;
-    if (iOffset == -1)
-    {
+    int offset = gameData.GetOffset("CBaseAbility::OnTouch");
+    delete gameData;
+    if (offset == -1)
         SetFailState("Failed to get offset 'CBaseAbility::OnTouch'.");
-    }
 
-    g_hLeapOnTouch = new DynamicHook(iOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity);
+    g_hLeapOnTouch = new DynamicHook(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity);
     g_hLeapOnTouch.AddParam(HookParamType_CBaseEntity);
 
     g_hBlockTime = CreateConVar(
@@ -51,9 +47,7 @@ public void OnPluginStart()
 public void OnEntityCreated(int entity, const char[] classname)
 {
     if (strcmp(classname, "ability_leap") == 0)
-    {
         g_hLeapOnTouch.HookEntity(Hook_Pre, entity, Leap_OnTouch);
-    }
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -68,9 +62,7 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 void Event_PlayerShoved(Event event, const char[] name, bool dontBroadcast)
 {
     if (!IsSurvivor(GetClientOfUserId(event.GetInt("attacker"))))
-    {
         return;
-    }
 
     int userid = event.GetInt("userid");
     int client = GetClientOfUserId(userid);
@@ -81,19 +73,15 @@ void Event_PlayerShoved(Event event, const char[] name, bool dontBroadcast)
     }
 }
 
-MRESReturn Leap_OnTouch(int ability, DHookParam hParams)
+MRESReturn Leap_OnTouch(int ability, DHookParam params)
 {
     int jockey = GetEntPropEnt(ability, Prop_Send, "m_owner");
-    if (!IsJockey(jockey) || !IsSurvivor(hParams.Get(1)))
-    {
+    if (!IsJockey(jockey) || !IsSurvivor(params.Get(1)))
         return MRES_Ignored;
-    }
 
     // 같은 슬롯에 다른 플레이어가 들어온 경우를 userid로 걸러낸다.
     if (g_iShovedUserId[jockey] == GetClientUserId(jockey) && g_fBlockEndTime[jockey] >= GetGameTime())
-    {
         return MRES_Supercede;
-    }
 
     return MRES_Ignored;
 }

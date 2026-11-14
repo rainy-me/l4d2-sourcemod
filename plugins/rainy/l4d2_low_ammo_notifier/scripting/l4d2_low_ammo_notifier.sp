@@ -10,7 +10,7 @@
 
 bool   g_bPluginStarted;
 
-ConVar g_hConVar_Threshold;
+ConVar g_hConVarThreshold;
 
 // 탄약 종류별로 이미 알렸는지 기억해서 부족한 동안 재장전할 때마다 다시 알리지 않는다
 bool   g_bLowAmmo[MAXPLAYERS_L4D2 + 1][Ammo_MAX];
@@ -28,7 +28,7 @@ public void OnPluginStart()
 {
     LoadTranslations("l4d2_low_ammo_notifier.phrases");
 
-    g_hConVar_Threshold = CreateConVar(
+    g_hConVarThreshold = CreateConVar(
         "l4d2_low_ammo_notifier_threshold", "2.0",
         "when reserve ammo is less than or equal to this * ClipSize, consider it as low ammo.",
         FCVAR_NOTIFY, true, 0.0);
@@ -102,7 +102,7 @@ void OnRemoveAmmo_Post(int client, int amount, AmmoType ammoType, bool handled)
         return;
 
     int  reserve                 = GetEntProp(client, Prop_Send, "m_iAmmo", _, ammoType);
-    bool low                     = reserve <= RoundToFloor(float(magazineMax) * g_hConVar_Threshold.FloatValue);
+    bool low                     = reserve <= RoundToFloor(float(magazineMax) * g_hConVarThreshold.FloatValue);
     bool wasLow                  = g_bLowAmmo[client][ammoType];
     g_bLowAmmo[client][ammoType] = low;
 

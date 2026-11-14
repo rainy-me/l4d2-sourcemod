@@ -23,9 +23,7 @@ public void OnPluginStart()
 Action Cmd_Stuck(int client, int args)
 {
     if (client <= 0 || !IsClientInGame(client) || !IsPlayerAlive(client))
-    {
         return Plugin_Handled;
-    }
 
     L4D_WarpToValidPositionIfStuck(client);
     CPrintToChat(client, "%t", "Unstuck");

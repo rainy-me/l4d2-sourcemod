@@ -19,19 +19,15 @@ public void OnPluginStart()
     // 게임 서버가 플레이어들에게 보내는 시스템 메시지를 감지합니다.
     UserMsg msgId = GetUserMessageId("TextMsg");
     if (msgId == INVALID_MESSAGE_ID)
-    {
         SetFailState("TextMsg user message not found");
-    }
     HookUserMessage(msgId, HideIdleMessage, true);
 }
 
-Action HideIdleMessage(UserMsg msg_id, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
+Action HideIdleMessage(UserMsg msgId, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
 {
     char token[128];
     if (BfReadString(msg, token, sizeof(token)) < 0)
-    {
         return Plugin_Continue;    // 읽기 실패 시 처리
-    }
 
     if (StrContains(token, IDLE_MESSAGE_TOKEN, false) != -1)
     {

@@ -23,31 +23,21 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
     int userid = event.GetInt("userid");
     if (userid > 0)
-    {
         return;
-    }
     int entity = event.GetInt("entityid");
     if (entity <= MaxClients || !IsValidEntity(entity))
-    {
         return;
-    }
     char victimName[32];
     event.GetString("victimname", victimName, sizeof(victimName));
     if (!StrEqual(victimName, "Infected"))
-    {
         return;
-    }
     char weapon[32];
     event.GetString("weapon", weapon, sizeof(weapon));
     if (!StrEqual(weapon, "melee"))
-    {
         return;
-    }
     int damageType = event.GetInt("type");
     if (!(damageType & DMG_MELEE))
-    {
         return;
-    }
 
     SetEntProp(entity, Prop_Send, "m_CollisionGroup", 1);
 }

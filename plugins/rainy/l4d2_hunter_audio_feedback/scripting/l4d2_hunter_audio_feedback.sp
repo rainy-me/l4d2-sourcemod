@@ -5,13 +5,13 @@
 #include <sdktools>
 #include <hxlib>
 
-ConVar g_hConVar_AlwaysShriek;
+ConVar g_hConVarAlwaysShriek;
 bool   g_bAlwaysShriek;
 
-ConVar g_hConVar_HonestWarn;
+ConVar g_hConVarHonestWarn;
 bool   g_bHonestWarn;
 
-int    g_iOffset_PounceSoundCooldown;
+int    g_iOffsetPounceSoundCooldown;
 bool   g_bLateLoaded;
 
 public Plugin myinfo =
@@ -23,62 +23,63 @@ public Plugin myinfo =
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_hunter_audio_feedback"
 };
 
-public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int errMax)
 {
-    g_bLateLoaded = bLate;
+    g_bLateLoaded = late;
     return APLRes_Success;
 }
 
 public void OnPluginStart()
 {
-    g_hConVar_AlwaysShriek = CreateConVar(
+    g_hConVarAlwaysShriek = CreateConVar(
         "audio_feedback_hunter_always_shrieks", "1",
         "hunters will always shriek when they lunge",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hConVar_AlwaysShriek.AddChangeHook(ConVarChanged_Update);
+    g_hConVarAlwaysShriek.AddChangeHook(ConVarChanged_Update);
 
-    g_hConVar_HonestWarn = CreateConVar(
+    g_hConVarHonestWarn = CreateConVar(
         "audio_feedback_hunter_honest_warn", "1",
         "hunters won't warn about their lunge if they're already lunging",
         FCVAR_NOTIFY, true, 0.0, true, 1.0);
-    g_hConVar_HonestWarn.AddChangeHook(ConVarChanged_Update);
+    g_hConVarHonestWarn.AddChangeHook(ConVarChanged_Update);
 
     ReadConVars();
 
     HookEvent("ability_use", Event_AbilityUse);
-    g_iOffset_PounceSoundCooldown = FindSendPropInfo("CTerrorPlayer", "m_pounceStartPosition");
-    g_iOffset_PounceSoundCooldown += 52;
+    g_iOffsetPounceSoundCooldown = FindSendPropInfo("CTerrorPlayer", "m_pounceStartPosition");
+    g_iOffsetPounceSoundCooldown += 52;
 
-    if (g_bLateLoaded) HXLibRescanForwards();
+    if (g_bLateLoaded)
+        HXLibRescanForwards();
 }
 
-void ConVarChanged_Update(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_Update(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     ReadConVars();
 }
 
 void ReadConVars()
 {
-    g_bAlwaysShriek = g_hConVar_AlwaysShriek.BoolValue;
-    g_bHonestWarn   = g_hConVar_HonestWarn.BoolValue;
+    g_bAlwaysShriek = g_hConVarAlwaysShriek.BoolValue;
+    g_bHonestWarn   = g_hConVarHonestWarn.BoolValue;
 }
 
-void Event_AbilityUse(Event hEvent, const char[] sName, bool bDontBroadcast)
+void Event_AbilityUse(Event event, const char[] name, bool dontBroadcast)
 {
     if (!g_bAlwaysShriek)
         return;
 
-    int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
-    if (iClient && GetZombieClass(iClient) == ZClass_Hunter && hEvent.GetInt("context"))
-        SetEntData(iClient, g_iOffset_PounceSoundCooldown, -1.0);
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    if (client && GetZombieClass(client) == ZClass_Hunter && event.GetInt("context"))
+        SetEntData(client, g_iOffsetPounceSoundCooldown, -1.0);
 }
 
-public Action OnVocalize(int iClient, char sGameSound[64], float &fCooldown, float &fDurationAI)
+public Action OnVocalize(int client, char gameSound[64], float &cooldown, float &durationAI)
 {
-    if (!g_bHonestWarn || !IsValidClient(iClient) || GetZombieClass(iClient) != ZClass_Hunter)
+    if (!g_bHonestWarn || !IsValidClient(client) || GetZombieClass(client) != ZClass_Hunter)
         return Plugin_Continue;
 
-    if (IsHunterLunging(iClient) && strcmp(sGameSound, "HunterZombie.Warn") == 0)
+    if (IsHunterLunging(client) && strcmp(gameSound, "HunterZombie.Warn") == 0)
         return Plugin_Handled;
 
     return Plugin_Continue;

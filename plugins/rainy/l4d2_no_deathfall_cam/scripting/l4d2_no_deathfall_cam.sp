@@ -16,8 +16,6 @@ public Plugin myinfo =
 public Action L4D_OnFatalFalling(int client, int camera)
 {
     if (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2)
-    {
         return Plugin_Handled;
-    }
     return Plugin_Continue;
 }

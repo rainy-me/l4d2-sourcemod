@@ -23,14 +23,10 @@ void Event_MapTransition(Event event, const char[] name, bool dontBroadcast)
     for (int i = 1; i <= MaxClients; i++)
     {
         if (!IsClientInGame(i) || GetClientTeam(i) != 2 || !IsPlayerAlive(i))
-        {
             continue;
-        }
 
         if (L4D_IsPlayerIncapacitated(i))
-        {
             L4D_ReviveSurvivor(i);
-        }
         L4D_SetPlayerReviveCount(i, 0);
         L4D_SetPlayerThirdStrikeState(i, false);
         L4D_SetPlayerIsGoingToDie(i, false);
@@ -43,9 +39,7 @@ void Event_MapTransition(Event event, const char[] name, bool dontBroadcast)
             float addedHealth       = float(50 - currentHealth);
             float newTempHealth     = currentTempHealth - addedHealth;
             if (newTempHealth < 0.0)
-            {
                 newTempHealth = 0.0;
-            }
             L4D_SetTempHealth(i, newTempHealth);
         }
     }
