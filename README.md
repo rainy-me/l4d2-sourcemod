@@ -53,7 +53,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 5. [l4d2_consistent_checkpoint_heal](/plugins/rainy/l4d2_consistent_checkpoint_heal/)  
    맵 전환 시 생존자의 체력을 50까지 회복시키고, 무력화 효과를 제거합니다.
 
-6. [l4d2_despawn_stuck_si](/plugins/rainy/l4d2_despawn_stuck_si/)  
+6. [l4d2_despawn_stuck_infected](/plugins/rainy/l4d2_despawn_stuck_infected/)  
    끼인 좀비를 제거합니다.
 
 7. [l4d2_fast_map_transition](/plugins/rainy/l4d2_fast_map_transition/)  

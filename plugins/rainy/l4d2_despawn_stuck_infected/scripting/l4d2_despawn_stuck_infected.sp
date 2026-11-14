@@ -145,7 +145,7 @@ public Plugin myinfo =
     author      = "Rainy",
     description = "끼인 좀비를 제거합니다.",
     version     = "1.0.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_despawn_stuck_si"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_despawn_stuck_infected"
 };
 
 public void OnPluginStart()
@@ -158,7 +158,7 @@ public void OnPluginStart()
         "time in seconds an infected must be stuck to be a candidate " ... "for being despawned. -1.0 to disable stuck despawns",
         CVAR_FLAGS, true, -1.0);
     g_hConVarMaxStuckTime.AddChangeHook(ConVarChanged_Update);
-    AutoExecConfig(true, "l4d2_despawn_stuck_si");
+    AutoExecConfig(true, "l4d2_despawn_stuck_infected");
 
     ReadConVars();
 
