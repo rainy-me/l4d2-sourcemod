@@ -9,12 +9,12 @@
     {
         "#format"   "{1:N}"
         "en"        "{green}{1}{default} quick healed you"
-        "ko"        "{green}{1}{default}님이 빠른 치료를 해주었습니다."
+        "ko"        "{green}{1}{default} 님이 빠른 치료를 해주었습니다."
     }
     "Quick Heal Given"
     {
         "#format"   "{1:N}"
         "en"        "Used quick healing to {green}{1}"
-        "ko"        "{green}{1}{default}님에게 빠른 치료를 사용했습니다."
+        "ko"        "{green}{1}{default} 님에게 빠른 치료를 사용했습니다."
     }
 }
