@@ -9,7 +9,7 @@
 #define HUNTER_GROWL_INTERVAL 2.6    // 헌터는 idle 소리가 없고, 웅크리는 동안 growl을 낸다
 #define JOCKEY_IDLE_INTERVAL  1.7
 #define CHARGER_IDLE_INTERVAL 1.7
-#define JOCKEY_CUE_RANGE      510.0    // 자키가 이 거리 안에서 생존자를 보면 idle 소리를 즉시 낸다
+#define JOCKEY_CUE_RANGE      500.0    // 자키가 이 거리 안에서 생존자를 보면 idle 소리를 즉시 낸다
 
 // 플러그인이 alert를 낸 뒤 이 시간 동안 엔진의 alert를 막는다 (가장 긴 alert가 약 3초)
 #define ALERT_BLOCK_TIME      3.0
