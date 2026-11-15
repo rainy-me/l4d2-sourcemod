@@ -212,7 +212,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 3. l4d_ai_hunter_skeet_dmg_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_ai_hunter_skeet_dmg_fix>
 
-4. l4d_cutscene_nodamage (버그 수정)  
+4. l4d_cutscene_nodamage  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_cutscene_nodamage>
 
 5. l4d_shotgun_sound_fix  
@@ -224,22 +224,22 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 7. l4d2_chainsaw_fix  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_chainsaw_fix>
 
-8. l4d2_item_hint (버그 수정)  
+8. l4d2_item_hint  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_item_hint>
 
-9. l4d2_skill_detect (버그 수정)  
+9. l4d2_skill_detect  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d2_skill_detect>
 
-10. l4dffannounce (알림 문구 수정, 버그 수정)  
+10. l4dffannounce (알림 문구 수정)  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4dffannounce>
 
-11. LMC_Black_and_White_Notifier (알림 문구 수정, 버그 수정)  
+11. LMC_Black_and_White_Notifier (알림 문구 수정)  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/LMC_Black_and_White_Notifier>
 
 12. physics_object_pushfix  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/physics_object_pushfix>
 
-13. trigger_horde_notify (알림 문구 수정, 버그 수정)  
+13. trigger_horde_notify (알림 문구 수정)  
     <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/trigger_horde_notify>
 
 14. l4d_death_item_glow (보조무기 glow 추가, 버그 수정)  
