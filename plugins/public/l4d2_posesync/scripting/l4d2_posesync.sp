@@ -1288,8 +1288,11 @@ int ClassifyEntity(int entity)
 
 	char cls[64];
 	GetEntityClassname(entity, cls, sizeof(cls));
-	if (StrEqual(cls, "infected") || StrEqual(cls, "witch"))
+	if (StrEqual(cls, "infected"))
 		return TARGET_COMMON;
+	// witches are left to the engine's own lag compensation (no bit: never recorded, never rewound)
+	if (StrEqual(cls, "witch"))
+		return 0;
 	return TARGET_OTHER;
 }
 
