@@ -9,7 +9,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Ragdoll Remover",
     author      = "Rainy",
-    description = "CI/SI의 ragdoll을 즉시 제거합니다.",
+    description = "일반좀비/특수좀비의 ragdoll을 즉시 제거합니다.",
     version     = "1.2.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_ragdoll_remover"
 };

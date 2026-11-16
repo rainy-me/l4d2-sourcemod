@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Idle Command Fix",
     author      = "Rainy",
-    description = "유휴 명령 미인식 문제를 해결합니다.",
+    description = "유휴 명령 미인식 문제를 고칩니다.",
     version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_idle_command_fix"
 };

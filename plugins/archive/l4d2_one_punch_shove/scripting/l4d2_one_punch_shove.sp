@@ -11,7 +11,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 One Punch Shove",
     author      = "Rainy",
-    description = "CI, SI를 밀치기 한 번으로 죽일 수 있습니다.",
+    description = "일반좀비, 특수좀비를 밀치기 한 번으로 죽일 수 있습니다.",
     version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/archive/l4d2_one_punch_shove"
 };

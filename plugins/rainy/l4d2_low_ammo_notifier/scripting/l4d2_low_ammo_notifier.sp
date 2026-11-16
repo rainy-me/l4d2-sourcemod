@@ -19,7 +19,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Low Ammo Notifier",
     author      = "Rainy",
-    description = "예비 탄약이 부족해지면 소리와 채팅으로 알립니다.",
+    description = "예비 탄약이 부족해지면 감염자를 제외한 플레이어에게 소리와 채팅으로 알립니다.",
     version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_low_ammo_notifier"
 };

@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 Get-Up Damage Fix",
     author      = "Rainy",
-    description = "일어나는 애니메이션이 진행되는 동안의 무적타임 불일치 문제를 고칩니다.",
+    description = "일어나는 애니메이션이 진행되는 동안의 무적 시간 불일치 문제를 고칩니다.",
     version     = "1.0.1",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_getup_damage_fix"
 };

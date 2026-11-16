@@ -18,7 +18,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 AI Stagger Claw Fix",
     author      = "Rainy",
-    description = "AI SI가 비틀거리거나 공중에 떠 있는 동안 긁기공격을 하지 못하도록 방지합니다.",
+    description = "AI 특수좀비가 스태거 중이거나 공중에 떠 있는 동안 긁기 공격을 하지 못하도록 방지합니다.",
     version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_ai_stagger_claw_fix"
 };
