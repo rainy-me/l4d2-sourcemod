@@ -9,15 +9,15 @@
 GlobalForward g_hForwardThirdPersonChanged;
 bool          g_bVersus;
 
-// 마지막으로 감지된 3인칭(숄더) 상태
+// Last detected third-person (shoulder) state
 bool          g_bThirdPerson[MAXPLAYERS + 1];
 
-// 사망/팀 변경/구출 등으로 클라이언트 카메라가 1인칭으로 초기화된 상태.
-// c_thirdpersonshoulder가 1이어도 실제로는 1인칭이므로, cvar가 0으로 돌아올 때까지 1인칭으로 취급한다.
+// The client camera was reset to first person by death, team change, rescue, etc.
+// c_thirdpersonshoulder can still be 1 while the view is first person, so treat it as first person until the cvar returns to 0.
 bool          g_bCameraReset[MAXPLAYERS + 1];
 
-// cvar 쿼리 응답 대기 중 여부와 쿼리를 보낸 시점의 userid.
-// 응답 전 중복 쿼리를 막고, 쿼리 도중 슬롯이 재사용된 경우 stale 응답을 무시한다.
+// Whether a cvar query is awaiting its reply, and the userid at the time it was sent.
+// Prevents duplicate queries and ignores stale replies when the slot was reused mid-query.
 bool          g_bQueryPending[MAXPLAYERS + 1];
 int           g_iQueryUserId[MAXPLAYERS + 1];
 
@@ -27,7 +27,7 @@ public Plugin myinfo =
     author      = "Rainy",
     description = "클라이언트의 3인칭(thirdpersonshoulder) 상태를 감지해 다른 플러그인에 알립니다.",
     version     = "1.0.0",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_thirdperson_state"
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/libs/l4d2_thirdperson_state"
 };
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -44,7 +44,7 @@ public void OnPluginStart()
     HookEvent("player_death", Event_PlayerDeath);
     HookEvent("survivor_rescued", Event_SurvivorRescued);
 
-    // 지연 로드 시 포워드를 기다리지 않고 현재 게임 모드를 반영
+    // On late load, apply the current game mode without waiting for the forward
     SetVersus(L4D_GetGameModeType() == GAMEMODE_VERSUS);
 
     CreateTimer(CHECK_INTERVAL, Timer_CheckThirdPerson, _, TIMER_REPEAT);
@@ -71,7 +71,7 @@ public void L4D_OnGameModeChange(int gameMode)
     SetVersus(gameMode == GAMEMODE_VERSUS);
 }
 
-// 대전 모드에서는 모든 클라이언트를 1인칭으로 통보하고, 대전에서 벗어나면 현재 감지 상태를 다시 통보한다.
+// In versus every client is reported as first person; on leaving versus the detected state is reported again.
 void SetVersus(bool versus)
 {
     if (versus == g_bVersus)
@@ -105,7 +105,7 @@ void ConVarQuery_ThirdPersonShoulder(QueryCookie cookie, int client, ConVarQuery
 {
     g_bQueryPending[client] = false;
 
-    // 응답이 실패했거나, 쿼리 도중 슬롯이 다른 클라이언트로 재사용된 경우 무시
+    // Ignore failed replies and replies for a slot that was reused by another client mid-query
     if (result != ConVarQuery_Okay || !IsClientInGame(client) || GetClientUserId(client) != g_iQueryUserId[client])
         return;
 
@@ -113,23 +113,23 @@ void ConVarQuery_ThirdPersonShoulder(QueryCookie cookie, int client, ConVarQuery
 
     if (!StrEqual(cvarValue, "0"))
     {
-        // 3인칭: 카메라 초기화 상태라면 여전히 1인칭으로 취급
+        // Third person: still first person while the camera is in the reset state
         g_bThirdPerson[client] = !g_bCameraReset[client];
     }
     else
     {
-        // 1인칭: 사망 중 토글된 경우를 대비해 살아있을 때만 초기화 상태 해제
+        // First person: clear the reset state only while alive, in case it was toggled while dead
         if (IsPlayerAlive(client))
             g_bCameraReset[client] = false;
 
         g_bThirdPerson[client] = false;
     }
 
-    // 상태가 바뀌었을 때만 통보 (포워드는 변화 이벤트)
+    // Notify only when the state changed (the forward is a change event)
     if (wasThirdPerson == g_bThirdPerson[client])
         return;
 
-    // 대전 모드에서는 실제 상태와 무관하게 항상 1인칭으로 통보
+    // In versus always report first person regardless of the actual state
     PushForward(client, g_bThirdPerson[client] && !g_bVersus);
 }
 
@@ -148,8 +148,8 @@ void Event_SurvivorRescued(Event event, const char[] name, bool dontBroadcast)
     MarkCameraReset(GetClientOfUserId(event.GetInt("victim")));
 }
 
-// 클라이언트 카메라가 1인칭으로 초기화되는 이벤트에서 호출.
-// 초기화 상태를 기록하고, 다음 폴링까지 기다리지 않고 즉시 1인칭으로 통보한다.
+// Called on events that reset the client camera to first person.
+// Records the reset state and reports first person right away instead of waiting for the next poll.
 void MarkCameraReset(int client)
 {
     if (!IsValidClient(client) || IsFakeClient(client))
@@ -164,7 +164,7 @@ void MarkCameraReset(int client)
     }
 }
 
-// 포워드로 통보되는 값과 동일한 현재 상태를 반환 (늦게 로드된 플러그인용)
+// Returns the current state, the same value the forward reports (for late-loaded plugins)
 int Native_IsThirdPerson(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);

@@ -4,20 +4,20 @@
 #define _l4d2_thirdperson_state_included
 
 /**
- * 클라이언트의 3인칭(숄더) 상태가 바뀌면 호출된다.
+ * Called when a client's third-person (shoulder) state changes.
  *
- * @param client         클라이언트 인덱스
- * @param thirdPerson    true = 3인칭(숄더), false = 1인칭
+ * @param client         Client index.
+ * @param thirdPerson    true = third person (shoulder), false = first person.
  */
 forward void TP_OnThirdPersonChanged(int client, bool thirdPerson);
 
 /**
- * 현재 3인칭(숄더) 상태를 반환한다. (마지막 포워드 호출과 같은 값)
- * 포워드를 놓친 늦게 로드된 플러그인에서 쓴다.
+ * Returns the current third-person (shoulder) state (same value as the last forward call).
+ * Useful for late-loaded plugins that missed earlier forward calls.
  *
- * @param client    클라이언트 인덱스
- * @return          true = 3인칭(숄더), false = 1인칭
- * @error           잘못된 클라이언트 인덱스
+ * @param client    Client index.
+ * @return          true = third person (shoulder), false = first person.
+ * @error           Invalid client index.
  */
 native bool TP_IsThirdPerson(int client);
 

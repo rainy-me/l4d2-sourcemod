@@ -158,19 +158,16 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 40. [l4d2_tank_witch_spawn_notifier](/plugins/rainy/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-41. [l4d2_thirdperson_state](/plugins/rainy/l4d2_thirdperson_state/)  
-    클라이언트의 3인칭(thirdpersonshoulder) 상태를 감지해 다른 플러그인에 알립니다.
-
-42. [l4d2_tickrate_door_fix](/plugins/rainy/l4d2_tickrate_door_fix/)  
+41. [l4d2_tickrate_door_fix](/plugins/rainy/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-43. [l4d2_unstuck](/plugins/rainy/l4d2_unstuck/)  
+42. [l4d2_unstuck](/plugins/rainy/l4d2_unstuck/)  
     끼인 플레이어가 스스로 탈출할 수 있는 명령을 제공합니다.
 
-44. [l4d2_witch_update_rate](/plugins/rainy/l4d2_witch_update_rate/)  
+43. [l4d2_witch_update_rate](/plugins/rainy/l4d2_witch_update_rate/)  
     nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.
 
-45. [l4d2_worker_bile_fix](/plugins/rainy/l4d2_worker_bile_fix/)  
+44. [l4d2_worker_bile_fix](/plugins/rainy/l4d2_worker_bile_fix/)  
     공사장 인부 좀비가 담즙 폭탄에 반응하도록 고칩니다.
 
 ### B. 미사용 자작 플러그인
@@ -336,26 +333,29 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 2. [hxlib](/plugins/libs/hxlib/)  
    다른 플러그인에서 사용하는 네이티브, 포워드, 스톡을 제공합니다.
 
-3. l4d_heartbeat (버그 수정)  
+3. [l4d2_thirdperson_state](/plugins/libs/l4d2_thirdperson_state/)  
+   클라이언트의 3인칭(thirdpersonshoulder) 상태를 감지해 다른 플러그인에 알립니다.
+
+4. l4d_heartbeat (버그 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
 
-4. l4d_pellet_spread_customizer  
+5. l4d_pellet_spread_customizer  
    <https://github.com/Target5150/MoYu_Server_Stupid_Plugins/tree/master/The%20Last%20Stand/l4d_pellet_spread_customizer>
 
-5. l4dtoolz `[Metamod]`  
+6. l4dtoolz `[Metamod]`  
    <https://github.com/lakwsh/l4dtoolz/releases>
 
-6. left4dhooks  
+7. left4dhooks  
    <https://forums.alliedmods.net/showthread.php?t=321696>
 
-7. Multi Colors  
+8. Multi Colors  
    <https://github.com/Bara/Multi-Colors>
 
-8. SourceScramble `[Extension]`  
+9. SourceScramble `[Extension]`  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-9. Use Priority Patch  
-   <https://forums.alliedmods.net/showthread.php?t=327511>
+10. Use Priority Patch  
+    <https://forums.alliedmods.net/showthread.php?t=327511>
 
 ## Rainy의 저장소
 
