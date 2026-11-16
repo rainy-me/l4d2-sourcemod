@@ -1,6 +1,6 @@
 #include <sourcemod>
 #include <sdktools>
-#include <ThirdPersonShoulder_Detect>
+#include <l4d2_thirdperson_state>
 
 #pragma semicolon 1
 #pragma newdecls required

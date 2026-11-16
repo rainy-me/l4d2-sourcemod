@@ -158,16 +158,19 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 40. [l4d2_tank_witch_spawn_notifier](/plugins/rainy/l4d2_tank_witch_spawn_notifier/)  
     탱크 및 윗치의 스폰을 알립니다.
 
-41. [l4d2_tickrate_door_fix](/plugins/rainy/l4d2_tickrate_door_fix/)  
+41. [l4d2_thirdperson_state](/plugins/rainy/l4d2_thirdperson_state/)  
+    클라이언트의 3인칭(thirdpersonshoulder) 상태를 감지해 다른 플러그인에 알립니다.
+
+42. [l4d2_tickrate_door_fix](/plugins/rainy/l4d2_tickrate_door_fix/)  
     틱레이트 변경에 따른 문 속도 문제를 고칩니다.
 
-42. [l4d2_unstuck](/plugins/rainy/l4d2_unstuck/)  
+43. [l4d2_unstuck](/plugins/rainy/l4d2_unstuck/)  
     끼인 플레이어가 스스로 탈출할 수 있는 명령을 제공합니다.
 
-43. [l4d2_witch_update_rate](/plugins/rainy/l4d2_witch_update_rate/)  
+44. [l4d2_witch_update_rate](/plugins/rainy/l4d2_witch_update_rate/)  
     nb_update_frequency와 관계없이 윗치의 NextBot 업데이트 빈도를 별도로 설정합니다.
 
-44. [l4d2_worker_bile_fix](/plugins/rainy/l4d2_worker_bile_fix/)  
+45. [l4d2_worker_bile_fix](/plugins/rainy/l4d2_worker_bile_fix/)  
     공사장 인부 좀비가 담즙 폭탄에 반응하도록 고칩니다.
 
 ### B. 미사용 자작 플러그인
@@ -215,7 +218,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 4. l4d_cutscene_nodamage  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_cutscene_nodamage>
 
-5. l4d_shotgun_sound_fix  
+5. l4d_shotgun_sound_fix (l4d2_thirdperson_state 사용)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_shotgun_sound_fix>
 
 6. l4d_witch_retreat_panic_fix  
@@ -351,11 +354,8 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 8. SourceScramble `[Extension]`  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>
 
-9. ThirdPersonShoulder_Detect (유휴 복귀 후 3인칭 오감지 고침, TP_IsThirdPerson native 추가)  
-   <https://forums.alliedmods.net/showthread.php?t=298649>
-
-10. Use Priority Patch  
-    <https://forums.alliedmods.net/showthread.php?t=327511>
+9. Use Priority Patch  
+   <https://forums.alliedmods.net/showthread.php?t=327511>
 
 ## Rainy의 저장소
 
