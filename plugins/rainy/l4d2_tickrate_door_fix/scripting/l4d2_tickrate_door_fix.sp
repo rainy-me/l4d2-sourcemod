@@ -22,7 +22,7 @@ public Plugin myinfo =
     name        = "L4D2 Tickrate Door Fix",
     author      = "Rainy",
     description = "틱레이트 변경에 따른 문 속도 문제를 고칩니다.",
-    version     = "1.0.3",
+    version     = "1.0.4",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_tickrate_door_fix"
 };
 
