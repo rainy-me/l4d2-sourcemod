@@ -327,11 +327,7 @@ Action Timer_CheckPlayerDrown(Handle timer, int client)
 		return Plugin_Stop;
 	}
 
-	// L4D1: ReviveLogic overwrites m_currentReviveCount, so reading it back would corrupt the real revive count
-	if( g_bLeft4Dead2 )
-		RequestFrame(OnFrameRevive, GetClientUserId(client));
-	else
-		ReviveLogic(client);
+	RequestFrame(OnFrameRevive, GetClientUserId(client));
 
 	//PrintToChatAll("%N %d, %d", client, GetEntProp(client, Prop_Data, "m_idrowndmg"), GetEntProp(client, Prop_Data, "m_idrownrestored"));
 	if(GetEntProp(client, Prop_Data, "m_idrowndmg") <= GetEntProp(client, Prop_Data, "m_idrownrestored"))
