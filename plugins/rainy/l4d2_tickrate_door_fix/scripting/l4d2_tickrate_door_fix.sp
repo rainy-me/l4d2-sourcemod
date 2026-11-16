@@ -8,19 +8,14 @@
 #define MAX_EDICTS             2048    //(1 << 11)
 #define ENTITY_MAX_NAME_LENGTH 64
 
-enum struct DoorsData
-{
-    float speed;
-}
-
 static const char g_sDoorsTypeTracked[][ENTITY_MAX_NAME_LENGTH] = {
     "prop_door_rotating",
     "prop_door_rotating_checkpoint"
 };
 
-DoorsData g_esDoors[MAX_EDICTS];
-ConVar    g_hConVarDoorSpeed;
-float     g_fDoorSpeed;
+float  g_fDoorBaseSpeed[MAX_EDICTS];
+ConVar g_hConVarDoorSpeed;
+float  g_fDoorSpeed;
 
 public Plugin myinfo =
 {
@@ -98,7 +93,7 @@ void SetDoorSettingsAll()
 
 void SetDoorSettings(int entity)
 {
-    float speed = g_esDoors[entity].speed * g_fDoorSpeed;
+    float speed = g_fDoorBaseSpeed[entity] * g_fDoorSpeed;
     SetEntPropFloat(entity, Prop_Data, "m_flSpeed", speed);
 }
 
@@ -117,7 +112,7 @@ void ResetDoorSettingsAll()
 
 void ResetDoorSettings(int entity)
 {
-    float speed = g_esDoors[entity].speed;
+    float speed = g_fDoorBaseSpeed[entity];
     SetEntPropFloat(entity, Prop_Data, "m_flSpeed", speed);
 }
 
@@ -136,5 +131,5 @@ void GetDoorSettingsAll()
 
 void GetDoorSettings(int entity)
 {
-    g_esDoors[entity].speed = GetEntPropFloat(entity, Prop_Data, "m_flSpeed");
+    g_fDoorBaseSpeed[entity] = GetEntPropFloat(entity, Prop_Data, "m_flSpeed");
 }

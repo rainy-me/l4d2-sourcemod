@@ -11,6 +11,7 @@
 ConVar g_hConVarGlowColor;
 ConVar g_hConVarGlowRange;
 ConVar g_hConVarFlashing;
+Handle g_hCheckTimer;
 
 public Plugin myinfo =
 {
@@ -51,6 +52,12 @@ public void OnPluginEnd()
     ToggleTankPropsGlow(false);
 }
 
+public void OnMapStart()
+{
+    // TIMER_FLAG_NO_MAPCHANGE로 이미 닫힌 핸들이라 delete하면 안 된다
+    g_hCheckTimer = null;
+}
+
 void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
     StartTankPropsGlow();
@@ -60,7 +67,9 @@ void StartTankPropsGlow()
 {
     ToggleTankPropsGlow(true);
     // tank_killed 없이 탱크가 사라지는 경우 대비
-    CreateTimer(TANK_CHECK_INTERVAL, Timer_CheckTanks, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+    // 탱크가 여러 마리여도 타이머는 하나만 돈다
+    if (g_hCheckTimer == null)
+        g_hCheckTimer = CreateTimer(TANK_CHECK_INTERVAL, Timer_CheckTanks, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
 void Event_TankKilled(Event event, const char[] name, bool dontBroadcast)
@@ -84,6 +93,7 @@ Action Timer_CheckTanks(Handle timer)
     if (IsAnyTankAlive())
         return Plugin_Continue;
     ToggleTankPropsGlow(false);
+    g_hCheckTimer = null;
     return Plugin_Stop;
 }
 
