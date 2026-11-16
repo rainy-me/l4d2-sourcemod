@@ -346,7 +346,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
    <https://forums.alliedmods.net/showthread.php?t=321696>
 
 7. Multi Colors  
-   <https://github.com/fbef0102/L4D1_2-Plugins/releases/tag/Multi-Colors>
+   <https://github.com/Bara/Multi-Colors>
 
 8. SourceScramble `[Extension]`  
    <https://github.com/nosoop/SMExt-SourceScramble/releases>

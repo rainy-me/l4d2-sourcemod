@@ -9,7 +9,7 @@
 
 #pragma newdecls optional
 
-#define MORE_COLORS_VERSION     "3.0.0-MC"
+#define MORE_COLORS_VERSION     "3.0.1-MC"
 #define MC_MAX_MESSAGE_LENGTH   256
 #define MAX_BUFFER_LENGTH       (MC_MAX_MESSAGE_LENGTH * 4)
 #define MAX_COLOR_TAG_LENGTH    32
@@ -1023,7 +1023,7 @@ stock void MC_InitFastColors() {
  * @return       32-bit hash value
  */
 stock int MC_FastHash(const char[] str) {
-	int hash = 2166136261;
+	int hash = 0x811C9DC5; // FNV-1a 32-bit offset basis
 	for (int i = 0; str[i]; i++) {
 		hash ^= str[i];
 		hash *= 16777619;
