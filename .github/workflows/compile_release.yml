@@ -6,12 +6,13 @@ on:
       - "base/**"
       - "plugins/archive/**"
       - "plugins_metamod/**"
-      - ".python-version"
       - "*.py"
       - "*.cmd"
-      - "*.ini"
       - "LICENSE"
       - "README.md"
+      - "CLAUDE.md"
+      - ".gitattributes"
+      - ".gitignore"
     branches:
       - main
   push:
@@ -19,12 +20,13 @@ on:
       - "base/**"
       - "plugins/archive/**"
       - "plugins_metamod/**"
-      - ".python-version"
       - "*.py"
       - "*.cmd"
-      - "*.ini"
       - "LICENSE"
       - "README.md"
+      - "CLAUDE.md"
+      - ".gitattributes"
+      - ".gitignore"
     branches:
       - main
   workflow_dispatch:
@@ -107,6 +109,12 @@ jobs:
 
       - name: Set release timestamp
         run: echo "RELEASE_TIMESTAMP=$(TZ=Asia/Seoul date +%y%m%d%H%M%S)" >> "$GITHUB_ENV"
+
+      # action-gh-release는 기존 태그를 옮기지 않으므로 직접 현재 커밋으로 옮긴다
+      - name: Move latest tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PATCH "repos/${{ github.repository }}/git/refs/tags/latest" -f sha="${{ github.sha }}" -F force=true
 
       - name: Update latest release
         uses: softprops/action-gh-release@v3

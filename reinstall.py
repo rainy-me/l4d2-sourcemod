@@ -79,14 +79,19 @@ def install(game_dir: Path) -> None:
 def compile_plugins(game_dir: Path) -> None:
     """리포지토리의 PLUGIN_DIRS에 있는 .sp 파일을 컴파일해 plugins 폴더로 이동."""
     scripting_dir = game_dir / "addons/sourcemod/scripting"
+    failed = []  # 하나가 실패해도 나머지는 끝까지 컴파일한다
 
     for sp in sorted(i.name for d in PLUGIN_DIRS for i in d.glob("*/scripting/*.sp")):
         print(f"\n컴파일: {sp}", flush=True)  # flush so it lands before spcomp's own output
-        subprocess.run(
+        result = subprocess.run(
             [scripting_dir / "spcomp.exe", sp, "-iinclude", f"-o../plugins/{Path(sp).stem}.smx"],
             cwd=scripting_dir,
-            check=True,
         )
+        if result.returncode != 0:
+            failed.append(sp)
+    if failed:
+        print("\n컴파일 실패:", *failed, sep="\n  ")
+        raise SystemExit(1)
     print("컴파일 및 적용 완료.")
 
 
