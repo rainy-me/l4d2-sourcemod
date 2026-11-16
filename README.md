@@ -333,7 +333,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 2. [hxlib](/plugins/libs/hxlib/)  
    다른 플러그인에서 사용하는 네이티브, 포워드, 스톡을 제공합니다.
 
-3. l4d_heartbeat  
+3. l4d_heartbeat (버그 수정)  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
 
 4. l4d_pellet_spread_customizer  

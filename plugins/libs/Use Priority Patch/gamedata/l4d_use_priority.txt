@@ -70,7 +70,7 @@
 				"windows"		"\xB8\x01\x00\x00\x00\xC2\x04\x00"
 				/* B8 01 00 00 00 C2 04 00 */
 				/* Windows matches multiple functions, but the first is our target. */
-				/* This signature is the full function. VTable dhook crashed for some reason so using patch instead. */
+				/* This signature is the full function. Windows uses the VTable offset above since 2.6, this is only kept for reference. */
 				/* VTable method to find. */
 			}
 		}
