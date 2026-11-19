@@ -15,7 +15,7 @@ public Plugin myinfo =
     name        = "L4D2 Campaign Progress Notifier",
     author      = "Rainy",
     description = "캠페인 진행 상황을 알립니다.",
-    version     = "1.2.1",
+    version     = "1.2.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_campaign_progress_notifier"
 };
 
@@ -36,7 +36,6 @@ public void OnPluginStart()
     HookEvent("round_start", Event_RoundStart);
 
     RegConsoleCmd("sm_p", Cmd_Progress);
-    RegConsoleCmd("sm_ㅔ", Cmd_Progress);
 }
 
 public void OnMapStart()
@@ -52,9 +51,28 @@ public void OnMapEnd()
         delete g_hUpdateTimer;
 }
 
+// 한글 명령은 RegConsoleCmd 채팅 트리거로 잡히지 않아 채팅을 직접 확인한다
+public Action OnClientSayCommand(int client, const char[] command, const char[] args)
+{
+    char text[16];
+    strcopy(text, sizeof(text), args);
+    TrimString(text);
+
+    if (StrEqual(text, "!ㅔ"))
+    {
+        Cmd_Progress(client, 0);
+        return Plugin_Continue;
+    }
+    if (StrEqual(text, "/ㅔ"))
+    {
+        Cmd_Progress(client, 0);
+        return Plugin_Handled;
+    }
+    return Plugin_Continue;
+}
+
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-    // 협동 계열(coop, realism, 협동 변이)에서만 알린다
     if (L4D_GetGameModeType() == GAMEMODE_COOP)
     {
         for (int i = 0; i < 3; i++)
