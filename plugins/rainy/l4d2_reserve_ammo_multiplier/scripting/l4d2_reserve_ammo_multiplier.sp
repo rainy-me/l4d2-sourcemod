@@ -41,7 +41,7 @@ public Plugin myinfo =
     name        = "L4D2 Reserve Ammo Multiplier",
     author      = "Rainy",
     description = "예비 탄약 소지량을 배율로 조정합니다.",
-    version     = "1.4.1",
+    version     = "1.4.2",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_reserve_ammo_multiplier"
 };
 
@@ -268,6 +268,8 @@ bool IsListedInAdminsTxt(int client)
         int comment = StrContains(line, "//");
         if (comment != -1)
             line[comment] = '\0';
+        // UTF-8 BOM이 있으면 첫 줄 관리자가 인식되지 않으므로 떼어낸다
+        ReplaceString(line, sizeof(line), "\xEF\xBB\xBF", "");
         TrimString(line);
         // GetClientAuthId는 STEAM_1 형식을 반환하므로 STEAM_0 표기를 맞춰줌
         ReplaceString(line, sizeof(line), "STEAM_0", "STEAM_1");
