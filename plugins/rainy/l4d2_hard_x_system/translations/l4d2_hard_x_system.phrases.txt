@@ -42,7 +42,7 @@
     {
         "#format"   "{1:s},{2:d},{3:s},{4:s}"
         "en"        "{green}★ {olive}{1} {default}Hard {lightgreen}{2}{3}{4}"
-        "ko"        "{green}★ {olive}{1} {default}Hard{lightgreen}{2}{3}{4}"
+        "ko"        "{green}★ {olive}{1} {default}Hard {lightgreen}{2}{3}{4}"
     }
     "Custom Limits"
     {
