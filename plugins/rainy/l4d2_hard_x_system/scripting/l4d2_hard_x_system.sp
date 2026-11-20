@@ -3,6 +3,7 @@
 
 #include <sourcemod>
 #include <left4dhooks>
+#include <multicolors>
 
 #define ADMINS_FILE "ems/admin system/admins.txt"
 #define MIN_LEVEL   2
@@ -32,7 +33,7 @@ public Plugin myinfo =
     name        = "L4D2 Hard X System",
     author      = "Rainy",
     description = "특수 감염자의 수와 리스폰 간격을 레벨로 조절합니다.",
-    version     = "1.0.0",
+    version     = "1.1.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_hard_x_system"
 };
 
@@ -41,6 +42,8 @@ public void OnPluginStart()
     g_hConVarGameMode = FindConVar("mp_gamemode");
     g_hConVarGameMode.AddChangeHook(ConVarChanged_GameMode);
     ReadGameMode();
+
+    LoadTranslations("l4d2_hard_x_system.phrases");
 
     BuildPath(Path_SM, g_sPath, sizeof(g_sPath), "data/l4d2_hard_x_system.cfg");
     LoadSettings();
@@ -246,7 +249,7 @@ Action HandleCommand(int client, int args, int type)
 
     if (!CheckCommandAccess(client, "sm_hard_set", ADMFLAG_ROOT) && !IsListedInAdminsTxt(client))
     {
-        ReplyToCommand(client, "This command can only be used by the admin.");
+        CReplyToCommand(client, "%t", "Admin Only");
         return Plugin_Handled;
     }
 
@@ -266,7 +269,7 @@ void OnHardCommand(int client, int args)
     GetCmdArg(1, arg, sizeof(arg));
     if (args != 1 || !ParseInt(arg, level) || !IsValidLevel(level))
     {
-        ReplyToCommand(client, "!hard <level> - Set the hard level.\nlevel: %d ~ %d. Use 0 to turn it off.", MIN_LEVEL, MAX_LEVEL);
+        CReplyToCommand(client, "%t", "Hard Usage", MIN_LEVEL, MAX_LEVEL);
         return;
     }
 
@@ -276,13 +279,13 @@ void OnHardCommand(int client, int args)
         // 끌 때는 커스텀 제한도 전부 초기화
         ResetLimits();
         g_iRespawn = 0;
-        PrintToChatAll("\x04OFF\x01. All custom limits and respawn interval reset.");
+        CPrintToChatAll("%t", "Hard Off Reset");
     }
     else
     {
         PrintInfo();
         if (level == MAX_LEVEL)
-            PrintToChatAll("\x04Warning:\x01 level \x03%d\x01 has critical engine bugs.", level);
+            CPrintToChatAll("%t", "Max Level Warning", level);
     }
     SaveSettings();
 }
@@ -309,7 +312,7 @@ void OnLimitCommand(int client, int args)
 
     if (!ok)
     {
-        ReplyToCommand(client, "!hardl <type[,type...]> <0 ~ %d | reset> - Set the limit of special infected.\n!hardl reset - Reset all limits.\ntype: boomer, charger, hunter, jockey, smoker, spitter (e.g. hunter,charger)", MAX_LEVEL);
+        CReplyToCommand(client, "%t", "Limit Usage", MAX_LEVEL);
         return;
     }
 
@@ -333,7 +336,7 @@ void OnRespawnCommand(int client, int args)
     }
     else if (args != 1 || !ParseInt(arg, seconds) || seconds < 1)
     {
-        ReplyToCommand(client, "!hardr <seconds | reset> - Set the special infected respawn interval (1 or more).\nreset: 20 at level 6 or lower, 15 at level 7 or higher.");
+        CReplyToCommand(client, "%t", "Respawn Usage");
         return;
     }
 
@@ -368,7 +371,7 @@ void PrintInfo()
 {
     if (g_iLevel == 0)
     {
-        PrintToChatAll("\x01[Hard X System]\x04 OFF");
+        CPrintToChatAll("%t", "Hard Off");
         return;
     }
 
@@ -382,12 +385,22 @@ void PrintActivation()
     if (g_iLevel == 0)
         return;
 
-    char respawn[48];
-    if (g_iRespawn != 0)
-        FormatEx(respawn, sizeof(respawn), " \x01(respawn \x03%d\x01s)", g_iRespawn);
+    // 덧붙는 문구도 받는 사람의 언어로 만들어야 해서 한 명씩 보낸다
+    char limits[64], respawn[64];
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (!IsClientInGame(i) || IsFakeClient(i))
+            continue;
 
-    PrintToChatAll("\x01\x04★ \x05%s \x01Hard \x03%d%s%s", g_sGameMode, g_iLevel,
-                   HasCustomLimits() ? " \x01(custom limits)" : "", respawn);
+        limits[0]  = '\0';
+        respawn[0] = '\0';
+        if (HasCustomLimits())
+            FormatEx(limits, sizeof(limits), "%T", "Custom Limits", i);
+        if (g_iRespawn != 0)
+            FormatEx(respawn, sizeof(respawn), "%T", "Custom Respawn", i, g_iRespawn);
+
+        CPrintToChat(i, "%t", "Activation", g_sGameMode, g_iLevel, limits, respawn);
+    }
 }
 
 void PrintLimits()
@@ -396,20 +409,20 @@ void PrintLimits()
     int  total;
     for (int i = 0; i < SI_COUNT; i++)
     {
-        Format(text, sizeof(text), "%s%s%s %s%d", text, i == 0 ? "" : "\x01, ", g_sNames[i],
-               g_iLimits[i] != -1 ? "\x03" : "\x05", GetLimit(i));
+        Format(text, sizeof(text), "%s%s%s %s%d", text, i == 0 ? "" : "{default}, ", g_sNames[i],
+               g_iLimits[i] != -1 ? "{lightgreen}" : "{olive}", GetLimit(i));
         total += GetLimit(i);
     }
-    PrintToChatAll("\x01%s", text);
+    CPrintToChatAll("%s", text);
 
     // 제한의 합이 최대 특좀 수보다 작으면 자리가 다 차지 않는다
     if (total < g_iLevel)
-        PrintToChatAll("\x04Warning:\x01 only \x03%d\x01 of \x03%d\x01 special infected slots can be filled.", total, g_iLevel);
+        CPrintToChatAll("%t", "Slots Warning", total, g_iLevel);
 }
 
 void PrintRespawn()
 {
-    PrintToChatAll("\x01Respawn interval \x03%d\x01s%s", GetRespawnInterval(), g_iRespawn == 0 ? " \x05(default)" : "");
+    CPrintToChatAll("%t", g_iRespawn == 0 ? "Respawn Interval Default" : "Respawn Interval", GetRespawnInterval());
 }
 
 bool IsListedInAdminsTxt(int client)

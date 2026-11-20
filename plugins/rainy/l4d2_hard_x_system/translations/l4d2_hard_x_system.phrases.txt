@@ -1,0 +1,76 @@
+"Phrases"
+{
+    "Admin Only"
+    {
+        "en"    "This command can only be used by the admin."
+        "ko"    "관리자만 사용할 수 있는 명령어입니다."
+    }
+    "Hard Usage"
+    {
+        "#format"   "{1:d},{2:d}"
+        "en"        "!hard <level> - Set the hard level.\nlevel: {1} ~ {2}. Use 0 to turn it off."
+        "ko"        "!hard <레벨> - 하드 레벨을 설정합니다.\n레벨: {1} ~ {2}. 0을 입력하면 꺼집니다."
+    }
+    "Limit Usage"
+    {
+        "#format"   "{1:d}"
+        "en"        "!hardl <type[,type...]> <0 ~ {1} | reset> - Set the limit of special infected.\n!hardl reset - Reset all limits.\ntype: boomer, charger, hunter, jockey, smoker, spitter (e.g. hunter,charger)"
+        "ko"        "!hardl <종류[,종류...]> <0 ~ {1} | reset> - 특수 감염자의 제한을 설정합니다.\n!hardl reset - 모든 제한을 초기화합니다.\n종류: boomer, charger, hunter, jockey, smoker, spitter (예: hunter,charger)"
+    }
+    "Respawn Usage"
+    {
+        "en"    "!hardr <seconds | reset> - Set the special infected respawn interval (1 or more).\nreset: 20 at level 6 or lower, 15 at level 7 or higher."
+        "ko"    "!hardr <초 | reset> - 특수 감염자의 리스폰 간격을 설정합니다 (1 이상).\nreset: 레벨 6 이하는 20초, 레벨 7 이상은 15초."
+    }
+    "Hard Off"
+    {
+        "en"    "{default}[Hard X System]{green} OFF"
+        "ko"    "{default}[Hard X System]{green} 꺼짐"
+    }
+    "Hard Off Reset"
+    {
+        "en"    "{green}OFF{default}. All custom limits and respawn interval reset."
+        "ko"    "{green}꺼짐{default}. 커스텀 제한과 리스폰 간격을 모두 초기화했습니다."
+    }
+    "Max Level Warning"
+    {
+        "#format"   "{1:d}"
+        "en"        "{green}Warning:{default} level {lightgreen}{1}{default} has critical engine bugs."
+        "ko"        "{green}경고:{default} 레벨 {lightgreen}{1}{default}에는 치명적인 엔진 버그가 있습니다."
+    }
+    "Activation"
+    {
+        "#format"   "{1:s},{2:d},{3:s},{4:s}"
+        "en"        "{green}★ {olive}{1} {default}Hard {lightgreen}{2}{3}{4}"
+        "ko"        "{green}★ {olive}{1} {default}Hard{lightgreen}{2}{3}{4}"
+    }
+    "Custom Limits"
+    {
+        "en"    " {default}(custom limits)"
+        "ko"    " {default}(커스텀 제한)"
+    }
+    "Custom Respawn"
+    {
+        "#format"   "{1:d}"
+        "en"        " {default}(respawn {lightgreen}{1}{default}s)"
+        "ko"        " {default}(리스폰 {lightgreen}{1}{default}초)"
+    }
+    "Slots Warning"
+    {
+        "#format"   "{1:d},{2:d}"
+        "en"        "{green}Warning:{default} only {lightgreen}{1}{default} of {lightgreen}{2}{default} special infected slots can be filled."
+        "ko"        "{green}경고:{default} 특수 감염자 자리 {lightgreen}{2}{default}개 중 {lightgreen}{1}{default}개만 채워집니다."
+    }
+    "Respawn Interval"
+    {
+        "#format"   "{1:d}"
+        "en"        "Respawn interval {lightgreen}{1}{default}s"
+        "ko"        "리스폰 간격 {lightgreen}{1}{default}초"
+    }
+    "Respawn Interval Default"
+    {
+        "#format"   "{1:d}"
+        "en"        "Respawn interval {lightgreen}{1}{default}s {olive}(default)"
+        "ko"        "리스폰 간격 {lightgreen}{1}{default}초 {olive}(기본값)"
+    }
+}
