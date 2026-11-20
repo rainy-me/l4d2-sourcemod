@@ -4,6 +4,7 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
+#include <multicolors>
 
 bool g_bEnabled = true;
 
@@ -51,7 +52,7 @@ Action Cmd_OnePunchShove(int client, int args)
 {
     g_bEnabled = !g_bEnabled;
     MeleeRagdollEffect(g_bEnabled);
-    PrintToChatAll("\x01[One-Punch Shove] \x04%s", g_bEnabled ? "ON" : "OFF");
+    CPrintToChatAll("{default}[One-Punch Shove] {green}%s", g_bEnabled ? "ON" : "OFF");
     return Plugin_Handled;
 }
 

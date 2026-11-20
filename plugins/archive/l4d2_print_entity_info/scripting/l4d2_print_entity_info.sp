@@ -3,7 +3,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <colors>
+#include <multicolors>
 
 public Plugin myinfo =
 {
@@ -23,20 +23,20 @@ Action Cmd_EntInfo(int client, int args)
 {
     if (client < 1 || !IsClientInGame(client))
     {
-        ReplyToCommand(client, "Enter the command in the chat.");
-        ReplyToCommand(client, "Shortcut key is convenient. (bind n \"say /entinfo\")");
+        CReplyToCommand(client, "Enter the command in the chat.");
+        CReplyToCommand(client, "Shortcut key is convenient. (bind n \"say /entinfo\")");
         return Plugin_Handled;
     }
 
     int entity = GetClientAimTarget(client, false);
     if (entity < 0)
     {
-        ReplyToCommand(client, "No entity is being aimed at.");
+        CReplyToCommand(client, "No entity is being aimed at.");
         return Plugin_Handled;
     }
     if (!IsValidEntity(entity))
     {
-        ReplyToCommand(client, "Invalid entity: %d", entity);
+        CReplyToCommand(client, "Invalid entity: %d", entity);
         return Plugin_Handled;
     }
 
