@@ -415,7 +415,6 @@ void PrintLimits()
     }
     CPrintToChatAll("%s", text);
 
-    // 제한의 합이 최대 특좀 수보다 작으면 자리가 다 차지 않는다
     if (total < g_iLevel)
         CPrintToChatAll("%t", "Slots Warning", total, g_iLevel);
 }
@@ -458,7 +457,6 @@ bool IsValidLevel(int level)
     return level == 0 || (level >= MIN_LEVEL && level <= MAX_LEVEL);
 }
 
-// StringToIntEx는 "8x"도 8로 읽으므로 읽은 길이가 전체와 같은지 확인한다
 bool ParseInt(const char[] text, int &value)
 {
     return text[0] != '\0' && StringToIntEx(text, value) == strlen(text);
