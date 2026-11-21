@@ -339,7 +339,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 3. [l4d2_thirdperson_state](/plugins/libs/l4d2_thirdperson_state/)  
    클라이언트의 3인칭(thirdpersonshoulder) 상태를 감지해 다른 플러그인에 알립니다.
 
-4. l4d_heartbeat (버그 수정)  
+4. l4d_heartbeat  
    <https://github.com/fbef0102/L4D1_2-Plugins/tree/master/l4d_heartbeat>
 
 5. l4d_pellet_spread_customizer  
