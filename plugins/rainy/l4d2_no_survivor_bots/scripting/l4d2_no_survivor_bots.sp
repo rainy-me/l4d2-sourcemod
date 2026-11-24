@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
     name        = "L4D2 No Survivor Bots",
     author      = "Rainy",
-    description = "생존자 봇을 처치하고 중도 참가자를 팀 옆에 부활시킵니다.",
+    description = "생존자 봇을 처치하고 중도 참가자를 부활시킵니다.",
     version     = "1.0.0",
     url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_no_survivor_bots"
 };
@@ -104,7 +104,8 @@ void RespawnNewPlayer(int client)
     if (!IsValidClient(client) || IsFakeClient(client) || IsPlayerAlive(client) || GetClientTeam(client) != 2)
         return;
 
-    L4D_RespawnPlayer(client);
+    L4D2_VScriptWrapper_ReviveByDefib(client);
+    SetEntityHealth(client, GetEntProp(client, Prop_Data, "m_iMaxHealth"));
     GivePlayerItem(client, "weapon_smg_silenced");
     GivePlayerItem(client, "weapon_first_aid_kit");
 

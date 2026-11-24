@@ -117,7 +117,7 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
     특수좀비가 낙하로 스태거를 취소하지 못하도록 착지 시 다시 스태거를 겁니다.
 
 27. [l4d2_no_survivor_bots](/plugins/rainy/l4d2_no_survivor_bots/)  
-    생존자 봇을 처치하고 중도 참가자를 팀 옆에 부활시킵니다.
+    생존자 봇을 처치하고 중도 참가자를 부활시킵니다.
 
 28. [l4d2_player_connect_notifier](/plugins/rainy/l4d2_player_connect_notifier/)  
     플레이어가 서버에 접속하면 채팅창에 알립니다.
