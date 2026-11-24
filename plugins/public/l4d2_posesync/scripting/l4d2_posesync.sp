@@ -40,7 +40,7 @@
  * Windows (server.dll md5 533888fbb4e5ed534b172470613a3017) and Linux (server_srv.so md5
  * bf54b537f4707f0c602208c427ec62df, server.so md5 e962508781885d7b0d871d79e456b03d); every
  * platform-dependent value is in the gamedata.
- * Requires SourceMod 1.11+ (built-in DHooks).
+ * Requires SourceMod 1.12+.
  */
 
 #pragma semicolon 1
@@ -708,7 +708,7 @@ Handle PrepEntityCall(GameData gd, const char[] name, SDKType param, SDKPassMeth
 	return EndPrepSDKCall();
 }
 
-public void OnCvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnCvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	ReadCvars();
 }
@@ -749,7 +749,7 @@ void ReadCvars()
 	}
 }
 
-public void OnMaxUnlagChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnMaxUnlagChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	UpdateRingSize();
 }
@@ -1071,7 +1071,7 @@ void Event_DbgCommand(Event event, const char[] name, bool dontBroadcast)
 }
 
 // Notes which entity and hitbox the shooter's bullets hit during the command, for the debug filter.
-public Action Hook_TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+Action Hook_TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
 	if (g_bDbgPass && victim > 0 && victim < MAX_ENTS && attacker == g_iShooter)
 	{
@@ -1151,7 +1151,7 @@ void HookTransmit(int entity, const char[] classname, bool existing = false)
 }
 
 // called for each client the entity is about to be sent to (it is in that client's PVS)
-public Action Hook_Transmit(int entity, int client)
+Action Hook_Transmit(int entity, int client)
 {
 	// only human shooters use this (a bot's lag compensation has no client drawing anything)
 	if (client < 1 || client >= PTX_MAX || !g_bHuman[client])
@@ -3842,7 +3842,7 @@ void UnhideDevCvars(bool verbose, int client = 0)
 	}
 }
 
-public Action Cmd_Unhide(int client, int args)
+Action Cmd_Unhide(int client, int args)
 {
 	UnhideDevCvars(true, client);
 	return Plugin_Handled;
@@ -3931,7 +3931,7 @@ void RefusalReason(int entity, float target, char[] out, int maxlen)
 // ---------------------------------------------------------------------------
 
 // sm_posesync_trace <ent> [seconds]: start (or, with 0, stop) a trace.
-public Action Cmd_Trace(int client, int args)
+Action Cmd_Trace(int client, int args)
 {
 	if (args < 1)
 	{
@@ -5921,7 +5921,7 @@ enum struct CSamples
 #define CI_OLDEST   4       // before the oldest sample: drawn there
 
 // called for each client a player is about to be sent to
-public Action Hook_PlayerTransmit(int entity, int client)
+Action Hook_PlayerTransmit(int entity, int client)
 {
 	if (client < 1 || client >= PTX_MAX || entity < 1 || entity >= PTX_MAX || client == entity || !g_bHuman[client])
 		return Plugin_Continue;
