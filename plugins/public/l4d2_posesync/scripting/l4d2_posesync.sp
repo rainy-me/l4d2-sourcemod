@@ -780,6 +780,27 @@ public void OnMapStart()
 		g_iEntModelIndex[i] = -1;
 		g_iEntModelInfo[i] = -1;
 	}
+	RequestFrame(Frame_PrimeMapModels);
+}
+
+// Reads the map's infected and survivor models on the first server frame, while clients are still
+// loading (the model precache table is complete by then): parsing one at its first spawn stalls a
+// frame, which a listen server host sees as a stutter when a horde or several specials spawn.
+void Frame_PrimeMapModels()
+{
+	int table = FindStringTable("modelprecache");
+	if (table == INVALID_STRING_TABLE)
+		return;
+	char path[PLATFORM_MAX_PATH];
+	int num = GetStringTableNumStrings(table);
+	for (int i = 0; i < num; i++)
+	{
+		ReadStringTable(table, i, path, sizeof(path));
+		// gibs (limbs) are never lag compensated
+		if ((strncmp(path, "models/infected/", 16, false) == 0 || strncmp(path, "models/survivors/", 17, false) == 0)
+			&& StrContains(path, "/limbs/", false) == -1)
+			FindOrParseModel(path);
+	}
 }
 
 // late load: hook the commons and witches that already exist
