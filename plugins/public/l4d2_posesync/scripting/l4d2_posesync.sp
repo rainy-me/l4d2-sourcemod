@@ -510,6 +510,14 @@ float g_fHeldEngAng[MAX_ENTS * 3];
 int   g_iStatHold;
 int g_iStatSwing, g_iStatRidden, g_iStatAnimRewind, g_iStatSparse;
 
+// A gunshot's lag compensation pass: the shooter's aim ray. Entities away from it are left to the
+// engine's own rewind (see NearAimRay).
+#define AIM_RAY_DIST   100.0    // units from the ray (the engine's own figure for its ray test)
+#define AIM_RAY_SPREAD 0.2      // plus this per unit along the ray (about 11 degrees: spread, recoil)
+bool  g_bRayPass;
+float g_fRayOrg[3], g_fRayDir[3];
+int   g_iStatOffRay;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (GetEngineVersion() != Engine_Left4Dead2)
@@ -1585,6 +1593,14 @@ MRESReturn Detour_Backtrack_Pre_Impl(DHookReturn hReturn, DHookParam hParams)
 		return MRES_Ignored;
 	}
 
+	if (g_bRayPass && !NearAimRay(entity))
+	{
+		g_iStatOffRay++;
+		if (g_iDebug > 0)
+			Dbg(entity, "[posesync] ent %d: skipped, away from the aim ray (engine's own rewind, target %.3f)", entity, target);
+		return MRES_Ignored;
+	}
+
 	bool changed = false, inWindow = false;
 	bool shooter = g_iShooter > 0 && g_iShooter <= MaxClients;
 	float cvarLerp;
@@ -1923,6 +1939,7 @@ MRESReturn Detour_Finish_Post(DHookParam hParams)
 MRESReturn Detour_Finish_Post_Impl(DHookParam hParams)
 {
 	#pragma unused hParams
+	g_bRayPass = false;
 	RestoreAll();
 	ReleaseFollowers();
 	return MRES_Ignored;
@@ -2071,13 +2088,44 @@ MRESReturn Detour_Wants_Post(int shooter, DHookReturn hReturn, DHookParam hParam
 // same call as LAG_COMPENSATE_HITBOXES rewinds sequence, cycle and overlay layers for every entity.
 MRESReturn Detour_Start_Pre(DHookParam hParams)
 {
+	g_bRayPass = false;
 	if (!g_bEnabled)
 		return MRES_Ignored;
 	if (view_as<int>(hParams.Get(2)) != LAGCOMP_HITBOXES_ALONG_RAY || view_as<float>(hParams.Get(5)) > 0.0)
 		return MRES_Ignored;
 	hParams.Set(2, LAGCOMP_HITBOXES);
 	g_iStatAnimRewind++;
+
+	// a gunshot: the plugin's own rewind (BacktrackEntity pre / post hooks) only for entities a
+	// bullet along the shooter's aim can reach, so a shot costs the entities near the ray, not
+	// every entity in view
+	int shooter = hParams.IsNull(1) ? 0 : hParams.Get(1);
+	if (shooter > 0 && shooter <= MaxClients && IsClientInGame(shooter))
+	{
+		float ang[3];
+		GetClientEyePosition(shooter, g_fRayOrg);
+		GetClientEyeAngles(shooter, ang);
+		GetAngleVectors(ang, g_fRayDir, NULL_VECTOR, NULL_VECTOR);
+		g_bRayPass = true;
+	}
 	return MRES_ChangedHandled;
+}
+
+// Whether a bullet of the current gunshot pass can reach the entity: its body centre (at the
+// present; the margin covers how far it is rewound) is within AIM_RAY_DIST of the aim ray, plus
+// AIM_RAY_SPREAD per unit along it. A bullet that still hits an entity outside (a wider spread)
+// is tested against the engine's own rewind of it.
+bool NearAimRay(int entity)
+{
+	float d[3];
+	GetEntDataVector(entity, g_iOffAbsOrigin, d);
+	d[2] += 36.0;
+	SubtractVectors(d, g_fRayOrg, d);
+	float along = GetVectorDotProduct(d, g_fRayDir);
+	if (along < 0.0)
+		along = 0.0;    // behind the shooter: plain distance from the eye
+	float limit = AIM_RAY_DIST + along * AIM_RAY_SPREAD;
+	return GetVectorDotProduct(d, d) - along * along <= limit * limit;
 }
 
 // ---------------------------------------------------------------------------
@@ -3250,9 +3298,9 @@ Action Cmd_Status(int client, int args)
 	ReplyToCommand(client, "[posesync] sequence changes of standing common infected recorded without a new simulation time: %d | moved to where the client drew them: %d (held at the newest update: %d)%s",
 		g_iStatIdleSeq, g_iStatClientPos, g_iStatHold, g_bCanMove ? "" : " (no gamedata)");
 	ReplyToCommand(client, "[posesync] move blends from the client's velocity estimate: players %d, common infected %d | feet and aim yaw turned like the client after a spawn: %d", g_iStatMoveBlend, g_iStatCommonMove, g_iStatSpawnTurn);
-	ReplyToCommand(client, "[posesync] entities kept compensated during a swing: %d%s | ridden survivors rewound: %d%s | gunshots with the animation rewind: %d%s | gaps bridged: %d%s",
+	ReplyToCommand(client, "[posesync] entities kept compensated during a swing: %d%s | ridden survivors rewound: %d%s | gunshots with the animation rewind: %d%s (entities away from the aim ray left to the engine: %d) | gaps bridged: %d%s",
 		g_iStatSwing, g_bHaveWants ? "" : " (no gamedata)", g_iStatRidden, g_bHaveWants ? "" : " (no gamedata)",
-		g_iStatAnimRewind, g_bHaveStart ? "" : " (no gamedata)", g_iStatSparse, g_bCanMove ? "" : " (no gamedata)");
+		g_iStatAnimRewind, g_bHaveStart ? "" : " (no gamedata)", g_iStatOffRay, g_iStatSparse, g_bCanMove ? "" : " (no gamedata)");
 	int infected = 0, live = 0;
 	float now = GetGameTime();
 	for (int i = MaxClients + 1; i < MAX_ENTS; i++)
@@ -3508,6 +3556,7 @@ public void OnPlayerRunCmdPost(int client, int buttons)
 		ReleaseFollowers();
 	}
 	DbgEndPass(client);
+	g_bRayPass = false;
 	g_iShooter = 0;
 	g_bDbgGunFired = false;
 }
