@@ -116,20 +116,20 @@ Rainy의 Left 4 Dead 2 SourceMod 구성 모음입니다.
 26. [l4d2_no_si_fall_stagger_cancel](/plugins/rainy/l4d2_no_si_fall_stagger_cancel/)  
     특수좀비가 낙하로 스태거를 취소하지 못하도록 착지 시 다시 스태거를 겁니다.
 
-27. [l4d2_player_connect_notifier](/plugins/rainy/l4d2_player_connect_notifier/)  
+27. [l4d2_no_survivor_bots](/plugins/rainy/l4d2_no_survivor_bots/)  
+    생존자 봇을 처치하고 중도 참가자를 팀 옆에 부활시킵니다.
+
+28. [l4d2_player_connect_notifier](/plugins/rainy/l4d2_player_connect_notifier/)  
     플레이어가 서버에 접속하면 채팅창에 알립니다.
 
-28. [l4d2_priority_sounds](/plugins/rainy/l4d2_priority_sounds/)  
+29. [l4d2_priority_sounds](/plugins/rainy/l4d2_priority_sounds/)  
     우선순위가 높은 소리가 다른 소리에 끊기지 않게 합니다.
 
-29. [l4d2_quick_healing](/plugins/rainy/l4d2_quick_healing/)  
+30. [l4d2_quick_healing](/plugins/rainy/l4d2_quick_healing/)  
     시작 은신처 내에서 1회 한정 킷을 즉시 사용할 수 있습니다.
 
-30. [l4d2_ragdoll_remover](/plugins/rainy/l4d2_ragdoll_remover/)  
+31. [l4d2_ragdoll_remover](/plugins/rainy/l4d2_ragdoll_remover/)  
     일반좀비/특수좀비의 ragdoll을 즉시 제거합니다.
-
-31. [l4d2_rainy_server_assistant](/plugins/rainy/l4d2_rainy_server_assistant/)  
-    Rainy 서버 운영을 자동화합니다.
 
 32. [l4d2_reserve_ammo_multiplier](/plugins/rainy/l4d2_reserve_ammo_multiplier/)  
     예비 탄약 소지량을 배율로 조정합니다.

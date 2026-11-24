@@ -12,20 +12,20 @@ ConVar g_hConVarEnable;
 
 public Plugin myinfo =
 {
-    name        = "L4D2 Rainy Server Assistant",
+    name        = "L4D2 No Survivor Bots",
     author      = "Rainy",
-    description = "Rainy 서버 운영을 자동화합니다.",
-    version     = "1.2.6",
-    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_rainy_server_assistant"
+    description = "생존자 봇을 처치하고 중도 참가자를 팀 옆에 부활시킵니다.",
+    version     = "1.0.0",
+    url         = "https://github.com/rainy-me/l4d2-sourcemod/tree/main/plugins/rainy/l4d2_no_survivor_bots"
 };
 
 public void OnPluginStart()
 {
     g_hConVarEnable = CreateConVar(
-        "l4d2_rainy_server_assistant_enable", "1",
+        "l4d2_no_survivor_bots_enable", "1",
         "1=ON, 0=OFF",
         FCVAR_NONE, true, 0.0, true, 1.0);
-    AutoExecConfig(true, "l4d2_rainy_server_assistant");
+    AutoExecConfig(true, "l4d2_no_survivor_bots");
 
     RegAdminCmd("sm_killbots", Cmd_Killbots, ADMFLAG_ROOT, "Kill bot survivors");
     RegAdminCmd("sm_kb", Cmd_Killbots, ADMFLAG_ROOT, "Kill bot survivors");
